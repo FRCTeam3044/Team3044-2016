@@ -1,48 +1,47 @@
-package com.team3044.robotmain.RobotCode;
+package com.team3044.robotmain.Reference;
 
-import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
 
-public class Robot extends IterativeRobot {
-    final String defaultAuto = "Default";
-    final String customAuto = "My Auto";
-    String autoSelected;
-    SendableChooser chooser;
+public class FirstController {
+	private static FirstController instance = null;
 	
-    public void robotInit() {
-        chooser = new SendableChooser();
-        chooser.addDefault("Default Auto", defaultAuto);
-        chooser.addObject("My Auto", customAuto);
-        SmartDashboard.putData("Auto choices", chooser);
-    }
-    
-    public void autonomousInit() {
-    	autoSelected = (String) chooser.getSelected();
-    	//autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
-		System.out.println("Auto selected: " + autoSelected);
-    }
+	private Joystick firstJoy;
+	
+	private FirstController() {
+		firstJoy = new Joystick(0);
+	}
+	
+	public double getLeftX() {
+		return firstJoy.getRawAxis(0);
+	}
 
-   
-    public void autonomousPeriodic() {
-    	switch(autoSelected) {
-    	case customAuto:
-        //Put custom auto code here   
-            break;
-    	case defaultAuto:
-    	default:
-    	//Put default auto code here
-            break;
-    	}
-    }
+	public double getLeftY() {
+		return firstJoy.getRawAxis(1);
+	}
 
-    public void teleopPeriodic() {
-        
-    }
-    
+	public double getRightX() {
+		return firstJoy.getRawAxis(4);
+	}
 
-    public void testPeriodic() {
+	public double getRightY() {
+		return firstJoy.getRawAxis(5);
+	}
+
+	public double getTriggerRight() {
+		return firstJoy.getRawAxis(3);
+	}
+
+	public double getTriggerLeft() {
+		return firstJoy.getRawAxis(2);
+	}
+	public boolean getRawButton(int num) {
+		if (!DriverStation.getInstance().isAutonomous()) {
+			return firstJoy.getRawButton(num);
+
+		} else {
+			return false;
+		}
+	}
     
-    }
 }
