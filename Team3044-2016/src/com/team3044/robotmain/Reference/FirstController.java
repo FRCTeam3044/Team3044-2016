@@ -8,8 +8,24 @@ public class FirstController {
 	
 	private Joystick firstJoy;
 	
+	public static int BUTTON_X = 3;
+	public static int BUTTON_Y = 4;
+	public static int BUTTON_B = 2;
+	public static int BUTTON_A = 1;
+
+	public static int BUTTON_RT = 6;
+	public static int BUTTON_LT = 5;
+	
 	private FirstController() {
 		firstJoy = new Joystick(0);
+	}
+	
+	public static FirstController getInstance() {
+		if (instance == null) {
+			instance = new FirstController();
+		}
+
+		return instance;
 	}
 	
 	public double getLeftX() {
