@@ -5,7 +5,7 @@ import com.team3044.robotmain.Reference.*;
 
 public class Defense {
 	Components components = new Components();
-   
+	SecondaryController secondJoy = SecondaryController.getInstance();
     public void defenseInit() {
         
     }
@@ -15,7 +15,9 @@ public class Defense {
     }
      
     public void defenseTeleopPeriodic() {
-    	
+    	if(secondJoy.getRawButton(3)){
+    		components.longArm.set(1);
+    	}
     }
 
 }
