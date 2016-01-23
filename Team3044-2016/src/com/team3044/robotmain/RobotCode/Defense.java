@@ -7,7 +7,18 @@ public class Defense {
 	Components components = new Components();
 	SecondaryController secondJoy = SecondaryController.getInstance();
     public void defenseInit() {
-        
+    
+    	
+	final int MOVING = 1;
+	final int STOPPING = 2;
+	final int HOME = 3;
+	final int SALLY_PORT1 = 4;
+	final int SALLY_PORT2 = 5;
+	final int DRAW_BRIDGE1 = 6;
+	final int DRAWBRIDGE2 = 7;
+	final int OTHER = 8;
+	
+	int DEFENSE_STATE = 9;
     }
     
     public void defenseAutoPeriodic() {
@@ -15,10 +26,11 @@ public class Defense {
     }
      
     public void defenseTeleopPeriodic() {
-    	if(secondJoy.getRawButton(3)){
-    		components.longArm.set(1);
+    	switch(DEFENSE_STATE){
+    	case: HOME
+    		
+    	break;
     	}
     }
 
 }
-//Hi Ryan

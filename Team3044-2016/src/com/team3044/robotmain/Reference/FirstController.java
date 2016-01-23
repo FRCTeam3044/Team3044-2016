@@ -15,6 +15,9 @@ public class FirstController {
 
 	public static int BUTTON_RT = 6;
 	public static int BUTTON_LT = 5;
+	public static int BUTTON_BACK = 7;
+	public static int BUTTON_START = 8;
+	//ANALOG STICK BUTTONS STILL AVAILABLE
 	
 	private FirstController() {
 		firstJoy = new Joystick(0);
