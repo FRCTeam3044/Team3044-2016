@@ -140,7 +140,7 @@ public class Defense {
 				components.shortArm.set(1);
 				components.longArm.set(1);
 				DEFENSE_STATE = MOVING;
-			}
+			} //this is a test
 		}
 	}
 }
