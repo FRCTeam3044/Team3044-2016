@@ -8,15 +8,15 @@ public class SecondaryController {
 	
 	private Joystick secondJoy;
 	
-	public static int BUTTON_X = 3;
+	public static int BUTTON_X = 3; //defense 
 	public static int BUTTON_Y = 4;
 	public static int BUTTON_B = 2;
-	public static int BUTTON_A = 1;
+	public static int BUTTON_A = 1; //defense
 
 	public static int BUTTON_RT = 6;
 	public static int BUTTON_LT = 5;
 	public static int BUTTON_BACK = 7;
-	public static int BUTTON_START = 8;
+	public static int BUTTON_START = 8; //defense
 	//ANALOG STICK BUTTONS STILL AVAILABLE
 	
 	private SecondaryController() {
