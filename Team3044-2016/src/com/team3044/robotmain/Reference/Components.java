@@ -13,7 +13,7 @@ public class Components {
 	public CANTalon rightBackDrive;
 	
 	public double leftDriveEncoder;
-	public double rightFrontEncoder;
+	public double rightDriveEncoder;
 	
 	//Shooter
 	public CANTalon topShooter;
