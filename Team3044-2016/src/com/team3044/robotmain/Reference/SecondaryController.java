@@ -9,8 +9,8 @@ public class SecondaryController {
 	private Joystick secondJoy;
 	
 	public static int BUTTON_X = 3; //defense 
-	public static int BUTTON_Y = 4;
-	public static int BUTTON_B = 2;
+	public static int BUTTON_Y = 4; //defense
+	public static int BUTTON_B = 2; //defense
 	public static int BUTTON_A = 1; //defense
 
 	public static int BUTTON_RT = 6;

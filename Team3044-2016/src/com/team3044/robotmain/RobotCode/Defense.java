@@ -18,6 +18,10 @@ public class Defense {
 	final int MOVING_TOWARD_HOME = 9;
 	final int NOT_HOME = 10;
 
+	// Button 1 & 2 SALLY_PORT
+	// Button 3 & 4 DRAW_BRIDGE
+	// Butt 8 HOME
+
 	final int X = 11; // This will be the angle of the POT for the LongArm
 	final int Y = 12; // This will be the angle of the POT for the ShortArm
 	int DEFENSE_STATE = 13;
@@ -132,14 +136,43 @@ public class Defense {
 				break;
 			}
 		case SALLY_PORT1:
-			if (secondJoy.getRawButton(8)) {
+			if (secondJoy.getRawButton(2)) {
 				components.shortArm.set(1);
 				components.longArm.set(1);
 				DEFENSE_STATE = MOVING;
-			} else if (secondJoy.getRawButton(1)) {
+				break;
+
+			}
+		case DRAW_BRIDGE1:
+			if (secondJoy.getRawButton(4)) {
 				components.shortArm.set(1);
 				components.longArm.set(1);
 				DEFENSE_STATE = MOVING;
+				break;
+			}
+		case SALLY_PORT2:
+			if (secondJoy.getRawButton(1) || secondJoy.getRawButton(3) || secondJoy.getRawButton(4)
+					|| secondJoy.getRawButton(8)) {
+				components.shortArm.set(1);
+				components.longArm.set(1);
+				DEFENSE_STATE = MOVING;
+				break;
+			}
+		case DRAW_BRIDGE2:
+			if (secondJoy.getRawButton(1) || secondJoy.getRawButton(2) || secondJoy.getRawButton(3)
+					|| secondJoy.getRawButton(8)) {
+				components.shortArm.set(1);
+				components.longArm.set(1);
+				DEFENSE_STATE = MOVING;
+				break;
+			}
+		case OTHER:
+			if (secondJoy.getRawButton(1) || secondJoy.getRawButton(2) || secondJoy.getRawButton(3)
+					|| secondJoy.getRawButton(4) || secondJoy.getRawButton(8)) {
+				components.shortArm.set(1);
+				components.longArm.set(1);
+				DEFENSE_STATE = MOVING;
+				break;
 			}
 		}
 	}
