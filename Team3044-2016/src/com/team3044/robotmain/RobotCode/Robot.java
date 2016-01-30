@@ -22,23 +22,25 @@ public class Robot extends IterativeRobot {
     	
     }
 
-   
     public void autonomousPeriodic() {
     	drive.driveAutoPeriodic();
     	defense.defenseAutoPeriodic();
     	shooter.shooterAutoPeriodic();
     	
     }
-
+    
+    public void teleopInit() {
+    	
+    }
+    
     public void teleopPeriodic() {
         drive.driveTeleopPeriodic();
         defense.defenseTeleopPeriodic();
         shooter.shooterTeleopPeriodic();
     }
     
-
-    public void testPeriodic() {
-    
-    }
+    public void disabledInit() {}
+    public void disabledPeriodic() {}
+    public void testPeriodic() {}
 }
 //Hello
