@@ -30,10 +30,8 @@ public class Components {
 	
 	//Digital IOs
 	public DigitalInput stagingSwitch = new DigitalInput(0);
-	
-	//Analog
-	public AnalogInput topTacho = new AnalogInput(0);
-	public AnalogInput botTacho = new AnalogInput(1);
+	public DigitalInput topTacho = new DigitalInput(1);
+	public DigitalInput botTacho = new DigitalInput(2);
 	
 		public void init(){
 			leftFrontDrive = new CANTalon(1);
