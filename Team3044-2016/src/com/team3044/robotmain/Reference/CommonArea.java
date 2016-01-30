@@ -7,6 +7,8 @@ public class CommonArea {
 	//Drive
 	public double leftDriveSpeed;
 	public double rightDriveSpeed;
+	public double leftAutoSpeed;
+	public double rightAutoSpeed;
 	public boolean isManualDrive = true;
 	
 	//Shooter
