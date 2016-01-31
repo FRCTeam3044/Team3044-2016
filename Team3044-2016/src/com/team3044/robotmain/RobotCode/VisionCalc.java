@@ -19,6 +19,7 @@ public class VisionCalc {
 	final double STARTSPEED = .5;
 	final double TURNSPEED = .4;
 	int state = 0;
+	//a
 	public static CalculatedTurnSpeed(int Angle){
 		
 	}
