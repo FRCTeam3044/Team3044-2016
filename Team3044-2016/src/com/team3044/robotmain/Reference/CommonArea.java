@@ -25,5 +25,8 @@ public class CommonArea {
 	//Arm
 	public boolean armDrawBridgeFlag = false;
 	
-	
+	//Vision
+	public boolean isTargetSeen = false;
+	public boolean isAligned = false;
+	public boolean isUpToSpeed = false;
 }

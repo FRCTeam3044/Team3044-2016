@@ -27,13 +27,14 @@ public class Components {
 	public CANTalon Pickup1;
 	public CANTalon Pickup2;
 	public CANTalon Pickup3;
-	
+
+	public DigitalInput GateUpLimit = new DigitalInput(2);
+	public DigitalInput GateDownLimit = new DigitalInput(3);
+	public DigitalInput BallInLimit = new DigitalInput(4);
 	//Digital IOs
 	public DigitalInput stagingSwitch = new DigitalInput(0);
-	
-	//Analog
-	public AnalogInput topTacho = new AnalogInput(0);
-	public AnalogInput botTacho = new AnalogInput(1);
+	public DigitalInput topTacho = new DigitalInput(1);
+	public DigitalInput botTacho = new DigitalInput(2);
 	
 		public void init(){
 			leftFrontDrive = new CANTalon(1);
