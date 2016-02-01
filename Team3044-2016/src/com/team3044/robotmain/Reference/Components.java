@@ -24,7 +24,7 @@ public class Components {
 	public CANTalon shortArm;
 	
 	//Pick Up
-	public CANTalon Pickup1;
+	public CANTalon gateTalon;
 	public CANTalon Pickup2;
 	public CANTalon Pickup3;
 

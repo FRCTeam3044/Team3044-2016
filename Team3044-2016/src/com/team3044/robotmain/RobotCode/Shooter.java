@@ -29,7 +29,8 @@ public class Shooter {
 	double positionball = 1; // this is the encoders desired place to pick boulder
 	double PickUpEncoder;
 	public enum state{
-		Starting_State,Gate_Coming_Down,Gate_Stopped_Between,Gate_Coming_Up,Ready_To_Pick_Up_Boulder
+		Starting_State,Gate_Coming_Down,Gate_Stopped_Between,Gate_Coming_Up,Ready_To_Pick_Up_Boulder, Boulder_Ingest, Boulder_Eject,
+		Ball_InGate_StoppedBetween, Ball_In_Gate_Coming_Up
 	};
 
 
@@ -40,43 +41,44 @@ public class Shooter {
 		switch (Pick_Up_State){
 		case Starting_State:
 			//if (!components.GateUpLimit.get()){
-			//components.Pickup1.set(motor_up_speed);
-			if (components.GateUpLimit.get() && firstJoy.getRawButton(1)){	//This Button is the bring gate down motor does not need limit switch
-				components.PickUpEncoder = components.Pickup1.getAnalogInRaw();
-				if(components.PickUpEncoder != positionball){				//change into talon usage & use range instead of set // dont need to check encoder
-					components.Pickup1.set(motor_down_speed);
+			//components.gateTalon.set(motor_up_speed);
+			if (firstJoy.getRawButton(1)){	//This Button is the bring gate down motor does not need limit switch
+				components.gateTalon.setPosition(0);
+				
+				if(components.gateTalon.getEncPosition() != positionball){				//use range instead of set // dont need to check encoder
+					components.gateTalon.set(motor_down_speed);
 					Pick_Up_State = state.Gate_Coming_Down;
 				}
-			} 													/*/else if (firstJoy.getRawButton(2)){boolean GateDownLimit = components.GateDownLimit.get(); //gives a boolean the status of the limit switchif(GateDownLimit != true){components.Pickup1.set(motor_down_speed);Pick_Up_State = Gate_Coming_All_Way_Down;}}*/
+			} 													/*/else if (firstJoy.getRawButton(2)){boolean GateDownLimit = components.GateDownLimit.get(); //gives a boolean the status of the limit switchif(GateDownLimit != true){components.gateTalon.set(motor_down_speed);Pick_Up_State = Gate_Coming_All_Way_Down;}}*/
 		case Gate_Coming_Down:
 			if (!firstJoy.getRawButton(1)){ 	//set variables for buttons
-				components.Pickup1.set(0);
+				components.gateTalon.set(0);
 				Pick_Up_State = Gate_Stopped_Between;
 
 			}else{
-				components.PickUpEncoder = components.Pickup1.getAnalogInRaw();	
+				components.PickUpEncoder = components.gateTalon.getAnalogInRaw();	
 				if (components.PickUpEncoder == positionball){	//take components. off less than instead of ==
-					components.Pickup1.set(0);
+					components.gateTalon.set(0);
 					Pick_Up_State = Ready_To_Pick_Up_Boulder;
 				}
 			}	
 		case Gate_Coming_Up:
 			if (!firstJoy.getRawButton(2)){
-				components.Pickup1.set(0);
+				components.gateTalon.set(0);
 				Pick_Up_State = Gate_Stopped_Between;
 
 			}else if (firstJoy.getRawButton(2)){
 				if (components.GateUpLimit.get()){
-					components.Pickup1.set(0);
+					components.gateTalon.set(0);
 					Pick_Up_State = Starting_State;
 				}
 			}	
 		case Ready_To_Pick_Up_Boulder:
 			if (firstJoy.getRawButton(2)){
-				components.Pickup1.set(motor_up_speed);
+				components.gateTalon.set(motor_up_speed);
 				Pick_Up_State = Gate_Coming_Up;
 			}else if (components.GateDownLimit.get() && firstJoy.getRawButton(7)){	//<-Start Portcullis and Drwabridge by bringing gate down
-				components.Pickup1.set(motor_down_speed);
+				components.gateTalon.set(motor_down_speed);
 				Pick_Up_State = Gate_All_Way_Down;//moving
 
 			}	
