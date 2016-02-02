@@ -33,7 +33,9 @@ public class Shooter {
 		Ball_InGate_StoppedBetween, Ball_In_Gate_Coming_Up
 	};
 
-
+	public void shooterInit() {
+		
+	}
 	public void shooterAutoPeriodic() {
 		
 	}
