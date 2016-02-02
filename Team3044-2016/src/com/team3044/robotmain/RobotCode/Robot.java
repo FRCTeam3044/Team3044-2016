@@ -1,4 +1,3 @@
-
 package com.team3044.robotmain.RobotCode;
 
 import com.team3044.robotmain.Reference.Components;
@@ -9,38 +8,44 @@ public class Robot extends IterativeRobot {
 	Drive drive = new Drive();
 	Shooter shooter = new Shooter();
 	Components component = new Components();
-	
-    public void robotInit() {
-    	component.init();
-    	drive.driveInit();
-    	defense.defenseInit();
-    	shooter.shooterInit();
-    	
-    }
-    
-    public void autonomousInit() {
-    	
-    }
+	Gate gate = new Gate();
 
-    public void autonomousPeriodic() {
-    	drive.driveAutoPeriodic();
-    	defense.defenseAutoPeriodic();
-    	shooter.shooterAutoPeriodic();
-    	
-    }
-    
-    public void teleopInit() {
-    	
-    }
-    
-    public void teleopPeriodic() {
-        drive.driveTeleopPeriodic();
-        defense.defenseTeleopPeriodic();
-        shooter.shooterTeleopPeriodic();
-    }
-    
-    public void disabledInit() {}
-    public void disabledPeriodic() {}
-    public void testPeriodic() {}
+	public void robotInit() {
+		component.init();
+		drive.driveInit();
+		defense.defenseInit();
+		shooter.shooterInit();
+		gate.gateInit();
+	}
+
+	public void autonomousInit() {
+
+	}
+
+	public void autonomousPeriodic() {
+		drive.driveAutoPeriodic();
+		defense.defenseAutoPeriodic();
+		shooter.shooterAutoPeriodic();
+		gate.gateAutoPeriodic();
+	}
+
+	public void teleopInit() {
+
+	}
+
+	public void teleopPeriodic() {
+		drive.driveTeleopPeriodic();
+		defense.defenseTeleopPeriodic();
+		shooter.shooterTeleopPeriodic();
+		gate.gateTeleopPeriodic();
+	}
+
+	public void disabledInit() {
+	}
+
+	public void disabledPeriodic() {
+	}
+
+	public void testPeriodic() {
+	}
 }
-//Hello

@@ -6,23 +6,6 @@ import com.team3044.robotmain.Reference.*;
 public class Shooter {
 	Components components = new Components();
 	FirstController firstJoy = FirstController.getInstance();
-	//create public double PickUpEncoder;
-
-	//Pick Up
-	/*final int Starting_State = 1; //Gate all way up
-	final int Gate_Coming_Down = 2;
-	final int Gate_Stopped_Between = 3;			//MrCSTate
-	final int Gate_Coming_Up = 4;
-	final int Ready_To_Pick_Up_Boulder = 5;
-	final int Boulder_Ingest = 6;
-	final int Boulder_Eject = 7;
-	final int Ball_InGate_StoppedBetween = 8;
-	final int Ball_In_Gate_Coming_Up = 9;
-	final int Ball_In_Gate_Coming_Down = 10;
-	final int Ball_In_Gate_All_Way_Down = 11;
-	final int Ball_In_Gate_All_Way_Up = 12;
-	final int Gate_All_Way_Down = 13;
-	*/
 	state Pick_Up_State = state.Starting_State;
 	double motor_down_speed = 1; //look at motor later
 	double motor_up_speed = -1;
@@ -30,9 +13,11 @@ public class Shooter {
 	double PickUpEncoder;
 	public enum state{
 		Starting_State,Gate_Coming_Down,Gate_Stopped_Between,Gate_Coming_Up,Ready_To_Pick_Up_Boulder, Boulder_Ingest, Boulder_Eject,
-		Ball_InGate_StoppedBetween, Ball_In_Gate_Coming_Up
+		Ball_InGate_StoppedBetween, Ball_In_Gate_Coming_Up, Ball_In_Gate_Coming_Down, Ball_In_Gate_All_Way_Down, Ball_In_Gate_All_Way_Up, 
 	};
-
+	public void shooterInit(){
+		
+	}
 
 	public void shooterAutoPeriodic() {
 		
