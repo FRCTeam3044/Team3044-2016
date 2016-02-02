@@ -40,6 +40,12 @@ public class CommonArea {
 	public boolean pickRollersOut = firstJoy.getRawButton(FirstController.BUTTON_LT);
 	public boolean pickRollersIn = firstJoy.getRawButton(FirstController.BUTTON_RT);
 	public boolean gateUp = firstJoy.getRawButton(FirstController.BUTTON_Y);
-	public boolean gateUp = firstJoy.getRawButton(FirstController.BUTTON_A);
+	public boolean gateDown = firstJoy.getRawButton(FirstController.BUTTON_A);
+	public boolean autoPortcullis = firstJoy.getRawButton(FirstController.BUTTON_START);
 	//SecondaryController
+	public boolean  = secondaryJoy.getRawButton(SecondaryController);
+	public boolean  = secondaryJoy.getRawButton(SecondaryController);
+	public boolean  = secondaryJoy.getRawButton(SecondaryController);
+	public boolean  = secondaryJoy.getRawButton(SecondaryController);
+	public boolean  = secondaryJoy.getRawButton(SecondaryController);
 }
