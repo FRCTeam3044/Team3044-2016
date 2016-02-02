@@ -21,6 +21,7 @@ public class CommonArea {
 	public boolean aimFlag = false;
 	public boolean shooterMotorFlag = false;
 	public boolean shootFlag = false;
+	public boolean isShot = false;
 	
 	//PickUp
 	public boolean portcullisFlag = false;
@@ -42,6 +43,8 @@ public class CommonArea {
 	public boolean gateUp = firstJoy.getRawButton(FirstController.BUTTON_Y);
 	public boolean gateDown = firstJoy.getRawButton(FirstController.BUTTON_A);
 	public boolean autoPortcullis = firstJoy.getRawButton(FirstController.BUTTON_START);
+	public boolean autoAlign = firstJoy.getRawButton(FirstController.BUTTON_BACK);
+	
 	//SecondaryController
 	public boolean  = secondaryJoy.getRawButton(SecondaryController);
 	public boolean  = secondaryJoy.getRawButton(SecondaryController);

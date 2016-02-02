@@ -2,6 +2,7 @@ package com.team3044.robotmain.Reference;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Components {
@@ -37,6 +38,9 @@ public class Components {
 	public DigitalInput GateUpLimit = new DigitalInput(2);
 	public DigitalInput GateDownLimit = new DigitalInput(3);
 	public DigitalInput BallInLimit = new DigitalInput(4);
+	
+	public Counter topTachoCounter = new Counter(topTacho);
+	public Counter botTachoCounter = new Counter(botTacho);
 	
 		public void init(){
 			leftFrontDrive = new CANTalon(1);
