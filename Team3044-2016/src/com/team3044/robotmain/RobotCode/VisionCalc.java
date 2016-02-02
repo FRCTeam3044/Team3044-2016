@@ -19,10 +19,25 @@ public class VisionCalc {
 	final double STARTSPEED = .5;
 	final double TURNSPEED = .4;
 	int state = 0;
-	//a
-	public static CalculatedTurnSpeed(int Angle){
-		
+	
+	public double CalculatedTurnSpeed(int Angle){
+		double turnSpeed;
+		turnSpeed = Angle/100;
+		return turnSpeed;
 	}
+	
+	public double CalculatedTopSpeed(double Distance){
+		double topSpeed;
+		topSpeed = Distance;
+		return topSpeed;
+	}
+	
+	public double CalculatedBotSpeed(double Distance){
+		double botSpeed;
+		botSpeed = Distance;
+		return botSpeed;
+	}
+	
 	public void Vision() {
 		switch(state){
 		case(WAITING):					//Waiting to start vision process
@@ -45,11 +60,11 @@ public class VisionCalc {
 				state = AUTOFIND;
 			} else if (commonarea.isTargetSeen && !commonarea.isAligned){		//Target seen but not aligned
 				state = ALIGN;
-			} else if (commonarea.isTargetSeen && commonarea.isAligned && !commonarea.isUpToSpeed){		//Target seen and aligned but shooter not ready
+			} else if (commonarea.isTargetSeen && commonarea.isAligned && !commonarea.isUpToSpeed){		//Target seen and aligned
+				commonarea.shooterTopSpeed = CalculatedTopSpeed();
+				commonarea.shooterBotSpeed = -CalculatedBotSpeed();
 				state = WAITFORSHOOTER;
-			} else if (commonarea.isTargetSeen && commonarea.isAligned && commonarea.isUpToSpeed){		//Target seen, aligned, and shooter is ready
-				state = SHOOT;
-			}
+			} 
 		break;
 		
 		case(AUTOFIND):
