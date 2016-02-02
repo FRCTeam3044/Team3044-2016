@@ -8,13 +8,14 @@ public class Robot extends IterativeRobot {
 	Drive drive = new Drive();
 	Shooter shooter = new Shooter();
 	Components component = new Components();
+	Gate gate = new Gate();
 
 	public void robotInit() {
 		component.init();
 		drive.driveInit();
 		defense.defenseInit();
 		shooter.shooterInit();
-
+		gate.gateInit();
 	}
 
 	public void autonomousInit() {
@@ -25,7 +26,7 @@ public class Robot extends IterativeRobot {
 		drive.driveAutoPeriodic();
 		defense.defenseAutoPeriodic();
 		shooter.shooterAutoPeriodic();
-
+		gate.gateAutoPeriodic();
 	}
 
 	public void teleopInit() {
@@ -36,6 +37,7 @@ public class Robot extends IterativeRobot {
 		drive.driveTeleopPeriodic();
 		defense.defenseTeleopPeriodic();
 		shooter.shooterTeleopPeriodic();
+		gate.gateTeleopPeriodic();
 	}
 
 	public void disabledInit() {
