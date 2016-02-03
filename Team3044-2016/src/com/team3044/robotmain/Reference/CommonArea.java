@@ -5,52 +5,52 @@ import com.team3044.robotmain.Reference.FirstController;
 import com.team3044.robotmain.Reference.SecondaryController;
 
 public class CommonArea {
-	FirstController firstJoy = FirstController.getInstance();
-	SecondaryController secondaryJoy = SecondaryController.getInstance();
+	static FirstController firstJoy = FirstController.getInstance();
+	static SecondaryController secondaryJoy = SecondaryController.getInstance();
 	
 	//Drive
-	public double leftDriveSpeed;
-	public double rightDriveSpeed;
-	public double leftAutoSpeed;
-	public double rightAutoSpeed;
-	public boolean isManualDrive = true;
+	public static double leftDriveSpeed;
+	public static double rightDriveSpeed;
+	public static double leftAutoSpeed;
+	public static double rightAutoSpeed;
+	public static boolean isManualDrive = true;
 	
 	//Shooter
-	public double shooterTopSpeed;
-	public double shooterBotSpeed;
-	public boolean aimFlag = false;
-	public boolean shooterMotorFlag = false;
-	public boolean shootFlag = false;
-	public boolean isShot = false;
+	public static double shooterTopSpeed;
+	public static double shooterBotSpeed;
+	public static boolean aimFlag = false;
+	public static boolean shooterMotorFlag = false;
+	public static boolean shootFlag = false;
+	public static boolean isShot = false;
 	
 	//PickUp
-	public boolean portcullisFlag = false;
-	public boolean pickUpDrawBridgeFlag = false;
+	public static boolean portcullisFlag = false;
+	public static boolean pickUpDrawBridgeFlag = false;
 	
 	//Arm
-	public boolean armDrawBridgeFlag = false;
+	public static boolean armDrawBridgeFlag = false;
 	
 	//Vision
-	public boolean isTargetSeen = false;
-	public boolean isAligned = false;
-	public boolean isUpToSpeed = false;
-	public int angleToTarget;
-	public double distanceFromTarget;
+	public static boolean isTargetSeen = false;
+	public static boolean isAligned = false;
+	public static boolean isUpToSpeed = false;
+	public static int angleToTarget;
+	public static double distanceFromTarget;
 	
 	//FirstController
-	public boolean pickRollersOut = firstJoy.getRawButton(FirstController.BUTTON_LT);
-	public boolean pickRollersIn = firstJoy.getRawButton(FirstController.BUTTON_RT);
-	public boolean gateUp = firstJoy.getRawButton(FirstController.BUTTON_Y);
-	public boolean gateDown = firstJoy.getRawButton(FirstController.BUTTON_A);
-	public boolean autoPortcullis = firstJoy.getRawButton(FirstController.BUTTON_X);
-	public boolean autoAlign = firstJoy.getRawButton(FirstController.BUTTON_START);
+	public static boolean pickRollersOut = firstJoy.getRawButton(FirstController.BUTTON_LT);
+	public static boolean pickRollersIn = firstJoy.getRawButton(FirstController.BUTTON_RT);
+	public static boolean gateUp = firstJoy.getRawButton(FirstController.BUTTON_Y);
+	public static boolean gateDown = firstJoy.getRawButton(FirstController.BUTTON_A);
+	public static boolean autoPortcullis = firstJoy.getRawButton(FirstController.BUTTON_X);
+	public static boolean autoAlign = firstJoy.getRawButton(FirstController.BUTTON_START);
 	
 	//SecondaryController
-	public boolean setShooterSpeed1 = secondaryJoy.getRawButton(SecondaryController.BUTTON_A);
-	public boolean setShooterSpeed2 = secondaryJoy.getRawButton(SecondaryController.BUTTON_X);
-	public boolean setShooterSpeed3 = secondaryJoy.getRawButton(SecondaryController.BUTTON_B);
-	public boolean setShooterSpeed4 = secondaryJoy.getRawButton(SecondaryController.BUTTON_Y);
-	public boolean shootBall = secondaryJoy.getRawButton(SecondaryController.BUTTON_RT);
-	public boolean startShooterAtVisionSpeed = secondaryJoy.getRawButton(SecondaryController.BUTTON_START);
-	public boolean startShooterAtSetSpeed = secondaryJoy.getRawButton(SecondaryController.BUTTON_RT);
+	public static boolean setShooterSpeed1 = secondaryJoy.getRawButton(SecondaryController.BUTTON_A);
+	public static boolean setShooterSpeed2 = secondaryJoy.getRawButton(SecondaryController.BUTTON_X);
+	public static boolean setShooterSpeed3 = secondaryJoy.getRawButton(SecondaryController.BUTTON_B);
+	public static boolean setShooterSpeed4 = secondaryJoy.getRawButton(SecondaryController.BUTTON_Y);
+	public static boolean shootBall = secondaryJoy.getRawButton(SecondaryController.BUTTON_RT);
+	public static boolean startShooterAtVisionSpeed = secondaryJoy.getRawButton(SecondaryController.BUTTON_START);
+	public static boolean startShooterAtSetSpeed = secondaryJoy.getRawButton(SecondaryController.BUTTON_RT);
 }
