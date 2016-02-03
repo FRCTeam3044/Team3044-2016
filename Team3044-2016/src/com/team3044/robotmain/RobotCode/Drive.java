@@ -21,9 +21,6 @@ public class Drive {
 	public CANTalon rightFrontDrive;
 	public CANTalon rightBackDrive;
 
-	public double leftDriveEncoder;
-	public double rightFrontEncoder;
-
 	public void driveInit() {
 
 		CANTalon leftFrontDrive = Components.leftFrontDrive;
