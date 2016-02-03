@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 public class Gate {
 	Components components = new Components();
 	CommonArea commonarea = new CommonArea();
-	
+
 	//Inputs
 	boolean gateUp = commonarea.gateUp;
 	boolean gateDown = commonarea.gateDown;
@@ -16,19 +16,25 @@ public class Gate {
 	//components.GateDownLimit.get()
 	//components.gateTalon.getEncPosition()
 	//components.BallInLimit.get()
-	
-	
+
+
 	//States
 	public enum state{
 		Stopped, movingUp, movingDown, autoPortculis
 	}
 	state gateState = state.Stopped;
-	
+
 	//Motor Speeds
 	double motorSpeedUp = 1;
 	double motorSpeedDown = 1;
 	
+	//Encoder Values
+	double upperEncoderLimit = 1;
+	double desiredEncoderLimit = 2;
+	double lowerEncoderLimit = 3;
 	
+
+
 	public void gateInit() {
 
 	}
@@ -39,7 +45,7 @@ public class Gate {
 
 	public void gateTeleopPeriodic() {
 		switch (gateState){
-		
+
 		//STOPPED
 		case Stopped:
 			if (!components.GateUpLimit.get() && gateUp){
@@ -48,25 +54,32 @@ public class Gate {
 			}else if (!components.GateDownLimit.get() && gateDown){
 				components.gateTalon.set(motorSpeedDown);
 				gateState = state.movingDown;
-			}else if (!components.BallInLimit.get() && portcullisStart){	//<---- look at this
+			}else if (!components.GateUpLimit.get() && portcullisStart){	//<---- look at this
 				gateState = state.autoPortculis;
 			}
-		
-		//MOVING UP
+
+			//MOVING UP
 		case movingUp:
 			if (components.GateUpLimit.get() || !gateUp){
 				components.gateTalon.set(0);
 				gateState = state.Stopped;
 			}
-		
-		//MOVING DOWN
+
+			//MOVING DOWN
 		case movingDown:
 			if (components.GateDownLimit.get() || !gateDown){
 				components.gateTalon.set(0);
 				gateState = state.Stopped;
-		}
-		
-		
-	}
+			}
 
-}}
+			//PORTCULIS AUTO
+		case autoPortculis:
+			if(Utilities.tolerance(lowerValue, actualValue, upperValue))
+			{	
+		}else if (components.GateUpLimit.get() || !portcullisStart){
+				components.gateTalon.set(0);
+				gateState = state.Stopped;
+			}
+		}
+	}
+}
