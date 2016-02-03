@@ -54,7 +54,7 @@ public class Drive {
 
 	public void driveTeleopPeriodic() {
 
-		if (commonarea.aimFlag) {
+		if (!commonarea.isManualDrive) {
 			leftDriveSpeed = commonarea.leftDriveSpeed;
 			rightDriveSpeed = -commonarea.rightDriveSpeed;
 
