@@ -24,13 +24,24 @@ public class Gate {
 	//Motor Speeds
 	double motorSpeedUp = 1;
 	double motorSpeedDown = 1;
-	
+
 	//Encoder Values
 	double upperEncoderLimit = 1;
-	double desiredEncoderLimit = 2;
-	double lowerEncoderLimit = 3;
-	
+	double lowerEncoderLimit = 2;
 
+	//variables
+	public double initialAngleDifference;
+	public double Desired;
+	
+	//Calculation for AnglefromVertical
+	public double angleEncoder (double encoderPosition){
+		double currentActualDegrees;
+		double supplementOfDesired;
+		currentActualDegrees = (360/1023)* encoderPosition;
+		supplementOfDesired = currentActualDegrees - initialAngleDifference;
+		Desired = supplementOfDesired-180;
+		return Desired;
+	}
 
 	public void gateInit() {
 
@@ -52,6 +63,7 @@ public class Gate {
 				Components.gateTalon.set(motorSpeedDown);
 				gateState = state.movingDown;
 			}else if (!Components.GateUpLimit.get() && portcullisStart){	//<---- look at this
+				Components.gateTalon.set(motorSpeedUp);
 				gateState = state.autoPortculis;
 			}
 
@@ -71,9 +83,9 @@ public class Gate {
 
 			//PORTCULIS AUTO
 		case autoPortculis:
-			if(Utilities.tolerance(lowerEncoderLimit, desiredEncoderLimit, upperEncoderLimit)){
+			if(angleEncoder(Components.gateTalon.getAnalogInRaw())==7){
 				
-		}else if (Components.GateUpLimit.get() || !portcullisStart){
+			}else if (Components.GateUpLimit.get() || !portcullisStart || Utilities.tolerance(lowerEncoderLimit, Components.gateTalon.getEncPosition(), upperEncoderLimit)){
 				Components.gateTalon.set(0);
 				gateState = state.Stopped;
 			}
