@@ -10,13 +10,12 @@ import edu.wpi.first.wpilibj.AnalogInput;
 public class Drive {
 	Components components = new Components();
 	FirstController controller = FirstController.getInstance();
-//got it
-	double leftSpeed;
-	double rightSpeed;
-	boolean halfSpeed;
-	boolean visionFlag;
-	double leftDrive;
-	double rightDrive;
+	CommonArea commonarea = new CommonArea();
+
+	double leftAutoSpeed;
+	double rightAutoSpeed;
+	double leftDriveSpeed;
+	double rightDriveSpeed;
 
 	public CANTalon leftFrontDrive;
 	public CANTalon leftBackDrive;
@@ -28,60 +27,58 @@ public class Drive {
 
 	public void driveInit() {
 
-		leftFrontDrive = new CANTalon(1);
-		leftBackDrive = new CANTalon(2);
-		rightFrontDrive = new CANTalon(3);
-		rightBackDrive = new CANTalon(4);
+		CANTalon leftFrontDrive = components.leftFrontDrive;
+		CANTalon leftBackDrive = components.leftFrontDrive;
+		CANTalon rightFrontDrive = components.rightFrontDrive;
+		CANTalon rightBackDrive = components.rightBackDrive;
 
 	}
 
 	public void driveAutoPeriodic() {
 
-		leftSpeed = leftDrive;
-		rightSpeed = -rightDrive;
+		leftAutoSpeed = commonarea.leftAutoSpeed;
+		rightAutoSpeed = -commonarea.rightAutoSpeed;
 
-		if (Math.abs(leftSpeed) < .1){
-			leftSpeed = 0;
+		if (Math.abs(leftAutoSpeed) < .1) {
+			leftAutoSpeed = 0;
 		}
-		if (Math.abs(rightSpeed) < .1){
-			rightSpeed = 0;
+		if (Math.abs(rightAutoSpeed) < .1) {
+			rightAutoSpeed = 0;
 
 		}
-		leftFrontDrive.set(leftSpeed);
-		leftBackDrive.set(leftSpeed);
-		rightFrontDrive.set(rightSpeed);
-		rightBackDrive.set(rightSpeed);
+		leftFrontDrive.set(leftAutoSpeed);
+		leftBackDrive.set(leftAutoSpeed);
+		rightFrontDrive.set(rightAutoSpeed);
+		rightBackDrive.set(rightAutoSpeed);
 	}
 
 	public void driveTeleopPeriodic() {
 
-		if (visionFlag){
-			leftSpeed = leftDrive;
-			rightSpeed = -rightDrive;
+		if (commonarea.aimFlag) {
+			leftDriveSpeed = commonarea.leftDriveSpeed;
+			rightDriveSpeed = -commonarea.rightDriveSpeed;
 
 		} else {
-			leftSpeed = (controller.getLeftY());
-			rightSpeed = (-controller.getRightY());
-			halfSpeed = (controller.getRawButton(controller.BUTTON_A));
+			leftDriveSpeed = (controller.getLeftY());
+			rightDriveSpeed = (-controller.getRightY());
 
-			if (halfSpeed){
-				leftSpeed = leftSpeed*.5;
-				rightSpeed = rightSpeed*.5;
+			if (controller.getTriggerLeft()>.5) {
+				leftDriveSpeed = leftDriveSpeed * .5;
+				rightDriveSpeed = rightDriveSpeed * .5;
 			}
 
 		}
-		if (Math.abs(leftSpeed) < .1){
-			leftSpeed = 0;
+		if (Math.abs(leftDriveSpeed) < .1) {
+			leftDriveSpeed = 0;
 		}
-		if (Math.abs(rightSpeed) < .1){
-			rightSpeed = 0;
+		if (Math.abs(rightDriveSpeed) < .1) {
+			rightDriveSpeed = 0;
 
 		}
-		leftFrontDrive.set(leftSpeed);
-		leftBackDrive.set(leftSpeed);
-		rightFrontDrive.set(rightSpeed);
-		rightBackDrive.set(rightSpeed);
-
+		leftFrontDrive.set(leftDriveSpeed);
+		leftBackDrive.set(leftDriveSpeed);
+		rightFrontDrive.set(rightDriveSpeed);
+		rightBackDrive.set(rightDriveSpeed);
 
 	}
 
