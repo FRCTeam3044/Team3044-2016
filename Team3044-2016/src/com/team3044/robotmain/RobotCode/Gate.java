@@ -5,17 +5,14 @@ import com.team3044.robotmain.Reference.*;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Gate {
-	Components components = new Components();
-	CommonArea commonarea = new CommonArea();
-
 	//Inputs
-	boolean gateUp = commonarea.gateUp;
-	boolean gateDown = commonarea.gateDown;
-	boolean portcullisStart = commonarea.portcullisFlag;
-	//components.GateUpLimit.get()
-	//components.GateDownLimit.get()
-	//components.gateTalon.getEncPosition()
-	//components.BallInLimit.get()
+	boolean gateUp = CommonArea.gateUp;
+	boolean gateDown = CommonArea.gateDown;
+	boolean portcullisStart = CommonArea.portcullisFlag;
+	//Components.GateUpLimit.get()
+	//Components.GateDownLimit.get()
+	//Components.gateTalon.getEncPosition()
+	//Components.BallInLimit.get()
 
 
 	//States
@@ -48,36 +45,36 @@ public class Gate {
 
 		//STOPPED
 		case Stopped:
-			if (!components.GateUpLimit.get() && gateUp){
-				components.gateTalon.set(motorSpeedUp);
+			if (!Components.GateUpLimit.get() && gateUp){
+				Components.gateTalon.set(motorSpeedUp);
 				gateState = state.movingUp;
-			}else if (!components.GateDownLimit.get() && gateDown){
-				components.gateTalon.set(motorSpeedDown);
+			}else if (!Components.GateDownLimit.get() && gateDown){
+				Components.gateTalon.set(motorSpeedDown);
 				gateState = state.movingDown;
-			}else if (!components.GateUpLimit.get() && portcullisStart){	//<---- look at this
+			}else if (!Components.GateUpLimit.get() && portcullisStart){	//<---- look at this
 				gateState = state.autoPortculis;
 			}
 
 			//MOVING UP
 		case movingUp:
-			if (components.GateUpLimit.get() || !gateUp){
-				components.gateTalon.set(0);
+			if (Components.GateUpLimit.get() || !gateUp){
+				Components.gateTalon.set(0);
 				gateState = state.Stopped;
 			}
 
 			//MOVING DOWN
 		case movingDown:
-			if (components.GateDownLimit.get() || !gateDown){
-				components.gateTalon.set(0);
+			if (Components.GateDownLimit.get() || !gateDown){
+				Components.gateTalon.set(0);
 				gateState = state.Stopped;
 			}
 
 			//PORTCULIS AUTO
 		case autoPortculis:
-			if(Utilities.tolerance(lowerValue, actualValue, upperValue))
-			{	
-		}else if (components.GateUpLimit.get() || !portcullisStart){
-				components.gateTalon.set(0);
+			if(Utilities.tolerance(lowerEncoderLimit, desiredEncoderLimit, upperEncoderLimit)){
+				
+		}else if (Components.GateUpLimit.get() || !portcullisStart){
+				Components.gateTalon.set(0);
 				gateState = state.Stopped;
 			}
 		}
