@@ -10,8 +10,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
 public class Drive {
 	Components components = new Components();
 	FirstController controller = FirstController.getInstance();
-	CommonArea commonarea = new CommonArea();
-
+	
 	double leftAutoSpeed;
 	double rightAutoSpeed;
 	double leftDriveSpeed;
@@ -36,8 +35,8 @@ public class Drive {
 
 	public void driveAutoPeriodic() {
 
-		leftAutoSpeed = commonarea.leftAutoSpeed;
-		rightAutoSpeed = -commonarea.rightAutoSpeed;
+		leftAutoSpeed = CommonArea.leftAutoSpeed;
+		rightAutoSpeed = -CommonArea.rightAutoSpeed;
 
 		if (Math.abs(leftAutoSpeed) < .1) {
 			leftAutoSpeed = 0;
@@ -54,9 +53,9 @@ public class Drive {
 
 	public void driveTeleopPeriodic() {
 
-		if (!commonarea.isManualDrive) {
-			leftDriveSpeed = commonarea.leftDriveSpeed;
-			rightDriveSpeed = -commonarea.rightDriveSpeed;
+		if (!CommonArea.isManualDrive) {
+			leftDriveSpeed = CommonArea.leftDriveSpeed;
+			rightDriveSpeed = -CommonArea.rightDriveSpeed;
 
 		} else {
 			leftDriveSpeed = (controller.getLeftY());
