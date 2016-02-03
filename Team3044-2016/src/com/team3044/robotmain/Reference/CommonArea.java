@@ -44,7 +44,7 @@ public class CommonArea {
 	public static boolean gateDown = firstJoy.getRawButton(FirstController.BUTTON_A);
 	public static boolean autoPortcullis = firstJoy.getRawButton(FirstController.BUTTON_X);
 	public static boolean autoAlign = firstJoy.getRawButton(FirstController.BUTTON_START);
-	
+		
 	//SecondaryController
 	public static boolean setShooterSpeed1 = secondaryJoy.getRawButton(SecondaryController.BUTTON_A);
 	public static boolean setShooterSpeed2 = secondaryJoy.getRawButton(SecondaryController.BUTTON_X);

@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class VisionCalc {
 	Components components = new Components();
-	CommonArea commonarea = new CommonArea();
 
 	final int WAITING = 0;
 	final int SPINSHOOTER = 1;
@@ -36,84 +35,84 @@ public class VisionCalc {
 		botSpeed = Distance;
 		return botSpeed;
 	}
-	
+
 	public void Vision() {
-		if(commonarea.autoAlign){
-			commonarea.aimFlag = true;
+		if (CommonArea.autoAlign) {
+			CommonArea.aimFlag = true;
 		}
 		switch (state) {
 		// ---------------------------------------------------------------------------------------------
 		case (WAITING):
-			if (commonarea.aimFlag) {
-				commonarea.shooterMotorFlag = true;
-				commonarea.shooterTopSpeed = STARTSPEED;
-				commonarea.shooterBotSpeed = -STARTSPEED;
+			if (CommonArea.aimFlag) {
+				CommonArea.shooterMotorFlag = true;
+				CommonArea.shooterTopSpeed = STARTSPEED;
+				CommonArea.shooterBotSpeed = STARTSPEED;
 				state = SPINSHOOTER;
 			}
 			break;
 		// ----------------------------------------------------------------------------------------------
 		case (SPINSHOOTER):
-			if (!commonarea.aimFlag) {
-				commonarea.leftDriveSpeed = 0;
-				commonarea.rightDriveSpeed = 0;
+			if (!CommonArea.aimFlag) {
+				CommonArea.leftDriveSpeed = 0;
+				CommonArea.rightDriveSpeed = 0;
 				state = WAITING;
-			} else if (!commonarea.isTargetSeen) {
+			} else if (!CommonArea.isTargetSeen) {
 				if (SmartDashboard.getBoolean("DB/Button 1")) {
-					commonarea.leftDriveSpeed = TURNSPEED;
-					commonarea.rightDriveSpeed = -TURNSPEED;
+					CommonArea.leftDriveSpeed = TURNSPEED;
+					CommonArea.rightDriveSpeed = TURNSPEED;
 				} else {
-					commonarea.leftDriveSpeed = -TURNSPEED;
-					commonarea.rightDriveSpeed = TURNSPEED;
+					CommonArea.leftDriveSpeed = TURNSPEED;
+					CommonArea.rightDriveSpeed = TURNSPEED;
 				}
 				state = AUTOFIND;
-			} else if (commonarea.isTargetSeen && !commonarea.isAligned) {
+			} else if (CommonArea.isTargetSeen && !CommonArea.isAligned) {
 				state = ALIGN;
-			} else if (commonarea.isTargetSeen && commonarea.isAligned) {
-				commonarea.shooterTopSpeed = CalculatedTopSpeed(commonarea.distanceFromTarget);
-				commonarea.shooterBotSpeed = -CalculatedBotSpeed(commonarea.distanceFromTarget);
+			} else if (CommonArea.isTargetSeen && CommonArea.isAligned) {
+				CommonArea.shooterTopSpeed = CalculatedTopSpeed(CommonArea.distanceFromTarget);
+				CommonArea.shooterBotSpeed = -CalculatedBotSpeed(CommonArea.distanceFromTarget);
 				state = WAITFORSHOOTER;
 			}
 			break;
 		// ---------------------------------------------------------------------------------------------
 		case (AUTOFIND):
-			if (!commonarea.aimFlag) {
-				commonarea.leftDriveSpeed = 0;
-				commonarea.rightDriveSpeed = 0;
+			if (!CommonArea.aimFlag) {
+				CommonArea.leftDriveSpeed = 0;
+				CommonArea.rightDriveSpeed = 0;
 				state = WAITING;
-			} else if (commonarea.isTargetSeen) {
-				commonarea.leftDriveSpeed = 0;
-				commonarea.rightDriveSpeed = 0;
+			} else if (CommonArea.isTargetSeen) {
+				CommonArea.leftDriveSpeed = 0;
+				CommonArea.rightDriveSpeed = 0;
 				state = ALIGN;
 			}
 			break;
 		// ---------------------------------------------------------------------------------------------
 		case (ALIGN):
-			if (!commonarea.aimFlag) {
-				commonarea.leftDriveSpeed = 0;
-				commonarea.rightDriveSpeed = 0;
+			if (!CommonArea.aimFlag) {
+				CommonArea.leftDriveSpeed = 0;
+				CommonArea.rightDriveSpeed = 0;
 				state = WAITING;
-			} else if (commonarea.isAligned) {
-				commonarea.shooterTopSpeed = CalculatedTopSpeed(commonarea.distanceFromTarget);
-				commonarea.shooterBotSpeed = -CalculatedBotSpeed(commonarea.distanceFromTarget);
+			} else if (CommonArea.isAligned) {
+				CommonArea.shooterTopSpeed = CalculatedTopSpeed(CommonArea.distanceFromTarget);
+				CommonArea.shooterBotSpeed = CalculatedBotSpeed(CommonArea.distanceFromTarget);
 				state = WAITFORSHOOTER;
 			} else {
-				commonarea.leftDriveSpeed = CalculatedTurnSpeed(commonarea.angleToTarget);
-				commonarea.rightDriveSpeed = -CalculatedTurnSpeed(commonarea.angleToTarget);
+				CommonArea.leftDriveSpeed = CalculatedTurnSpeed(CommonArea.angleToTarget);
+				CommonArea.rightDriveSpeed = CalculatedTurnSpeed(CommonArea.angleToTarget);
 			}
 			break;
 		// ----------------------------------------------------------------------------------------------
 		case (WAITFORSHOOTER):
-			if (commonarea.isUpToSpeed) {
-				commonarea.shootFlag = true;
+			if (CommonArea.isUpToSpeed) {
+				CommonArea.shootFlag = true;
 				state = SHOOT;
 			}
 			break;
 		// ----------------------------------------------------------------------------------------------
 		case (SHOOT):
-			if (commonarea.isShot) {
-				commonarea.shootFlag = false;
-				commonarea.isShot = false;
-				commonarea.aimFlag = false;
+			if (CommonArea.isShot) {
+				CommonArea.shootFlag = false;
+				CommonArea.isShot = false;
+				CommonArea.aimFlag = false;
 				state = WAITING;
 			}
 			break;
