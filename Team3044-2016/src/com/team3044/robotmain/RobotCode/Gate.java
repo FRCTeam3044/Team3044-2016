@@ -17,9 +17,9 @@ public class Gate {
 
 	//States
 	public enum state{
-		Stopped, movingUp, movingDown, autoPortculis
+		Init, encoderZeroing, Stopped, movingUp, movingDown, autoPortculis
 	}
-	state gateState = state.Stopped;
+	state gateState = state.Init;
 
 	//Motor Speeds
 	double motorSpeedUp = 1;
@@ -54,6 +54,22 @@ public class Gate {
 	public void gateTeleopPeriodic() {
 		switch (gateState){
 
+		//INIT
+		case Init:
+			if (!Components.GateUpLimit.get()){
+				Components.gateTalon.set(motorSpeedUp);
+				gateState = state.encoderZeroing;
+			}else{
+				gateState = state.Stopped;
+			}
+		
+		//ENCODERZEROING
+		case encoderZeroing:
+			if (Components.GateUpLimit.get()){
+				Components.gateTalon.setPosition(0);
+				gateState = state.Stopped;
+			}
+		
 		//STOPPED
 		case Stopped:
 			if (!Components.GateUpLimit.get() && gateUp){
