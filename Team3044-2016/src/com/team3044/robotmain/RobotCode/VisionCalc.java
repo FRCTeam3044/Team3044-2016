@@ -5,8 +5,7 @@ import com.team3044.robotmain.Reference.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class VisionCalc {
-	Components components = new Components();
-
+	
 	final int WAITING = 0;
 	final int SPINSHOOTER = 1;
 	final int AUTOFIND = 2;
