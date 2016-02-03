@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.AnalogInput;
 
 public class Drive {
-	Components components = new Components();
+	
 	FirstController controller = FirstController.getInstance();
 	
 	double leftAutoSpeed;
@@ -26,10 +26,10 @@ public class Drive {
 
 	public void driveInit() {
 
-		CANTalon leftFrontDrive = components.leftFrontDrive;
-		CANTalon leftBackDrive = components.leftFrontDrive;
-		CANTalon rightFrontDrive = components.rightFrontDrive;
-		CANTalon rightBackDrive = components.rightBackDrive;
+		CANTalon leftFrontDrive = Components.leftFrontDrive;
+		CANTalon leftBackDrive = Components.leftFrontDrive;
+		CANTalon rightFrontDrive = Components.rightFrontDrive;
+		CANTalon rightBackDrive = Components.rightBackDrive;
 
 	}
 
