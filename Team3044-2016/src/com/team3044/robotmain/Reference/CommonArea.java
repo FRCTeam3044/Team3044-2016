@@ -16,8 +16,8 @@ public class CommonArea {
 	public static boolean isManualDrive = true;
 	
 	//Shooter
-	public static double shooterTopSpeed;
-	public static double shooterBotSpeed;
+	public static double shooterVisionTopSpeed;
+	public static double shooterVisionBotSpeed;
 	public static boolean aimFlag = false;
 	public static boolean shooterMotorFlag = false;
 	public static boolean shootFlag = false;
@@ -51,6 +51,5 @@ public class CommonArea {
 	public static boolean setShooterSpeed3 = secondaryJoy.getRawButton(SecondaryController.BUTTON_B);
 	public static boolean setShooterSpeed4 = secondaryJoy.getRawButton(SecondaryController.BUTTON_Y);
 	public static boolean shootBall = secondaryJoy.getRawButton(SecondaryController.BUTTON_RT);
-	public static boolean startShooterAtVisionSpeed = secondaryJoy.getRawButton(SecondaryController.BUTTON_START);
-	public static boolean startShooterAtSetSpeed = secondaryJoy.getRawButton(SecondaryController.BUTTON_RT);
+	public static boolean startShooterAtSetSpeed = secondaryJoy.getRawButton(SecondaryController.BUTTON_RT); //this is button for vision shoot
 }
