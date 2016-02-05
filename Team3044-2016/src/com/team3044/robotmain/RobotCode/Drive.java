@@ -3,13 +3,13 @@ package com.team3044.robotmain.RobotCode;
 import com.team3044.robotmain.Reference.*;
 
 import edu.wpi.first.wpilibj.CANTalon;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.AnalogInput;
 
 public class Drive {
-	
+
 	FirstController controller = FirstController.getInstance();
-	
+
 	double leftAutoSpeed;
 	double rightAutoSpeed;
 	double leftDriveSpeed;
@@ -57,7 +57,7 @@ public class Drive {
 			leftDriveSpeed = (controller.getLeftY());
 			rightDriveSpeed = (-controller.getRightY());
 
-			if (controller.getTriggerLeft()>.5) {
+			if (controller.getTriggerLeft() > .5) {
 				leftDriveSpeed = leftDriveSpeed * .5;
 				rightDriveSpeed = rightDriveSpeed * .5;
 			}
@@ -77,5 +77,12 @@ public class Drive {
 
 	}
 
+	public void testPeriodic() {
+		
+		leftFrontDrive.set(SmartDashboard.getDouble("DB/ Slider 0"));
+		leftBackDrive.set(SmartDashboard.getDouble("DB/ Slider 1"));
+		rightFrontDrive.set(SmartDashboard.getDouble("DB/ Slider 2"));
+		rightBackDrive.set(SmartDashboard.getDouble("DB/ SLider 3"));
+
+	}
 }
-Status API Training Shop Blog About Pricing 
