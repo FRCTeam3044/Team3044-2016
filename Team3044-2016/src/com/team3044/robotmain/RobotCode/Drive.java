@@ -84,5 +84,7 @@ public class Drive {
 		rightFrontDrive.set(SmartDashboard.getDouble("DB/ Slider 2"));
 		rightBackDrive.set(SmartDashboard.getDouble("DB/ SLider 3"));
 
+		SmartDashboard.putString("DB/ String 0", String.valueOf(leftFrontDrive.getAnalogInRaw()));
+		SmartDashboard.putString("DB/ String 1", String.valueOf(rightFrontDrive.getAnalogInRaw()));
 	}
 }
