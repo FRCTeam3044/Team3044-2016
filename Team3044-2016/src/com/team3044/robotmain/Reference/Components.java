@@ -31,7 +31,7 @@ public class Components {
 
 	
 	//Digital IOs
-	public static DigitalInput stagingSwitch = new DigitalInput(0);
+	public static DigitalInput conflict = new DigitalInput(0);
 	public static DigitalInput topTacho = new DigitalInput(1);
 	public static DigitalInput botTacho = new DigitalInput(2);
 	
