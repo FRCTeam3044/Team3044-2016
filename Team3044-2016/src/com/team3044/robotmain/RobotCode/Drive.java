@@ -32,6 +32,8 @@ public class Drive {
 		
 		leftFrontDrive.enableBrakeMode(true);
 		rightFrontDrive.enableBrakeMode(true);
+		leftBackDrive.enableBrakeMode(true);
+		rightBackDrive.enableBrakeMode(true);
 		
 	
 	}
