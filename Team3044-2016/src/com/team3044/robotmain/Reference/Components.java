@@ -21,8 +21,8 @@ public class Components {
 	public static CANTalon botShooter;
 	
 	//Defense
-	public static CANTalon longArm;
-	public static CANTalon shortArm;
+	public static CANTalon lowerArm;
+	public static CANTalon upperArm;
 	
 	//Pick Up
 	public static CANTalon gateTalon;
@@ -51,8 +51,8 @@ public class Components {
 			topShooter = new CANTalon(5);
 			botShooter = new CANTalon(6);
 			
-			longArm = new CANTalon(7);
-			shortArm = new CANTalon(8);
+			lowerArm = new CANTalon(7);
+			upperArm = new CANTalon(8);
 			
 			gateTalon = new CANTalon(9);
 			Pickup2 = new CANTalon(10);
