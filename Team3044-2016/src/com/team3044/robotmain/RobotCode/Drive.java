@@ -27,8 +27,11 @@ public class Drive {
 		CANTalon rightFrontDrive = Components.rightFrontDrive;
 		CANTalon rightBackDrive = Components.rightBackDrive;
 
-		Components.leftFrontDrive.setPosition(0);
-		Components.rightFrontDrive.setPosition(0);
+		leftFrontDrive.setPosition(0);
+		rightFrontDrive.setPosition(0);
+		
+		leftFrontDrive.enableBrakeMode(true);
+		rightFrontDrive.enableBrakeMode(true);
 		
 	
 	}
