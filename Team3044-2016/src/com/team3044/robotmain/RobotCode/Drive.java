@@ -27,8 +27,11 @@ public class Drive {
 		CANTalon rightFrontDrive = Components.rightFrontDrive;
 		CANTalon rightBackDrive = Components.rightBackDrive;
 
+		Components.leftFrontDrive.setPosition(0);
+		Components.rightFrontDrive.setPosition(0);
+		
+	
 	}
-
 	public void driveAutoPeriodic() {
 
 		leftAutoSpeed = CommonArea.leftAutoSpeed;
