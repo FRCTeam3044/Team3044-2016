@@ -2,6 +2,7 @@ package com.team3044.robotmain.Reference;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
 
@@ -47,6 +48,9 @@ public class Components {
 			leftBackDrive = new CANTalon(2);
 			rightFrontDrive = new CANTalon(3);
 			rightBackDrive = new CANTalon(4);
+			
+			leftFrontDrive.setFeedbackDevice(FeedbackDevice.AnalogEncoder);
+			rightFrontDrive.setFeedbackDevice(FeedbackDevice.AnalogEncoder);
 			
 			topShooter = new CANTalon(5);
 			botShooter = new CANTalon(6);
