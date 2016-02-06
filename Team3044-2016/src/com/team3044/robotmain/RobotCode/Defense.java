@@ -8,7 +8,9 @@ public class Defense {
 	SecondaryController secondJoy = SecondaryController.getInstance();
 
 	public enum state {
-		LA_MOVING_UP, LA_MOVING_UP_TARGET, LA_MOVING_DOWN, LA_MOVING_DOWN_TARGET, LA_CONFLICT, LA_STOPPED, UA_MOVING_UP, UA_MOVING_UP_TARGET, UA_MOVING_DOWN, UA_MOVING_DOWN_TARGET, UA_CONFLICT, UA_STOPPED, MAIN_STOPPED, MAIN_MOVING_MANUALLY, MAIN_MOVING_TARGET
+		LA_MOVING_UP, LA_MOVING_UP_TARGET, LA_MOVING_DOWN, LA_MOVING_DOWN_TARGET, LA_CONFLICT, LA_STOPPED, 
+		UA_MOVING_UP, UA_MOVING_UP_TARGET, UA_MOVING_DOWN, UA_MOVING_DOWN_TARGET, UA_CONFLICT, UA_STOPPED, 
+		MAIN_STOPPED, MAIN_MOVING_MANUALLY, MAIN_MOVING_TARGET
 	}
 
 	// Button 8 HOME
@@ -48,10 +50,9 @@ public class Defense {
 
 	public boolean LA_HOME = Components.upperArm.isFwdLimitSwitchClosed(); // LIMIT SWITCHES																		// SWITCHES
 	public boolean LA_TOO_FAR = Components.upperArm.isRevLimitSwitchClosed();
-	//public boolean LA_CONFLICT = Components.upperArm.limit swittch
 	public boolean UA_HOME = Components.lowerArm.isFwdLimitSwitchClosed();
 	public boolean UA_TOO_FAR = Components.lowerArm.isRevLimitSwitchClosed();
-	//public boolean UA_CONFLICT = Components.lowerArm.limitswitch
+	public boolean CONFLICT = Components.conflict.get();
 	
 	public void defenseInit() {
 
@@ -91,9 +92,33 @@ public class Defense {
 			break;
 
 		case LA_MOVING_UP:
+			if(LA_STOP){
+				LOWER_ARM = state.LA_STOPPED;
+				Components.lowerArm.set(LA_SPEED_STOP);
+			}
+			if(LA_TOO_FAR){
+				LOWER_ARM = state.LA_STOPPED;
+				Components.lowerArm.set(LA_SPEED_STOP);
+			}
+			if(CONFLICT){
+				LOWER_ARM = state.LA_CONFLICT;
+				Components.lowerArm.set(LA_SPEED_STOP);
+			}
 			break;
 
 		case LA_MOVING_DOWN:
+			if(LA_STOP){
+				LOWER_ARM = state.LA_STOPPED;
+				Components.lowerArm.set(LA_SPEED_STOP);
+			}
+			if(LA_HOME){
+				LOWER_ARM = state.LA_STOPPED;
+				Components.lowerArm.set(LA_SPEED_STOP);
+			}
+			if(CONFLICT){
+				LOWER_ARM = state.LA_CONFLICT;
+				Components.lowerArm.set(LA_SPEED_STOP);
+			}
 			break;
 
 		case LA_MOVING_UP_TARGET:
@@ -113,7 +138,10 @@ public class Defense {
 				LOWER_ARM = state.LA_MOVING_DOWN_TARGET;
 				Components.lowerArm.set(LA_MOVING_DOWN_SPEED);
 			}
-			//CONFLICTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+			if(CONFLICT){
+				LOWER_ARM = state.LA_CONFLICT;
+				Components.lowerArm.set(LA_SPEED_STOP);
+			}
 			break;
 
 		case LA_MOVING_DOWN_TARGET:
@@ -133,7 +161,10 @@ public class Defense {
 				LOWER_ARM = state.LA_MOVING_DOWN_TARGET;
 				Components.lowerArm.set(LA_MOVING_DOWN_SPEED);
 			}
-			//CONFLICTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+			if(CONFLICT){
+				LOWER_ARM = state.LA_CONFLICT;
+				Components.lowerArm.set(LA_SPEED_STOP);
+			}
 			break;
 
 		}
