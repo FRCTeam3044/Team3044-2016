@@ -86,5 +86,7 @@ public class Drive {
 
 		SmartDashboard.putString("DB/ String 0", String.valueOf(leftFrontDrive.getAnalogInRaw()));
 		SmartDashboard.putString("DB/ String 1", String.valueOf(rightFrontDrive.getAnalogInRaw()));
+		
+		driveTeleopPeriodic();
 	}
 }
