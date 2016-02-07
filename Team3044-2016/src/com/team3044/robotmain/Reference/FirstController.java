@@ -54,6 +54,46 @@ public class FirstController {
 	public double getTriggerLeft() {
 		return firstJoy.getRawAxis(2);
 	}
+	
+	public boolean getDPadLeft(){
+		if(firstJoy.getPOV() == 270){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean getDPadRight(){
+		if(firstJoy.getPOV() == 90){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean getDPadUp(){
+		if(firstJoy.getPOV() == 0){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean getDPadDown(){
+		if(firstJoy.getPOV() == 180){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean getDPadOther(){
+		if(firstJoy.getPOV() == -1){
+			return true;
+		} else {
+			return false;
+		}
+	}
 	public boolean getRawButton(int num) {
 		if (!DriverStation.getInstance().isAutonomous()) {
 			return firstJoy.getRawButton(num);

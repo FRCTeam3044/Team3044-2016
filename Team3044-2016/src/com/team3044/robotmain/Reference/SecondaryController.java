@@ -10,14 +10,13 @@ public class SecondaryController {
 	
 	public static int BUTTON_X = 3; //defense 
 	public static int BUTTON_Y = 4; //defense
-	public static int BUTTON_B = 2; //defense
-	public static int BUTTON_A = 1; //defense
+	public static int BUTTON_B = 2; 
+	public static int BUTTON_A = 1; 
 
 	public static int BUTTON_RT = 6;
 	public static int BUTTON_LT = 5;
 	public static int BUTTON_BACK = 7;
-	public static int BUTTON_START = 8; //defense
-	//ANALOG STICK BUTTONS STILL AVAILABLE
+	public static int BUTTON_START = 8; //DEFENSE
 	
 	private SecondaryController() {
 		secondJoy = new Joystick(1);
@@ -53,6 +52,46 @@ public class SecondaryController {
 
 	public double getTriggerLeft() {
 		return secondJoy.getRawAxis(2);
+	}
+	
+	public boolean getDPadLeft(){
+		if(secondJoy.getPOV() == 270){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean getDPadRight(){
+		if(secondJoy.getPOV() == 90){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean getDPadUp(){
+		if(secondJoy.getPOV() == 0){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean getDPadDown(){
+		if(secondJoy.getPOV() == 180){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean getDPadOther(){
+		if(secondJoy.getPOV() == -1){
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public boolean getRawButton(int num) {
