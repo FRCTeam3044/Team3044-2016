@@ -11,11 +11,10 @@ public class Robot extends IterativeRobot {
 	Defense defense = new Defense();
 	Drive drive = new Drive();
 	Shooter shooter = new Shooter();
-	Components components = new Components();
 	Gate gate = new Gate();
 
 	public void robotInit() {
-		components.init();
+		Components.getInstance().init();
 		drive.driveInit();
 		defense.defenseInit();
 		shooter.shooterInit();
@@ -67,10 +66,10 @@ public class Robot extends IterativeRobot {
 
 		SmartDashboard
 				.putString("DB/String 0", String
-						.valueOf(components.leftFrontDrive
+						.valueOf(Components.getInstance().leftFrontDrive
 								.getAnalogInPosition()));
 		SmartDashboard.putString("DB/String 1", String
-				.valueOf(components.rightFrontDrive.getAnalogInPosition()));
+				.valueOf(Components.getInstance().rightFrontDrive.getAnalogInPosition()));
 
 		switch (TEST_DRIVE_STATE) {
 		case DRIVE_NORMAL:
@@ -78,8 +77,8 @@ public class Robot extends IterativeRobot {
 					FirstController.BUTTON_START)) {
 				TEST_DRIVE_STATE = DRIVE_FORWARD;
 				count = 0;
-				components.leftFrontDrive.setPosition(0);
-				components.rightFrontDrive.setPosition(0);
+				Components.getInstance().leftFrontDrive.setPosition(0);
+				Components.getInstance().rightFrontDrive.setPosition(0);
 				CommonArea.leftDriveSpeed = .5;
 				CommonArea.rightDriveSpeed = .5;
 				CommonArea.isManualDrive = false;
@@ -94,16 +93,16 @@ public class Robot extends IterativeRobot {
 				CommonArea.isManualDrive = true;
 			}
 
-			if (components.leftFrontDrive.getAnalogInPosition() > ENCODER_DISTANCE_ONE_METER) {
+			if (Components.getInstance().leftFrontDrive.getAnalogInPosition() > ENCODER_DISTANCE_ONE_METER) {
 				CommonArea.leftDriveSpeed = 0;
 			}
 
-			if (components.rightFrontDrive.getAnalogInPosition() > ENCODER_DISTANCE_ONE_METER) {
+			if (Components.getInstance().rightFrontDrive.getAnalogInPosition() > ENCODER_DISTANCE_ONE_METER) {
 				CommonArea.rightDriveSpeed = 0;
 			}
 
-			if (components.rightFrontDrive.getAnalogInPosition() > ENCODER_DISTANCE_ONE_METER
-					&& components.leftFrontDrive.getAnalogInPosition() > ENCODER_DISTANCE_ONE_METER) {
+			if (Components.getInstance().rightFrontDrive.getAnalogInPosition() > ENCODER_DISTANCE_ONE_METER
+					&& Components.getInstance().leftFrontDrive.getAnalogInPosition() > ENCODER_DISTANCE_ONE_METER) {
 				TEST_DRIVE_STATE = DRIVE_BACK;
 				CommonArea.rightDriveSpeed = -.5;
 				CommonArea.leftDriveSpeed = -.5;
@@ -119,16 +118,16 @@ public class Robot extends IterativeRobot {
 				CommonArea.isManualDrive = true;
 			}
 
-			if (components.leftFrontDrive.getAnalogInPosition() < 1) {
+			if (Components.getInstance().leftFrontDrive.getAnalogInPosition() < 1) {
 				CommonArea.leftDriveSpeed = 0;
 			}
 
-			if (components.rightFrontDrive.getAnalogInPosition() < 1) {
+			if (Components.getInstance().rightFrontDrive.getAnalogInPosition() < 1) {
 				CommonArea.rightDriveSpeed = 0;
 			}
 
-			if (components.rightFrontDrive.getAnalogInPosition() < 1
-					&& components.leftFrontDrive.getAnalogInPosition() < 1) {
+			if (Components.getInstance().rightFrontDrive.getAnalogInPosition() < 1
+					&& Components.getInstance().leftFrontDrive.getAnalogInPosition() < 1) {
 				if (count <= 5) {
 					TEST_DRIVE_STATE = DRIVE_FORWARD;
 					CommonArea.rightDriveSpeed = .5;
