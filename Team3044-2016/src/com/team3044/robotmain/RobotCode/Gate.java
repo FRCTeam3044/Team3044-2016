@@ -1,3 +1,4 @@
+
 package com.team3044.robotmain.RobotCode;
 
 import com.team3044.robotmain.Reference.*;
@@ -8,26 +9,27 @@ public class Gate {
 	//Inputs
 	boolean gateUp = CommonArea.gateUp;
 	boolean gateDown = CommonArea.gateDown;
-	boolean portcullisStart = CommonArea.portcullisFlag;
-	//Components.GateUpLimit.get()
+	boolean ChevalStart = CommonArea.ChevalFlag; //set up cheval button
+	//Components.GateUpLimit.get() 
 	//Components.GateDownLimit.get()
 	//Components.gateTalon.getEncPosition()
 	//Components.BallInLimit.get()
+	boolean encoderCalibrated = false;
 
 
 	//States
 	public enum state{
-		Init, encoderZeroing, Stopped, movingUp, movingDown, autoPortculis
+		Init, encoderZeroing, Stopped, movingUp, movingDown, autoCheval
 	}
 	state gateState = state.Init;
 
 	//Motor Speeds
 	double motorSpeedUp = 1;
-	double motorSpeedDown = 1;
+	double motorSpeedDown = -1;
 
-	//Encoder Values
-	double upperEncoderLimit = 1;
-	double lowerEncoderLimit = 2;
+	//Encoder tolerance Values
+	double upperEncoderLimit = -.7;
+	double lowerEncoderLimit = -.8;//check values
 
 	//variables
 	public double initialAngleDifference;
@@ -60,28 +62,40 @@ public class Gate {
 				Components.gateTalon.set(motorSpeedUp);
 				gateState = state.encoderZeroing;
 			}else{
+				Components.gateTalon.setPosition(0);
+				encoderCalibrated = true;
 				gateState = state.Stopped;
 			}
+			break;
 		
 		//ENCODERZEROING
 		case encoderZeroing:
 			if (Components.GateUpLimit.get()){
+				Components.gateTalon.set(0);
 				Components.gateTalon.setPosition(0);
+				encoderCalibrated = true;
 				gateState = state.Stopped;
+			}else if (gateUp){
+				gateState = state.movingUp;
+			}else if (gateDown){
+				Components.gateTalon.set(motorSpeedDown);
+				gateState = state.movingDown;
 			}
+			break;
 		
 		//STOPPED
 		case Stopped:
-			if (!Components.GateUpLimit.get() && gateUp){
+			if (gateUp && !Components.GateUpLimit.get()){
 				Components.gateTalon.set(motorSpeedUp);
 				gateState = state.movingUp;
-			}else if (!Components.GateDownLimit.get() && gateDown){
+			}else if (gateDown && !Components.GateDownLimit.get()){
 				Components.gateTalon.set(motorSpeedDown);
 				gateState = state.movingDown;
-			}else if (!Components.GateUpLimit.get() && portcullisStart){	//<---- look at this
+			/*}else if (ChevalStart && !Components.GateUpLimit.get() && encoderCalibrated){	//<---- look at this
 				Components.gateTalon.set(motorSpeedUp);
-				gateState = state.autoPortculis;
+				gateState = state.autoCheval;*/
 			}
+			break;
 
 			//MOVING UP
 		case movingUp:
@@ -89,6 +103,7 @@ public class Gate {
 				Components.gateTalon.set(0);
 				gateState = state.Stopped;
 			}
+			break;
 
 			//MOVING DOWN
 		case movingDown:
@@ -96,15 +111,17 @@ public class Gate {
 				Components.gateTalon.set(0);
 				gateState = state.Stopped;
 			}
+			break;
 
-			//PORTCULIS AUTO
-		case autoPortculis:
+			//Cheval AUTO
+		/*case autoCheval:
 			if(angleEncoder(Components.gateTalon.getAnalogInRaw())==7){
 				
-			}else if (Components.GateUpLimit.get() || !portcullisStart || Utilities.tolerance(lowerEncoderLimit, Components.gateTalon.getEncPosition(), upperEncoderLimit)){
+			}else if (Components.GateUpLimit.get() || !ChevalStart || Utilities.tolerance(lowerEncoderLimit, Components.gateTalon.getEncPosition(), upperEncoderLimit)){
 				Components.gateTalon.set(0);
 				gateState = state.Stopped;
 			}
+			break;*/
 		}
 	}
 }
