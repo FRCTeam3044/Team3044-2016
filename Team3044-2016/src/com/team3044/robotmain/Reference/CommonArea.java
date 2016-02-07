@@ -52,4 +52,8 @@ public class CommonArea {
 	public static boolean setShooterSpeed4 = secondaryJoy.getRawButton(SecondaryController.BUTTON_Y);
 	public static boolean shootBall = secondaryJoy.getRawButton(SecondaryController.BUTTON_RT);
 	public static boolean startShooterAtSetSpeed = secondaryJoy.getRawButton(SecondaryController.BUTTON_RT); //this is button for vision shoot
+	public static boolean dPadLeft = secondaryJoy.getDPadLeft();
+	public static boolean dPadRight = secondaryJoy.getDPadRight();
+	public static boolean dPadUp = secondaryJoy.getDPadUp();
+	public static boolean dPadDown = secondaryJoy.getDPadDown();
 }
