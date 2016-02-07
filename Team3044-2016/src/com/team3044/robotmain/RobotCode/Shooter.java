@@ -60,17 +60,17 @@ public class Shooter {
 
 
 		case Stopped:
-			if ( startVisionShoot && Components.BallInLimit.get() ){
-				Components.topShooter.set(shooterVisionTopSpeed);
-				Components.botShooter.set(shooterVisionBotSpeed);
+			if ( startVisionShoot && Components.getInstance().BallInLimit.get() ){
+				Components.getInstance().topShooter.set(shooterVisionTopSpeed);
+				Components.getInstance().botShooter.set(shooterVisionBotSpeed);
 				shooterState = state.startingVisionShoot;
 			}
-			else if (pickRollersIn && !Components.BallInLimit.get()){
-				Components.shooterTrack.set(trackMotorSpeed);
+			else if (pickRollersIn && !Components.getInstance().BallInLimit.get()){
+				Components.getInstance().shooterTrack.set(trackMotorSpeed);
 				shooterState = state.ingestingBoulder;
 			}
 			else if (pickRollersOut){
-				Components.shooterTrack.set(-trackMotorSpeed);
+				Components.getInstance().shooterTrack.set(-trackMotorSpeed);
 				shooterState = state.ejectingBoulder;
 			}
 			break;
@@ -79,8 +79,8 @@ public class Shooter {
 
 			//PickUp
 		case ingestingBoulder:
-			if (Components.BallInLimit.get() || !pickRollersIn){
-				Components.shooterTrack.set(0);
+			if (Components.getInstance().BallInLimit.get() || !pickRollersIn){
+				Components.getInstance().shooterTrack.set(0);
 				shooterState = state.Stopped;
 			}
 			break;
@@ -88,7 +88,7 @@ public class Shooter {
 			//Ejecting
 		case ejectingBoulder:
 			if (!pickRollersOut){
-				Components.shooterTrack.set(0);
+				Components.getInstance().shooterTrack.set(0);
 				shooterState = state.Stopped;
 			}
 			break;
@@ -97,16 +97,16 @@ public class Shooter {
 			//Vision
 		case startingVisionShoot:
 			if (shootBall){
-				Components.shooterTrack.set(trackMotorSpeed);
+				Components.getInstance().shooterTrack.set(trackMotorSpeed);
 				shooterState = state.Shooting;		
 			}
 			
 			else if (!startVisionShoot){
-				Components.topShooter.set(0);
-				Components.botShooter.set(0);
+				Components.getInstance().topShooter.set(0);
+				Components.getInstance().botShooter.set(0);
 				shooterState = state.Stopped;
 			}
-			else if (Utilities.tolerance(shooterVisionTopSpeed-toleranceShooter, Components.topTachoCounter.get(), shooterVisionTopSpeed+toleranceShooter) && Utilities.tolerance(shooterVisionBotSpeed-toleranceShooter, Components.botTachoCounter.get(), shooterVisionBotSpeed+toleranceShooter)){
+			else if (Utilities.tolerance(shooterVisionTopSpeed-toleranceShooter, Components.getInstance().topTachoCounter.get(), shooterVisionTopSpeed+toleranceShooter) && Utilities.tolerance(shooterVisionBotSpeed-toleranceShooter, Components.getInstance().botTachoCounter.get(), shooterVisionBotSpeed+toleranceShooter)){
 				CommonArea.isUpToSpeed = true;
 				
 			}else{
@@ -115,13 +115,13 @@ public class Shooter {
 			break;
 
 		case Shooting:
-			if (!Components.BallInLimit.get()){
+			if (!Components.getInstance().BallInLimit.get()){
 				mytimer.reset();
 				mytimer.start();
 				shooterState = state.ShootingDelay;
 			}else if (!startVisionShoot){
-				Components.topShooter.set(0);
-				Components.botShooter.set(0);
+				Components.getInstance().topShooter.set(0);
+				Components.getInstance().botShooter.set(0);
 				shooterState = state.Stopped;}
 			break;
 			
@@ -129,16 +129,16 @@ public class Shooter {
 			
 			if (mytimer.get() > 2){
 				CommonArea.isShot = true;
-				Components.shooterTrack.set(0);
-				Components.topShooter.set(0);
-				Components.botShooter.set(0);
+				Components.getInstance().shooterTrack.set(0);
+				Components.getInstance().topShooter.set(0);
+				Components.getInstance().botShooter.set(0);
 				mytimer.stop();
 				shooterState = state.Stopped;
 			}else if (!startVisionShoot){
 				CommonArea.isShot = true;
-				Components.shooterTrack.set(0);
-				Components.topShooter.set(0);
-				Components.botShooter.set(0);
+				Components.getInstance().shooterTrack.set(0);
+				Components.getInstance().topShooter.set(0);
+				Components.getInstance().botShooter.set(0);
 				shooterState = state.Stopped;
 				}break;
 

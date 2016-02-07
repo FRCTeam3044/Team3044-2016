@@ -5,6 +5,7 @@ import com.team3044.robotmain.Reference.FirstController;
 import com.team3044.robotmain.Reference.SecondaryController;
 
 public class CommonArea {
+	
 	static FirstController firstJoy = FirstController.getInstance();
 	static SecondaryController secondaryJoy = SecondaryController.getInstance();
 	
@@ -22,6 +23,9 @@ public class CommonArea {
 	public static boolean shooterMotorFlag = false;
 	public static boolean shootFlag = false;
 	public static boolean isShot = false;
+	
+	//Gate
+	public static boolean chevalFlag = false;
 	
 	//PickUp
 	public static boolean portcullisFlag = false;

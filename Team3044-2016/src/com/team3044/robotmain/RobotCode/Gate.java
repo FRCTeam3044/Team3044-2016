@@ -3,13 +3,11 @@ package com.team3044.robotmain.RobotCode;
 
 import com.team3044.robotmain.Reference.*;
 
-import edu.wpi.first.wpilibj.DigitalInput;
-
 public class Gate {
 	//Inputs
 	boolean gateUp = CommonArea.gateUp;
 	boolean gateDown = CommonArea.gateDown;
-	boolean ChevalStart = CommonArea.ChevalFlag; //set up cheval button
+	boolean chevalStart = CommonArea.chevalFlag;
 	//Components.GateUpLimit.get() 
 	//Components.GateDownLimit.get()
 	//Components.gateTalon.getEncPosition()
@@ -58,11 +56,11 @@ public class Gate {
 
 		//INIT
 		case Init:
-			if (!Components.GateUpLimit.get()){
-				Components.gateTalon.set(motorSpeedUp);
+			if (!Components.getInstance().GateUpLimit.get()){
+				Components.getInstance().gateTalon.set(motorSpeedUp);
 				gateState = state.encoderZeroing;
 			}else{
-				Components.gateTalon.setPosition(0);
+				Components.getInstance().gateTalon.setPosition(0);
 				encoderCalibrated = true;
 				gateState = state.Stopped;
 			}
@@ -70,55 +68,55 @@ public class Gate {
 		
 		//ENCODERZEROING
 		case encoderZeroing:
-			if (Components.GateUpLimit.get()){
-				Components.gateTalon.set(0);
-				Components.gateTalon.setPosition(0);
+			if (Components.getInstance().GateUpLimit.get()){
+				Components.getInstance().gateTalon.set(0);
+				Components.getInstance().gateTalon.setPosition(0);
 				encoderCalibrated = true;
 				gateState = state.Stopped;
 			}else if (gateUp){
 				gateState = state.movingUp;
 			}else if (gateDown){
-				Components.gateTalon.set(motorSpeedDown);
+				Components.getInstance().gateTalon.set(motorSpeedDown);
 				gateState = state.movingDown;
 			}
 			break;
 		
 		//STOPPED
 		case Stopped:
-			if (gateUp && !Components.GateUpLimit.get()){
-				Components.gateTalon.set(motorSpeedUp);
+			if (gateUp && !Components.getInstance().GateUpLimit.get()){
+				Components.getInstance().gateTalon.set(motorSpeedUp);
 				gateState = state.movingUp;
-			}else if (gateDown && !Components.GateDownLimit.get()){
-				Components.gateTalon.set(motorSpeedDown);
+			}else if (gateDown && !Components.getInstance().GateDownLimit.get()){
+				Components.getInstance().gateTalon.set(motorSpeedDown);
 				gateState = state.movingDown;
-			/*}else if (ChevalStart && !Components.GateUpLimit.get() && encoderCalibrated){	//<---- look at this
-				Components.gateTalon.set(motorSpeedUp);
+			/*}else if (ChevalStart && !Components.getInstance().GateUpLimit.get() && encoderCalibrated){	//<---- look at this
+				Components.getInstance().gateTalon.set(motorSpeedUp);
 				gateState = state.autoCheval;*/
 			}
 			break;
 
 			//MOVING UP
 		case movingUp:
-			if (Components.GateUpLimit.get() || !gateUp){
-				Components.gateTalon.set(0);
+			if (Components.getInstance().GateUpLimit.get() || !gateUp){
+				Components.getInstance().gateTalon.set(0);
 				gateState = state.Stopped;
 			}
 			break;
 
 			//MOVING DOWN
 		case movingDown:
-			if (Components.GateDownLimit.get() || !gateDown){
-				Components.gateTalon.set(0);
+			if (Components.getInstance().GateDownLimit.get() || !gateDown){
+				Components.getInstance().gateTalon.set(0);
 				gateState = state.Stopped;
 			}
 			break;
 
 			//Cheval AUTO
 		/*case autoCheval:
-			if(angleEncoder(Components.gateTalon.getAnalogInRaw())==7){
+			if(angleEncoder(Components.getInstance().gateTalon.getAnalogInRaw())==7){
 				
-			}else if (Components.GateUpLimit.get() || !ChevalStart || Utilities.tolerance(lowerEncoderLimit, Components.gateTalon.getEncPosition(), upperEncoderLimit)){
-				Components.gateTalon.set(0);
+			}else if (Components.getInstance().GateUpLimit.get() || !ChevalStart || Utilities.tolerance(lowerEncoderLimit, Components.getInstance().gateTalon.getEncPosition(), upperEncoderLimit)){
+				Components.getInstance().gateTalon.set(0);
 				gateState = state.Stopped;
 			}
 			break;*/

@@ -40,7 +40,7 @@ public class Components {
 
 	// Pick Up
 	public CANTalon gateTalon;
-	public CANTalon Pickup2;
+	public CANTalon shooterTrack;
 	public CANTalon Pickup3;
 
 	// Digital IOs
@@ -71,7 +71,7 @@ public class Components {
 		upperArm = new CANTalon(8);
 
 		gateTalon = new CANTalon(9);
-		Pickup2 = new CANTalon(10);
+		shooterTrack = new CANTalon(10);
 		Pickup3 = new CANTalon(11);
 	}
 }
