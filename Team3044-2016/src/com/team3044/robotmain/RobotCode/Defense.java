@@ -143,23 +143,23 @@ public class Defense {
 
 			break;
 		case MAIN_STOPPED:
-			if (secondJoy.getRawButton(1)) {
+			if (X1) {
 				MAIN = state.MAIN_MOVING_TARGET;
 				Components.upperArm.set(UA_MOVING);
 				Components.lowerArm.set(LA_MOVING);
-			} else if (secondJoy.getRawButton(2)) {
+			} else if (X2) {
 				MAIN = state.MAIN_MOVING_TARGET;
 				Components.upperArm.set(UA_MOVING);
 				Components.lowerArm.set(LA_MOVING);
-			} else if (secondJoy.getRawButton(3)) {
+			} else if (Y1) {
 				MAIN = state.MAIN_MOVING_TARGET;
 				Components.upperArm.set(UA_MOVING);
 				Components.lowerArm.set(LA_MOVING);
-			} else if (secondJoy.getRawButton(4)) {
+			} else if (Y2) {
 				MAIN = state.MAIN_MOVING_TARGET;
 				Components.upperArm.set(UA_MOVING);
 				Components.lowerArm.set(LA_MOVING);
-			} else if (secondJoy.getRawButton(8)) {
+			} else if (H1) {
 				MAIN = state.MAIN_MOVING_TARGET;
 				Components.upperArm.set(UA_MOVING);
 				Components.lowerArm.set(LA_MOVING);

@@ -8,8 +8,8 @@ public class SecondaryController {
 	
 	private Joystick secondJoy;
 	
-	public static int BUTTON_X = 3; //defense 
-	public static int BUTTON_Y = 4; //defense
+	public static int BUTTON_X = 3; 
+	public static int BUTTON_Y = 4; 
 	public static int BUTTON_B = 2; 
 	public static int BUTTON_A = 1; 
 
@@ -55,14 +55,14 @@ public class SecondaryController {
 	}
 	
 	public boolean getDPadLeft(){
-		if(secondJoy.getPOV() == 270){
+		if(secondJoy.getPOV() == 270){ //DEFENSE
 			return true;
 		} else {
 			return false;
 		}
 	}
 	
-	public boolean getDPadRight(){
+	public boolean getDPadRight(){ //DEFENSE
 		if(secondJoy.getPOV() == 90){
 			return true;
 		} else {
@@ -70,7 +70,7 @@ public class SecondaryController {
 		}
 	}
 	
-	public boolean getDPadUp(){
+	public boolean getDPadUp(){ //DEFENSE
 		if(secondJoy.getPOV() == 0){
 			return true;
 		} else {
@@ -78,7 +78,7 @@ public class SecondaryController {
 		}
 	}
 	
-	public boolean getDPadDown(){
+	public boolean getDPadDown(){ //DEFENSE
 		if(secondJoy.getPOV() == 180){
 			return true;
 		} else {
