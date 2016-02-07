@@ -16,7 +16,8 @@ public class Defense {
 	public boolean X2;
 	public boolean Y1;
 	public boolean Y2;
-	public boolean LA_BUTTON_DOWN;
+	
+	public boolean LA_BUTTON_DOWN; //COMMANDS NOT BUTTONS
 	public boolean LA_BUTTON_UP;
 	public boolean UA_BUTTON_DOWN;
 	public boolean UA_BUTTON_UP;
@@ -97,20 +98,15 @@ public class Defense {
 		case MAIN_MOVING_MANUALLY:
 			if (UPPER_ARM == state.UA_STOPPED && LOWER_ARM == state.LA_STOPPED) {
 				MAIN = state.MAIN_STOPPED;
-				Components.upperArm.set(UA_SPEED_STOP);
-				Components.lowerArm.set(LA_SPEED_STOP);
-			} else if (!LA_BUTTON_DOWN) {
+			} else if (LA_BUTTON_DOWN) {
+				LOWER_ARM = state.LA_MOVING_DOWN;
+				
+			} else if (LA_BUTTON_UP) {
 				MAIN = state.MAIN_MOVING_MANUALLY;
-				Components.upperArm.set(UA_MOVING);
-				Components.lowerArm.set(LA_MOVING);
-			} else if (!LA_BUTTON_UP) {
+	
+			} else if (UA_BUTTON_DOWN) {
 				MAIN = state.MAIN_MOVING_MANUALLY;
-				Components.upperArm.set(UA_MOVING);
-				Components.lowerArm.set(LA_MOVING);
-			} else if (!UA_BUTTON_DOWN) {
-				MAIN = state.MAIN_MOVING_MANUALLY;
-				Components.upperArm.set(UA_MOVING);
-				Components.lowerArm.set(LA_MOVING);
+				
 			} else if (!UA_BUTTON_UP) {
 				MAIN = state.MAIN_MOVING_MANUALLY;
 				Components.upperArm.set(UA_MOVING);
