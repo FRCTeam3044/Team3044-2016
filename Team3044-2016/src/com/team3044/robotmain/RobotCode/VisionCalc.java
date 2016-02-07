@@ -19,10 +19,11 @@ public class VisionCalc {
 	boolean aimFlag = CommonArea.aimFlag;
 	boolean shooterMotorFlag = CommonArea.shooterMotorFlag;
 	boolean shootFlag = CommonArea.shootFlag;
+	boolean isManualDrive = CommonArea.isManualDrive;
+	
 	boolean isShot = CommonArea.isShot;
 	boolean isTargetSeen = CommonArea.isTargetSeen;
 	boolean isAligned = CommonArea.isAligned;
-	boolean isManualDrive = CommonArea.isManualDrive;
 	boolean isUpToSpeed = CommonArea.isUpToSpeed;
 	
 	double shooterVisionTopSpeed = CommonArea.shooterVisionTopSpeed;
@@ -58,8 +59,8 @@ public class VisionCalc {
 		isManualDrive = true;
 		shooterMotorFlag = false;
 		shootFlag = false;
-		isShot = false;
 		aimFlag = false;
+		isShot = false;
 	}
 
 	public void Vision() {
@@ -70,10 +71,10 @@ public class VisionCalc {
 		// ---------------------------------------------------------------------------------------------
 		case WAITING:
 			if (aimFlag) {
-				shooterMotorFlag = true;
 				isManualDrive = false;
+				shooterMotorFlag = true;
 				shooterVisionTopSpeed = STARTSPEED;
-				shooterVisionBotSpeed = STARTSPEED;
+				shooterVisionBotSpeed = -STARTSPEED;
 				visionState = state.SPINSHOOTER;
 			}
 			break;
@@ -117,7 +118,7 @@ public class VisionCalc {
 				leftDriveSpeed = 0;
 				rightDriveSpeed = 0;
 				shooterVisionTopSpeed = CalculatedTopSpeed(distanceFromTarget);
-				shooterVisionBotSpeed = CalculatedBotSpeed(distanceFromTarget);
+				shooterVisionBotSpeed = -CalculatedBotSpeed(distanceFromTarget);
 				visionState = state.WAITFORSHOOTER;
 			} else {
 				leftDriveSpeed = CalculatedTurnSpeed(angleToTarget);
