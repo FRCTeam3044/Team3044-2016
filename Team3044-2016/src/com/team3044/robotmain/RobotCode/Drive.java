@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
 public class Drive {
 
 	FirstController controller = FirstController.getInstance();
-
+	//Components components = new Components();
 	double leftAutoSpeed;
 	double rightAutoSpeed;
 	double leftDriveSpeed;
@@ -22,10 +22,10 @@ public class Drive {
 
 	public void driveInit() {
 
-		CANTalon leftFrontDrive = Components.leftFrontDrive;
-		CANTalon leftBackDrive = Components.leftFrontDrive;
-		CANTalon rightFrontDrive = Components.rightFrontDrive;
-		CANTalon rightBackDrive = Components.rightBackDrive;
+		CANTalon leftFrontDrive = Components.getInstance().leftFrontDrive;
+		CANTalon leftBackDrive = Components.getInstance().leftBackDrive;
+		CANTalon rightFrontDrive = Components.getInstance().rightFrontDrive;
+		CANTalon rightBackDrive = Components.getInstance().rightBackDrive;
 
 		leftFrontDrive.setPosition(0);
 		rightFrontDrive.setPosition(0);
@@ -94,7 +94,5 @@ public class Drive {
 
 		SmartDashboard.putString("DB/ String 0", String.valueOf(leftFrontDrive.getAnalogInRaw()));
 		SmartDashboard.putString("DB/ String 1", String.valueOf(rightFrontDrive.getAnalogInRaw()));
-		
-		driveTeleopPeriodic();
 	}
 }
