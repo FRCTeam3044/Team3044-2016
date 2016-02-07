@@ -8,53 +8,38 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class Shooter {
 	//Inputs
-	boolean pickRollersIn = CommonArea.pickRollersIn;
-	boolean pickRollersOut = CommonArea.pickRollersOut;
-	boolean startShooterAtVisionSpeed = CommonArea.startShooterAtSetSpeed;
-	boolean shootBall = CommonArea.shootBall;
+	boolean pickRollersIn;
+	boolean pickRollersOut ;
+	boolean startShooterAtVisionSpeed;
+	boolean shootBall;
+	boolean startVisionShoot;
+	double shooterVisionTopSpeed;
+	double shooterVisionBotSpeed;
+	final double toleranceShooter = .5;
 	//Components.BallInLimit.get()
 	//1/Components.topTachoCounter.getPeriod(); <willgivespeedofturning
 	//1/Components.botTachoCounter.getPeriod(); 
-	//Components.BallInLimit.get()
-	
+
+	//Motor Speeds
+		final double trackMotorSpeed = 1;
+
+		boolean lastStaging = false;
+		Timer mytimer = new Timer();
+
+
 	//VISION CODE SPEEDS
 	//CommonArea.shooterTopSpeed;
 	//CommonArea.shooterBotSpeed;
-	
-	//SET SPEEDS
-	double xTopSpeed = .1;
-	double xBotSpeed = -.1;
-	
-	double yTopSpeed = .1;
-	double yBotSpeed = -.1;
-	
-	double aTopSpeed = .1;
-	double aBotSpeed = -.1;
 
-	double bTopSpeed = .1;
-	double bBotSpeed = -.1;
-	
 	//States
 	public enum state{
-		Stopped, ingestingBoulder, ejectingBoulder, startingShooter, startingvisionShoot, waitingForVisionShoot
+		Stopped, ingestingBoulder, ejectingBoulder, startingVisionShoot, waitingForVisionShoot, Shooting, ShootingDelay
 	}
 	state shooterState = state.Stopped;
 
-	//Motor Speeds
-	double motorSpeedUp = 1;
-	double motorSpeedDown = 1;
-
-	//Encoder Values
-	double upperEncoderLimit = 1;
-	double lowerEncoderLimit = 2;
-
-	//variables
-	public double initialAngleDifference;
-	public double Desired;
-
-	boolean lastStaging = false;
 	
-	Timer mytimer = new Timer();
+
+	
 	public void shooterInit(){
 
 	}
@@ -63,49 +48,100 @@ public class Shooter {
 
 	}
 	public void shooterTeleopPeriodic() {
+		pickRollersIn = CommonArea.pickRollersIn;
+		pickRollersOut = CommonArea.pickRollersOut;
+		startShooterAtVisionSpeed = CommonArea.startShooterAtSetSpeed;
+		shootBall = CommonArea.shootFlag;
+		startVisionShoot = CommonArea.isAligned;
+		shooterVisionTopSpeed = CommonArea.shooterVisionTopSpeed;
+		shooterVisionBotSpeed = CommonArea.shooterVisionBotSpeed;
+
 		switch(shooterState){
-		
+
+
 		case Stopped:
-			if (CommonArea.isAligned){
-				//start motors yo vision speed
-				shooterState = state.startingvisionShoot;
+			if ( startVisionShoot && Components.BallInLimit.get() ){
+				Components.topShooter.set(shooterVisionTopSpeed);
+				Components.botShooter.set(shooterVisionBotSpeed);
+				shooterState = state.startingVisionShoot;
 			}
-		
-		
-		
-		
-		
-		
-		
-		//Vision
-		case startingvisionShoot:
-			if (Components.topTachoCounter.equals(CommonArea.shooterVisionTopSpeed) && Components.botTachoCounter.equals(CommonArea.shooterVisionBotSpeed) ){
-				CommonArea.isUpToSpeed = true;
-				shooterState = state.waitingForVisionShoot;
-			}else if (!CommonArea.isAligned){
+			else if (pickRollersIn && !Components.BallInLimit.get()){
+				Components.shooterTrack.set(trackMotorSpeed);
+				shooterState = state.ingestingBoulder;
+			}
+			else if (pickRollersOut){
+				Components.shooterTrack.set(-trackMotorSpeed);
+				shooterState = state.ejectingBoulder;
+			}
+			break;
+
+
+
+			//PickUp
+		case ingestingBoulder:
+			if (Components.BallInLimit.get() || !pickRollersIn){
+				Components.shooterTrack.set(0);
+				shooterState = state.Stopped;
+			}
+			break;
+
+			//Ejecting
+		case ejectingBoulder:
+			if (!pickRollersOut){
+				Components.shooterTrack.set(0);
+				shooterState = state.Stopped;
+			}
+			break;
+
+
+			//Vision
+		case startingVisionShoot:
+			if (shootBall){
+				Components.shooterTrack.set(trackMotorSpeed);
+				shooterState = state.Shooting;		
+			}
+			
+			else if (!startVisionShoot){
 				Components.topShooter.set(0);
 				Components.botShooter.set(0);
 				shooterState = state.Stopped;
 			}
-		case waitingForVisionShoot:
-			if (CommonArea.shootFlag){
-				//track motor =1
-				//state.set Stopped
-			
+			else if (Utilities.tolerance(shooterVisionTopSpeed-toleranceShooter, Components.topTachoCounter.get(), shooterVisionTopSpeed+toleranceShooter) && Utilities.tolerance(shooterVisionBotSpeed-toleranceShooter, Components.botTachoCounter.get(), shooterVisionBotSpeed+toleranceShooter)){
+				CommonArea.isUpToSpeed = true;
+				
+			}else{
+				CommonArea.isUpToSpeed = false;
 			}
-			if (lastStaging && !Components.BallInLimit.get()){
+			break;
+
+		case Shooting:
+			if (!Components.BallInLimit.get()){
 				mytimer.reset();
 				mytimer.start();
-				
-			}
-			boolean lastStaging = Components.BallInLimit.get(); 
+				shooterState = state.ShootingDelay;
+			}else if (!startVisionShoot){
+				Components.topShooter.set(0);
+				Components.botShooter.set(0);
+				shooterState = state.Stopped;}
+			break;
+			
+		case ShootingDelay:
+			
 			if (mytimer.get() > 2){
 				CommonArea.isShot = true;
+				Components.shooterTrack.set(0);
 				Components.topShooter.set(0);
 				Components.botShooter.set(0);
 				mytimer.stop();
 				shooterState = state.Stopped;
-			}
+			}else if (!startVisionShoot){
+				CommonArea.isShot = true;
+				Components.shooterTrack.set(0);
+				Components.topShooter.set(0);
+				Components.botShooter.set(0);
+				shooterState = state.Stopped;
+				}break;
+
 		}
-	
-}}
+	}
+}
