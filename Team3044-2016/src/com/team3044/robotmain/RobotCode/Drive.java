@@ -1,15 +1,13 @@
 package com.team3044.robotmain.RobotCode;
 
 import com.team3044.robotmain.Reference.*;
-
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.AnalogInput;
-
 public class Drive {
 
 	FirstController controller = FirstController.getInstance();
-	//Components components = new Components();
+
 	double leftAutoSpeed;
 	double rightAutoSpeed;
 	double leftDriveSpeed;
@@ -23,20 +21,19 @@ public class Drive {
 	public void driveInit() {
 
 		CANTalon leftFrontDrive = Components.getInstance().leftFrontDrive;
-		CANTalon leftBackDrive = Components.getInstance().leftBackDrive;
+		CANTalon leftBackDrive = Components.getInstance().leftFrontDrive;
 		CANTalon rightFrontDrive = Components.getInstance().rightFrontDrive;
 		CANTalon rightBackDrive = Components.getInstance().rightBackDrive;
 
 		leftFrontDrive.setPosition(0);
 		rightFrontDrive.setPosition(0);
-		
+
 		leftFrontDrive.enableBrakeMode(true);
 		rightFrontDrive.enableBrakeMode(true);
 		leftBackDrive.enableBrakeMode(true);
 		rightBackDrive.enableBrakeMode(true);
-		
-	
 	}
+
 	public void driveAutoPeriodic() {
 
 		leftAutoSpeed = CommonArea.leftAutoSpeed;
@@ -47,7 +44,6 @@ public class Drive {
 		}
 		if (Math.abs(rightAutoSpeed) < .1) {
 			rightAutoSpeed = 0;
-
 		}
 		leftFrontDrive.set(leftAutoSpeed);
 		leftBackDrive.set(leftAutoSpeed);
@@ -69,24 +65,21 @@ public class Drive {
 				leftDriveSpeed = leftDriveSpeed * .5;
 				rightDriveSpeed = rightDriveSpeed * .5;
 			}
-
 		}
+
 		if (Math.abs(leftDriveSpeed) < .1) {
 			leftDriveSpeed = 0;
 		}
 		if (Math.abs(rightDriveSpeed) < .1) {
 			rightDriveSpeed = 0;
-
 		}
 		leftFrontDrive.set(leftDriveSpeed);
 		leftBackDrive.set(leftDriveSpeed);
 		rightFrontDrive.set(rightDriveSpeed);
 		rightBackDrive.set(rightDriveSpeed);
-
 	}
-
 	public void testPeriodic() {
-		
+
 		leftFrontDrive.set(SmartDashboard.getDouble("DB/ Slider 0"));
 		leftBackDrive.set(SmartDashboard.getDouble("DB/ Slider 1"));
 		rightFrontDrive.set(SmartDashboard.getDouble("DB/ Slider 2"));
@@ -94,5 +87,9 @@ public class Drive {
 
 		SmartDashboard.putString("DB/ String 0", String.valueOf(leftFrontDrive.getAnalogInRaw()));
 		SmartDashboard.putString("DB/ String 1", String.valueOf(rightFrontDrive.getAnalogInRaw()));
+		
+		driveTeleopPeriodic();
 	}
 }
+
+
