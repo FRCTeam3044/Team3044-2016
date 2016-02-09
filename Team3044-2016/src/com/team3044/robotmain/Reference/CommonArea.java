@@ -60,4 +60,5 @@ public class CommonArea {
 	public static boolean dPadRight = secondaryJoy.getDPadRight();
 	public static boolean dPadUp = secondaryJoy.getDPadUp();
 	public static boolean dPadDown = secondaryJoy.getDPadDown();
+	public static boolean homeArm = secondaryJoy.getRawButton(SecondaryController.BUTTON_START);
 }

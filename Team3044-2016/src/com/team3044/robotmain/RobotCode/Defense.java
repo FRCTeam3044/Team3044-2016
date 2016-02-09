@@ -5,8 +5,6 @@ import com.team3044.robotmain.Reference.*;
 
 public class Defense {
 
-	static SecondaryController secondJoy = SecondaryController.getInstance();
-
 	public enum state {
 		LA_MOVING_UP, LA_MOVING_UP_TARGET, LA_MOVING_DOWN, LA_MOVING_DOWN_TARGET, LA_CONFLICT, LA_STOPPED, UA_MOVING_UP, UA_MOVING_UP_TARGET, UA_MOVING_DOWN, UA_MOVING_DOWN_TARGET, UA_CONFLICT, UA_STOPPED, MAIN_STOPPED, MAIN_MOVING_MANUALLY, MAIN_MOVING_TARGET
 	}
@@ -78,11 +76,11 @@ public class Defense {
 		lowerArmEnc = Components.getInstance().lowerArm.getEncPosition();
 		upperArmEnc = Components.getInstance().upperArm.getEncPosition();
 
-		X1 = secondJoy.getDPadUp();
-		X2 = secondJoy.getDPadDown();
-		Y1 = secondJoy.getDPadLeft();
-		Y2 = secondJoy.getDPadRight();
-		H1 = secondJoy.getRawButton(secondJoy.BUTTON_START);
+		X1 = CommonArea.dPadUp; //secondJoy.getDPadUp();
+		X2 = CommonArea.dPadDown;//secondJoy.getDPadDown();
+		Y1 = CommonArea.dPadLeft;//secondJoy.getDPadLeft();
+		Y2 = CommonArea.dPadRight;//secondJoy.getDPadRight();
+		H1 = CommonArea.homeArm;//secondJoy.getRawButton(secondJoy.BUTTON_START);
 
 		switch (MAIN) {
 
