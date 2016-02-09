@@ -16,15 +16,14 @@ public class Defense {
 	public boolean X2;
 	public boolean Y1;
 	public boolean Y2;
-	
-	public boolean LA_BUTTON_DOWN; //COMMANDS NOT BUTTONS
+
+	public boolean LA_BUTTON_DOWN; // COMMANDS NOT BUTTONS
 	public boolean LA_BUTTON_UP;
 	public boolean UA_BUTTON_DOWN;
 	public boolean UA_BUTTON_UP;
 
-	public double lowerArmEnc;  // LA ENCODER
+	public double lowerArmEnc; // LA ENCODER
 	public double upperArmEnc; // UA ENCODER
-																		
 
 	public double lowerArmEncTarget; // TARGET ENCODER ANGLE
 	public double upperArmEncTarget;
@@ -56,10 +55,10 @@ public class Defense {
 	state UPPER_ARM = state.UA_STOPPED;
 
 	public boolean LA_HOME; // LOWER ARM LIMIT SWITCH HOME
-	public boolean LA_TOO_FAR; //LOWER ARM LIMIT SWITCH TOO FAR
-	public boolean UA_HOME; //UPPER ARM LIMIT SWITCH HOME
-	public boolean UA_TOO_FAR; //UPPER ARM LIMIT SWITCH TOO FAR
-	public boolean CONFLICT; //LIMIT SWITCH CONFLICT
+	public boolean LA_TOO_FAR; // LOWER ARM LIMIT SWITCH TOO FAR
+	public boolean UA_HOME; // UPPER ARM LIMIT SWITCH HOME
+	public boolean UA_TOO_FAR; // UPPER ARM LIMIT SWITCH TOO FAR
+	public boolean CONFLICT; // LIMIT SWITCH CONFLICT
 
 	public void defenseInit() {
 
@@ -76,17 +75,15 @@ public class Defense {
 		UA_TOO_FAR = Components.getInstance().lowerArm.isRevLimitSwitchClosed();
 		CONFLICT = Components.getInstance().conflict.get();
 
-		
 		lowerArmEnc = Components.getInstance().lowerArm.getEncPosition();
 		upperArmEnc = Components.getInstance().upperArm.getEncPosition();
-		
+
 		X1 = secondJoy.getDPadUp();
 		X2 = secondJoy.getDPadDown();
 		Y1 = secondJoy.getDPadLeft();
 		Y2 = secondJoy.getDPadRight();
 		H1 = secondJoy.getRawButton(secondJoy.BUTTON_START);
-				
-				
+
 		switch (MAIN) {
 
 		default:
@@ -100,83 +97,51 @@ public class Defense {
 				MAIN = state.MAIN_STOPPED;
 			} else if (LA_BUTTON_DOWN) {
 				LOWER_ARM = state.LA_MOVING_DOWN;
-				
 			} else if (LA_BUTTON_UP) {
 				MAIN = state.MAIN_MOVING_MANUALLY;
-	
 			} else if (UA_BUTTON_DOWN) {
 				MAIN = state.MAIN_MOVING_MANUALLY;
-				
 			} else if (!UA_BUTTON_UP) {
 				MAIN = state.MAIN_MOVING_MANUALLY;
-				Components.getInstance().upperArm.set(UA_MOVING);
-				Components.getInstance().lowerArm.set(LA_MOVING);
 			}
 			break;
 
 		case MAIN_MOVING_TARGET:
 			if (UPPER_ARM == state.UA_STOPPED && LOWER_ARM == state.LA_STOPPED) {
 				MAIN = state.MAIN_STOPPED;
-				Components.getInstance().upperArm.set(UA_SPEED_STOP);
-				Components.getInstance().lowerArm.set(LA_SPEED_STOP);
 			} else if (LA_BUTTON_DOWN) {
 				MAIN = state.MAIN_MOVING_MANUALLY;
-				Components.getInstance().upperArm.set(UA_MOVING);
-				Components.getInstance().lowerArm.set(LA_MOVING);
 			} else if (LA_BUTTON_UP) {
 				MAIN = state.MAIN_MOVING_MANUALLY;
-				Components.getInstance().upperArm.set(UA_MOVING);
-				Components.getInstance().lowerArm.set(LA_MOVING);
 			} else if (UA_BUTTON_DOWN) {
 				MAIN = state.MAIN_MOVING_MANUALLY;
-				Components.getInstance().upperArm.set(UA_MOVING);
-				Components.getInstance().lowerArm.set(LA_MOVING);
 			} else if (UA_BUTTON_UP) {
 				MAIN = state.MAIN_MOVING_MANUALLY;
-				Components.getInstance().upperArm.set(UA_MOVING);
-				Components.getInstance().lowerArm.set(LA_MOVING);
 			}
-
 			break;
+
 		case MAIN_STOPPED:
 			if (X1) {
 				MAIN = state.MAIN_MOVING_TARGET;
-				Components.getInstance().upperArm.set(UA_MOVING);
-				Components.getInstance().lowerArm.set(LA_MOVING);
 			} else if (X2) {
 				MAIN = state.MAIN_MOVING_TARGET;
-				Components.getInstance().upperArm.set(UA_MOVING);
-				Components.getInstance().lowerArm.set(LA_MOVING);
 			} else if (Y1) {
 				MAIN = state.MAIN_MOVING_TARGET;
-				Components.getInstance().upperArm.set(UA_MOVING);
-				Components.getInstance().lowerArm.set(LA_MOVING);
 			} else if (Y2) {
 				MAIN = state.MAIN_MOVING_TARGET;
-				Components.getInstance().upperArm.set(UA_MOVING);
-				Components.getInstance().lowerArm.set(LA_MOVING);
 			} else if (H1) {
 				MAIN = state.MAIN_MOVING_TARGET;
-				Components.getInstance().upperArm.set(UA_MOVING);
-				Components.getInstance().lowerArm.set(LA_MOVING);
 			} else if (LA_BUTTON_DOWN) {
 				MAIN = state.MAIN_MOVING_MANUALLY;
-				Components.getInstance().upperArm.set(UA_MOVING);
-				Components.getInstance().lowerArm.set(LA_MOVING);
 			} else if (LA_BUTTON_UP) {
 				MAIN = state.MAIN_MOVING_MANUALLY;
-				Components.getInstance().upperArm.set(UA_MOVING);
-				Components.getInstance().lowerArm.set(LA_MOVING);
 			} else if (UA_BUTTON_DOWN) {
 				MAIN = state.MAIN_MOVING_MANUALLY;
-				Components.getInstance().upperArm.set(UA_MOVING);
-				Components.getInstance().lowerArm.set(LA_MOVING);
 			} else if (UA_BUTTON_UP) {
 				MAIN = state.MAIN_MOVING_MANUALLY;
-				Components.getInstance().upperArm.set(UA_MOVING);
-				Components.getInstance().lowerArm.set(LA_MOVING);
 			}
 		}
+		
 		switch (LOWER_ARM) {
 
 		default:
@@ -318,7 +283,7 @@ public class Defense {
 			} else if (UA_STOP) {
 				UPPER_ARM = state.UA_STOPPED;
 				Components.getInstance().upperArm.set(UA_SPEED_STOP);
-			} 
+			}
 			break;
 
 		case UA_MOVING_DOWN:
@@ -331,7 +296,7 @@ public class Defense {
 			} else if (UA_STOP) {
 				UPPER_ARM = state.UA_STOPPED;
 				Components.getInstance().upperArm.set(UA_SPEED_STOP);
-			} 
+			}
 			break;
 
 		case UA_MOVING_UP_TARGET:
