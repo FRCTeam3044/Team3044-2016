@@ -15,7 +15,7 @@ public class Defense {
 	public boolean Y1;
 	public boolean Y2;
 
-	public boolean LA_BUTTON_DOWN; // COMMANDS NOT BUTTONS
+	public boolean LA_BUTTON_DOWN; // MANUAL BUTTONS
 	public boolean LA_BUTTON_UP;
 	public boolean UA_BUTTON_DOWN;
 	public boolean UA_BUTTON_UP;
@@ -26,17 +26,17 @@ public class Defense {
 	public double lowerArmEncTarget; // TARGET ENCODER ANGLE
 	public double upperArmEncTarget;
 
-	public boolean LA_UP; // COMMANDS TO GET TO THE NEXT LA STATE
-	public boolean LA_DOWN;
-	public boolean LA_UP_TARGET;
-	public boolean LA_DOWN_TARGET;
-	public boolean LA_STOP;
+	public boolean CMD_LA_UP; // COMMANDS TO GET TO THE NEXT LA STATE
+	public boolean CMD_LA_DOWN;
+	public boolean CMD_LA_UP_TARGET;
+	public boolean CMD_LA_DOWN_TARGET;
+	public boolean CMD_LA_STOP;
 
-	public boolean UA_UP; // COMMANDS TO GET TO THE NEXT UA STATE
-	public boolean UA_DOWN;
-	public boolean UA_UP_TARGET;
-	public boolean UA_DOWN_TARGET;
-	public boolean UA_STOP;
+	public boolean CMD_UA_UP; // COMMANDS TO GET TO THE NEXT UA STATE
+	public boolean CMD_UA_DOWN;
+	public boolean CMD_UA_UP_TARGET;
+	public boolean CMD_UA_DOWN_TARGET;
+	public boolean CMD_UA_STOP;
 
 	public double LA_MOVING; // MOTORS
 	public double LA_MOVING_UP_SPEED;
@@ -52,11 +52,11 @@ public class Defense {
 	state MAIN = state.MAIN_STOPPED;
 	state UPPER_ARM = state.UA_STOPPED;
 
-	public boolean LA_HOME; // LOWER ARM LIMIT SWITCH HOME
-	public boolean LA_TOO_FAR; // LOWER ARM LIMIT SWITCH TOO FAR
-	public boolean UA_HOME; // UPPER ARM LIMIT SWITCH HOME
-	public boolean UA_TOO_FAR; // UPPER ARM LIMIT SWITCH TOO FAR
-	public boolean CONFLICT; // LIMIT SWITCH CONFLICT
+	public boolean LA_LS_HOME; // LOWER ARM LIMIT SWITCH HOME
+	public boolean LA_LS_TOO_FAR; // LOWER ARM LIMIT SWITCH TOO FAR
+	public boolean UA_LS_HOME; // UPPER ARM LIMIT SWITCH HOME
+	public boolean UA_LS_TOO_FAR; // UPPER ARM LIMIT SWITCH TOO FAR
+	public boolean LS_CONFLICT; // LIMIT SWITCH CONFLICT
 
 	public void defenseInit() {
 
@@ -67,27 +67,27 @@ public class Defense {
 	}
 
 	public void defenseTeleopPeriodic() {
-		LA_HOME = Components.getInstance().upperArm.isFwdLimitSwitchClosed();
-		LA_TOO_FAR = Components.getInstance().upperArm.isRevLimitSwitchClosed();
-		UA_HOME = Components.getInstance().lowerArm.isFwdLimitSwitchClosed();
-		UA_TOO_FAR = Components.getInstance().lowerArm.isRevLimitSwitchClosed();
-		CONFLICT = Components.getInstance().conflict.get();
+		LA_LS_HOME = Components.getInstance().upperArm.isFwdLimitSwitchClosed();
+		LA_LS_TOO_FAR = Components.getInstance().upperArm.isRevLimitSwitchClosed();
+		UA_LS_HOME = Components.getInstance().lowerArm.isFwdLimitSwitchClosed();
+		UA_LS_TOO_FAR = Components.getInstance().lowerArm.isRevLimitSwitchClosed();
+		LS_CONFLICT = Components.getInstance().conflict.get();
 
 		lowerArmEnc = Components.getInstance().lowerArm.getEncPosition();
 		upperArmEnc = Components.getInstance().upperArm.getEncPosition();
 
-		X1 = CommonArea.dPadUp; //secondJoy.getDPadUp();
-		X2 = CommonArea.dPadDown;//secondJoy.getDPadDown();
-		Y1 = CommonArea.dPadLeft;//secondJoy.getDPadLeft();
-		Y2 = CommonArea.dPadRight;//secondJoy.getDPadRight();
-		H1 = CommonArea.homeArm;//secondJoy.getRawButton(secondJoy.BUTTON_START);
+		X1 = CommonArea.dPadUp;
+		X2 = CommonArea.dPadDown;
+		Y1 = CommonArea.dPadLeft;
+		Y2 = CommonArea.dPadRight;
+		H1 = CommonArea.homeArm;
 
 		switch (MAIN) {
 
 		default:
 			MAIN = state.MAIN_STOPPED;
-			UA_STOP = true;
-			LA_STOP = true;
+			CMD_UA_STOP = true;
+			CMD_LA_STOP = true;
 			break;
 
 		case MAIN_MOVING_MANUALLY:
@@ -147,90 +147,90 @@ public class Defense {
 			break;
 
 		case LA_STOPPED:
-			if (LA_UP = true && !LA_TOO_FAR) {
+			if (CMD_LA_UP = true && !LA_LS_TOO_FAR) {
 				LOWER_ARM = state.LA_MOVING_UP;
 				Components.getInstance().lowerArm.set(LA_MOVING_UP_SPEED);
-			} else if (LA_UP_TARGET = true && !LA_TOO_FAR) {
+			} else if (CMD_LA_UP_TARGET = true && !LA_LS_TOO_FAR) {
 				LOWER_ARM = state.LA_MOVING_UP_TARGET;
 				Components.getInstance().lowerArm.set(LA_MOVING_UP_SPEED);
-			} else if (LA_DOWN_TARGET = true && !LA_HOME) {
+			} else if (CMD_LA_DOWN_TARGET = true && !LA_LS_HOME) {
 				LOWER_ARM = state.LA_MOVING_DOWN_TARGET;
 				Components.getInstance().lowerArm.set(LA_MOVING_DOWN_SPEED);
-			} else if (LA_DOWN = true && !LA_HOME) {
+			} else if (CMD_LA_DOWN = true && !LA_LS_HOME) {
 				LOWER_ARM = state.LA_MOVING_DOWN;
 				Components.getInstance().lowerArm.set(LA_MOVING_DOWN_SPEED);
 			}
 			break;
 
-		case LA_CONFLICT: // show the commands better
-			if (LA_UP = true && !LA_TOO_FAR) {
+		case LA_CONFLICT:
+			if (CMD_LA_UP = true && !LA_LS_TOO_FAR) {
 				LOWER_ARM = state.LA_MOVING_UP;
 				Components.getInstance().lowerArm.set(LA_MOVING_UP_SPEED);
-			} else if (LA_DOWN = true && !LA_HOME) {
+			} else if (CMD_LA_DOWN = true && !LA_LS_HOME) {
 				LOWER_ARM = state.LA_MOVING_DOWN;
 				Components.getInstance().lowerArm.set(LA_MOVING_DOWN_SPEED);
 			}
 			break;
 
 		case LA_MOVING_UP:
-			if (LA_TOO_FAR) {
+			if (LA_LS_TOO_FAR) {
 				LOWER_ARM = state.LA_STOPPED;
 				Components.getInstance().lowerArm.set(LA_SPEED_STOP);
-			} else if (CONFLICT) {
+			} else if (LS_CONFLICT) {
 				LOWER_ARM = state.LA_CONFLICT;
 				Components.getInstance().lowerArm.set(LA_SPEED_STOP);
-			} else if (LA_STOP) {
+			} else if (CMD_LA_STOP) {
 				LOWER_ARM = state.LA_STOPPED;
 				Components.getInstance().lowerArm.set(LA_SPEED_STOP);
 			}
 			break;
 
 		case LA_MOVING_DOWN:
-			if (LA_HOME) {
+			if (LA_LS_HOME) {
 				LOWER_ARM = state.LA_STOPPED;
 				Components.getInstance().lowerArm.set(LA_SPEED_STOP);
-			} else if (CONFLICT) {
+			} else if (LS_CONFLICT) {
 				LOWER_ARM = state.LA_CONFLICT;
 				Components.getInstance().lowerArm.set(LA_SPEED_STOP);
-			} else if (LA_STOP) {
+			} else if (CMD_LA_STOP) {
 				LOWER_ARM = state.LA_STOPPED;
 				Components.getInstance().lowerArm.set(LA_SPEED_STOP);
 			}
 			break;
 
 		case LA_MOVING_UP_TARGET:
-			if (CONFLICT) {
+			if (LS_CONFLICT) {
 				LOWER_ARM = state.LA_CONFLICT;
 				Components.getInstance().lowerArm.set(LA_SPEED_STOP);
-			} else if (LA_TOO_FAR) {
+			} else if (LA_LS_TOO_FAR) {
 				LOWER_ARM = state.LA_STOPPED;
 				Components.getInstance().lowerArm.set(LA_SPEED_STOP);
 			} else if (lowerArmEnc >= lowerArmEncTarget) {
 				LOWER_ARM = state.LA_STOPPED;
 				Components.getInstance().lowerArm.set(LA_SPEED_STOP);
-			} else if (LA_STOP) {
+			} else if (CMD_LA_STOP) {
 				LOWER_ARM = state.LA_STOPPED;
 				Components.getInstance().lowerArm.set(LA_SPEED_STOP);
-			} else if (LA_DOWN_TARGET && !LA_HOME && lowerArmEnc <= lowerArmEncTarget) {
+			} else if (CMD_LA_DOWN_TARGET && !LA_LS_HOME && lowerArmEnc <= lowerArmEncTarget) {
 				LOWER_ARM = state.LA_MOVING_DOWN_TARGET;
 				Components.getInstance().lowerArm.set(LA_MOVING_DOWN_SPEED);
 			}
 			break;
 
 		case LA_MOVING_DOWN_TARGET:
-			if (CONFLICT) {
+			if (LS_CONFLICT) {
 				LOWER_ARM = state.LA_CONFLICT;
 				Components.getInstance().lowerArm.set(LA_SPEED_STOP);
-			} else if (LA_HOME) {
+			} else if (LA_LS_HOME) {
 				LOWER_ARM = state.LA_STOPPED;
 				Components.getInstance().lowerArm.set(LA_SPEED_STOP);
 			} else if (lowerArmEnc <= lowerArmEncTarget) {
 				LOWER_ARM = state.LA_STOPPED;
 				Components.getInstance().lowerArm.set(LA_SPEED_STOP);
-			} else if (LA_STOP) {
+			} else if (CMD_LA_STOP) {
 				LOWER_ARM = state.LA_STOPPED;
 				Components.getInstance().lowerArm.set(LA_SPEED_STOP);
-			} else if (LA_UP_TARGET && !LA_TOO_FAR && lowerArmEnc >= lowerArmEncTarget) {
+			} else if (CMD_LA_UP_TARGET && !LA_LS_TOO_FAR && lowerArmEnc >= lowerArmEncTarget) {
 				LOWER_ARM = state.LA_MOVING_DOWN_TARGET;
 				Components.getInstance().lowerArm.set(LA_MOVING_DOWN_SPEED);
 
@@ -246,52 +246,52 @@ public class Defense {
 			break;
 
 		case UA_STOPPED:
-			if (UA_UP = true && !UA_TOO_FAR) {
+			if (CMD_UA_UP = true && !UA_LS_TOO_FAR) {
 				UPPER_ARM = state.UA_MOVING_UP;
 				Components.getInstance().upperArm.set(UA_MOVING_UP_SPEED);
-			} else if (UA_UP_TARGET = true && !UA_TOO_FAR) {
+			} else if (CMD_UA_UP_TARGET = true && !UA_LS_TOO_FAR) {
 				UPPER_ARM = state.UA_MOVING_UP_TARGET;
 				Components.getInstance().upperArm.set(UA_MOVING_UP_SPEED);
-			} else if (UA_DOWN_TARGET = true && !UA_HOME) {
+			} else if (CMD_UA_DOWN_TARGET = true && !UA_LS_HOME) {
 				UPPER_ARM = state.UA_MOVING_DOWN_TARGET;
 				Components.getInstance().upperArm.set(UA_MOVING_DOWN_SPEED);
-			} else if (UA_DOWN = true && !UA_HOME) {
+			} else if (CMD_UA_DOWN = true && !UA_LS_HOME) {
 				UPPER_ARM = state.UA_MOVING_DOWN;
 				Components.getInstance().upperArm.set(UA_MOVING_DOWN_SPEED);
 			}
 			break;
 
 		case UA_CONFLICT:
-			if (UA_UP = true && !UA_TOO_FAR) {
+			if (CMD_UA_UP = true && !UA_LS_TOO_FAR) {
 				UPPER_ARM = state.UA_MOVING_UP;
 				Components.getInstance().upperArm.set(UA_MOVING_UP_SPEED);
-			} else if (UA_DOWN = true && !UA_HOME) {
+			} else if (CMD_UA_DOWN = true && !UA_LS_HOME) {
 				UPPER_ARM = state.UA_MOVING_DOWN;
 				Components.getInstance().upperArm.set(UA_MOVING_DOWN_SPEED);
 			}
 			break;
 
 		case UA_MOVING_UP:
-			if (UA_TOO_FAR) {
+			if (UA_LS_TOO_FAR) {
 				UPPER_ARM = state.UA_STOPPED;
 				Components.getInstance().upperArm.set(UA_SPEED_STOP);
-			} else if (CONFLICT) {
+			} else if (LS_CONFLICT) {
 				UPPER_ARM = state.UA_CONFLICT;
 				Components.getInstance().upperArm.set(UA_SPEED_STOP);
-			} else if (UA_STOP) {
+			} else if (CMD_UA_STOP) {
 				UPPER_ARM = state.UA_STOPPED;
 				Components.getInstance().upperArm.set(UA_SPEED_STOP);
 			}
 			break;
 
 		case UA_MOVING_DOWN:
-			if (UA_HOME) {
+			if (UA_LS_HOME) {
 				UPPER_ARM = state.UA_STOPPED;
 				Components.getInstance().upperArm.set(UA_SPEED_STOP);
-			} else if (CONFLICT) {
+			} else if (LS_CONFLICT) {
 				UPPER_ARM = state.UA_CONFLICT;
 				Components.getInstance().upperArm.set(UA_SPEED_STOP);
-			} else if (UA_STOP) {
+			} else if (CMD_UA_STOP) {
 				UPPER_ARM = state.UA_STOPPED;
 				Components.getInstance().upperArm.set(UA_SPEED_STOP);
 			}
@@ -301,16 +301,16 @@ public class Defense {
 			if (upperArmEnc >= upperArmEncTarget) {
 				UPPER_ARM = state.UA_STOPPED;
 				Components.getInstance().upperArm.set(UA_SPEED_STOP);
-			} else if (UA_TOO_FAR) {
+			} else if (UA_LS_TOO_FAR) {
 				UPPER_ARM = state.UA_STOPPED;
 				Components.getInstance().upperArm.set(UA_SPEED_STOP);
-			} else if (UA_STOP) {
+			} else if (CMD_UA_STOP) {
 				UPPER_ARM = state.UA_STOPPED;
 				Components.getInstance().upperArm.set(UA_SPEED_STOP);
-			} else if (UA_DOWN_TARGET && !UA_HOME && upperArmEnc <= upperArmEncTarget) {
+			} else if (CMD_UA_DOWN_TARGET && !UA_LS_HOME && upperArmEnc <= upperArmEncTarget) {
 				UPPER_ARM = state.UA_MOVING_DOWN_TARGET;
 				Components.getInstance().upperArm.set(UA_MOVING_DOWN_SPEED);
-			} else if (CONFLICT) {
+			} else if (LS_CONFLICT) {
 				UPPER_ARM = state.UA_CONFLICT;
 				Components.getInstance().upperArm.set(UA_SPEED_STOP);
 			}
@@ -320,16 +320,16 @@ public class Defense {
 			if (upperArmEnc <= upperArmEncTarget) {
 				UPPER_ARM = state.UA_STOPPED;
 				Components.getInstance().upperArm.set(UA_SPEED_STOP);
-			} else if (UA_HOME) {
+			} else if (UA_LS_HOME) {
 				UPPER_ARM = state.UA_STOPPED;
 				Components.getInstance().upperArm.set(UA_SPEED_STOP);
-			} else if (UA_STOP) {
+			} else if (CMD_UA_STOP) {
 				UPPER_ARM = state.UA_STOPPED;
 				Components.getInstance().upperArm.set(UA_SPEED_STOP);
-			} else if (UA_UP_TARGET && !UA_TOO_FAR && upperArmEnc >= upperArmEncTarget) {
+			} else if (CMD_UA_UP_TARGET && !UA_LS_TOO_FAR && upperArmEnc >= upperArmEncTarget) {
 				UPPER_ARM = state.UA_MOVING_DOWN_TARGET;
 				Components.getInstance().upperArm.set(UA_MOVING_DOWN_SPEED);
-			} else if (CONFLICT) {
+			} else if (LS_CONFLICT) {
 				UPPER_ARM = state.UA_CONFLICT;
 				Components.getInstance().upperArm.set(UA_SPEED_STOP);
 			}
