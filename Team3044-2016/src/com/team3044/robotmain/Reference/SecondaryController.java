@@ -16,7 +16,7 @@ public class SecondaryController {
 	public static int BUTTON_RT = 6;
 	public static int BUTTON_LT = 5;
 	public static int BUTTON_BACK = 7;
-	public static int BUTTON_START = 8; //DEFENSE
+	public static int BUTTON_START = 8;
 	
 	private SecondaryController() {
 		secondJoy = new Joystick(1);
