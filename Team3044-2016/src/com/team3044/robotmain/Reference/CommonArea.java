@@ -14,6 +14,8 @@ public class CommonArea {
 	public static double rightDriveSpeed;
 	public static double leftAutoSpeed;
 	public static double rightAutoSpeed;
+	public static boolean movexFeet = false;
+	public static boolean atDistance = false;
 	public static boolean isManualDrive = true;
 	
 	//Shooter
