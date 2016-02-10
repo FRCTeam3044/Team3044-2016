@@ -83,7 +83,7 @@ public class VisionCalc {
 		// ----------------------------------------------------------------------------------------------
 		case SPINSHOOTER:
 			if (!autoAlign) {
-				Reset();
+				Reset(); 
 				visionState = state.WAITING;
 			} else if (!isTargetSeen) {
 				if (SmartDashboard.getBoolean("DB/Button 1")) {
