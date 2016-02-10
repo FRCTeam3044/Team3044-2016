@@ -51,7 +51,7 @@ public class Drive {
 		rightFrontDrive.enableBrakeMode(true);
 		leftBackDrive.enableBrakeMode(true);
 		rightBackDrive.enableBrakeMode(true);
-	}
+	} 
 
 	public void driveAutoPeriodic() {
 		boolean movexFeet = CommonArea.movexFeet;
