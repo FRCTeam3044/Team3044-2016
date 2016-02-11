@@ -40,7 +40,7 @@ public class Drive {
 	public void driveInit() {
 
 		leftFrontDrive = Components.getInstance().leftFrontDrive;
-		leftBackDrive = Components.getInstance().leftFrontDrive;
+		leftBackDrive = Components.getInstance().leftBackDrive;
 		rightFrontDrive = Components.getInstance().rightFrontDrive;
 		rightBackDrive = Components.getInstance().rightBackDrive;
 
