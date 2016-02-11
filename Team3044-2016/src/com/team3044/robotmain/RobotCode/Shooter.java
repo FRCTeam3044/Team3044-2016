@@ -55,8 +55,11 @@ public class Shooter {
 		startVisionShoot = CommonArea.isAligned;
 		shooterVisionTopSpeed = CommonArea.shooterVisionTopSpeed;
 		shooterVisionBotSpeed = CommonArea.shooterVisionBotSpeed;
-
-		switch(shooterState){
+		
+		Components.getInstance().topShooter.set(DB/Slider1""");
+		Components.getInstance().botShooter.set(DB/Slider2""");
+		
+		/*switch(shooterState){
 
 
 		case Stopped:
@@ -142,6 +145,6 @@ public class Shooter {
 				shooterState = state.Stopped;
 				}break;
 
-		}
+		}*/
 	}
 }
