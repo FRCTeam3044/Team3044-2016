@@ -4,26 +4,45 @@ import com.team3044.robotmain.Reference.*;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.AnalogInput;
+
 public class Drive {
 
 	FirstController controller = FirstController.getInstance();
 
+	public enum state {
+		stopped, moveLeftMotor, moveRightMotor, moveBothMotors, manualDrive
+	}
+
+	state autoDriveState = state.stopped;
 	double leftAutoSpeed;
 	double rightAutoSpeed;
 	double leftDriveSpeed;
 	double rightDriveSpeed;
+	double rightDesiredEncoderValue;
+	double leftDesiredEncoderValue;
 
 	public CANTalon leftFrontDrive;
 	public CANTalon leftBackDrive;
 	public CANTalon rightFrontDrive;
 	public CANTalon rightBackDrive;
 
+	public double encoderTolerance = 50;
+
+	public boolean isAtDistance(double current, double desired) {
+		if (desired + encoderTolerance > current
+				|| current > desired - encoderTolerance) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public void driveInit() {
 
-		CANTalon leftFrontDrive = Components.getInstance().leftFrontDrive;
-		CANTalon leftBackDrive = Components.getInstance().leftFrontDrive;
-		CANTalon rightFrontDrive = Components.getInstance().rightFrontDrive;
-		CANTalon rightBackDrive = Components.getInstance().rightBackDrive;
+		leftFrontDrive = Components.getInstance().leftFrontDrive;
+		leftBackDrive = Components.getInstance().leftBackDrive;
+		rightFrontDrive = Components.getInstance().rightFrontDrive;
+		rightBackDrive = Components.getInstance().rightBackDrive;
 
 		leftFrontDrive.setPosition(0);
 		rightFrontDrive.setPosition(0);
@@ -32,23 +51,113 @@ public class Drive {
 		rightFrontDrive.enableBrakeMode(true);
 		leftBackDrive.enableBrakeMode(true);
 		rightBackDrive.enableBrakeMode(true);
-	}
+	} 
 
 	public void driveAutoPeriodic() {
-
+		boolean movexFeet = CommonArea.movexFeet;
+		
 		leftAutoSpeed = CommonArea.leftAutoSpeed;
 		rightAutoSpeed = -CommonArea.rightAutoSpeed;
+		
+			double rightCurrentEncoderValue = rightFrontDrive.getAnalogInRaw();
+			double leftCurrentEncoderValue = leftFrontDrive.getAnalogInRaw();
 
-		if (Math.abs(leftAutoSpeed) < .1) {
-			leftAutoSpeed = 0;
+			boolean leftOnTarget = isAtDistance(leftCurrentEncoderValue,
+					leftDesiredEncoderValue);
+			boolean rightOnTarget = isAtDistance(rightCurrentEncoderValue,
+					rightDesiredEncoderValue);
+
+		switch (autoDriveState) {
+		case stopped:
+			if (!movexFeet){
+				autoDriveState = state.manualDrive;
+				
+			} else if (!rightOnTarget && leftOnTarget && movexFeet) {
+				rightFrontDrive.set(rightAutoSpeed);
+				rightBackDrive.set(rightAutoSpeed);
+				autoDriveState = state.moveRightMotor;
+
+			} else if (!leftOnTarget && rightOnTarget && movexFeet) {
+				leftFrontDrive.set(leftAutoSpeed);
+				leftBackDrive.set(leftAutoSpeed);
+				autoDriveState = state.moveLeftMotor;
+
+			} else if (!leftOnTarget && !rightOnTarget && movexFeet) {
+				leftFrontDrive.set(leftAutoSpeed);
+				leftBackDrive.set(leftAutoSpeed);
+				rightFrontDrive.set(rightAutoSpeed);
+				rightBackDrive.set(rightAutoSpeed);
+				autoDriveState = state.moveBothMotors;
+			} else if (leftOnTarget && rightOnTarget && movexFeet) {
+				CommonArea.atDistance = true;
+			} 
+			break;
+		case moveLeftMotor:
+			if (!movexFeet){
+				autoDriveState = state.manualDrive;
+				
+			} else if (rightOnTarget && leftOnTarget) {
+				autoDriveState = state.stopped;
+
+			} else if (!rightOnTarget && !leftOnTarget) {
+				leftFrontDrive.set(leftAutoSpeed);
+				leftBackDrive.set(leftAutoSpeed);
+				rightFrontDrive.set(rightAutoSpeed);
+				rightBackDrive.set(rightAutoSpeed);
+				autoDriveState = state.moveBothMotors;
+			}
+			break;
+		case moveRightMotor:
+			if (!movexFeet){
+				autoDriveState = state.manualDrive;
+				
+			} else if (rightOnTarget && leftOnTarget) {
+				autoDriveState = state.stopped;
+
+			} else if (!rightOnTarget && !leftOnTarget) {
+				leftFrontDrive.set(leftAutoSpeed);
+				leftBackDrive.set(leftAutoSpeed);
+				rightFrontDrive.set(rightAutoSpeed);
+				rightBackDrive.set(rightAutoSpeed);
+				autoDriveState = state.moveBothMotors;
+			}
+			break;
+		case moveBothMotors:
+			if (!movexFeet){
+				autoDriveState = state.manualDrive;
+				
+			} else if (rightOnTarget && leftOnTarget) {
+				autoDriveState = state.stopped;
+
+			} else if (!rightOnTarget && leftOnTarget) {
+				rightFrontDrive.set(rightAutoSpeed);
+				rightBackDrive.set(rightAutoSpeed);
+				autoDriveState = state.moveRightMotor;
+
+			} else if (!leftOnTarget && rightOnTarget) {
+				leftFrontDrive.set(leftAutoSpeed);
+				leftBackDrive.set(leftAutoSpeed);
+				autoDriveState = state.moveLeftMotor;
+			}
+			break;
+		case manualDrive:
+			if (movexFeet){
+				autoDriveState = state.stopped;
+			} else {
+			if (Math.abs(leftAutoSpeed) < .2) {
+				leftAutoSpeed = 0;
+			}
+			if (Math.abs(rightAutoSpeed) < .2) {
+				rightAutoSpeed = 0;
+			}
+
+			leftFrontDrive.set(leftAutoSpeed);
+			leftBackDrive.set(leftAutoSpeed);
+			rightFrontDrive.set(rightAutoSpeed);
+			rightBackDrive.set(rightAutoSpeed);
+			}
+			break;
 		}
-		if (Math.abs(rightAutoSpeed) < .1) {
-			rightAutoSpeed = 0;
-		}
-		leftFrontDrive.set(leftAutoSpeed);
-		leftBackDrive.set(leftAutoSpeed);
-		rightFrontDrive.set(rightAutoSpeed);
-		rightBackDrive.set(rightAutoSpeed);
 	}
 
 	public void driveTeleopPeriodic() {
@@ -67,10 +176,10 @@ public class Drive {
 			}
 		}
 
-		if (Math.abs(leftDriveSpeed) < .1) {
+		if (Math.abs(leftDriveSpeed) < .2) {
 			leftDriveSpeed = 0;
 		}
-		if (Math.abs(rightDriveSpeed) < .1) {
+		if (Math.abs(rightDriveSpeed) < .2) {
 			rightDriveSpeed = 0;
 		}
 		leftFrontDrive.set(leftDriveSpeed);
@@ -78,6 +187,7 @@ public class Drive {
 		rightFrontDrive.set(rightDriveSpeed);
 		rightBackDrive.set(rightDriveSpeed);
 	}
+
 	public void testPeriodic() {
 
 		leftFrontDrive.set(SmartDashboard.getDouble("DB/ Slider 0"));
@@ -85,11 +195,11 @@ public class Drive {
 		rightFrontDrive.set(SmartDashboard.getDouble("DB/ Slider 2"));
 		rightBackDrive.set(SmartDashboard.getDouble("DB/ SLider 3"));
 
-		SmartDashboard.putString("DB/ String 0", String.valueOf(leftFrontDrive.getAnalogInRaw()));
-		SmartDashboard.putString("DB/ String 1", String.valueOf(rightFrontDrive.getAnalogInRaw()));
-		
+		SmartDashboard.putString("DB/ String 0",
+				String.valueOf(leftFrontDrive.getAnalogInRaw()));
+		SmartDashboard.putString("DB/ String 1",
+				String.valueOf(rightFrontDrive.getAnalogInRaw()));
+
 		driveTeleopPeriodic();
 	}
 }
-
-

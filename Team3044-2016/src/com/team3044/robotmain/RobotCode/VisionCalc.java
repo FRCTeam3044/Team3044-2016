@@ -12,8 +12,8 @@ public class VisionCalc {
 
 	state visionState = state.WAITING;
 
-	final double STARTSPEED = .5;
-	final double TURNSPEED = .4;
+	final double SHOOTERSTARTSPEED = .5;
+	final double DRIVETURNSPEED = .4;
 	
 	boolean autoAlign = CommonArea.autoAlign;
 	boolean aimFlag = CommonArea.aimFlag;
@@ -73,23 +73,25 @@ public class VisionCalc {
 			if (aimFlag) {
 				isManualDrive = false;
 				shooterMotorFlag = true;
-				shooterVisionTopSpeed = STARTSPEED;
-				shooterVisionBotSpeed = -STARTSPEED;
+				leftDriveSpeed = 0;
+				rightDriveSpeed = 0;
+				shooterVisionTopSpeed = SHOOTERSTARTSPEED;
+				shooterVisionBotSpeed = -SHOOTERSTARTSPEED;
 				visionState = state.SPINSHOOTER;
 			}
 			break;
 		// ----------------------------------------------------------------------------------------------
 		case SPINSHOOTER:
 			if (!autoAlign) {
-				Reset();
+				Reset(); 
 				visionState = state.WAITING;
 			} else if (!isTargetSeen) {
 				if (SmartDashboard.getBoolean("DB/Button 1")) {
-					leftDriveSpeed = TURNSPEED;
-					rightDriveSpeed = -TURNSPEED;
+					leftDriveSpeed = DRIVETURNSPEED;
+					rightDriveSpeed = -DRIVETURNSPEED;
 				} else {
-					leftDriveSpeed = -TURNSPEED;
-					rightDriveSpeed = TURNSPEED;
+					leftDriveSpeed = -DRIVETURNSPEED;
+					rightDriveSpeed = DRIVETURNSPEED;
 				}
 				visionState = state.AUTOFIND;
 			} else if (isTargetSeen && !isAligned) {
@@ -127,7 +129,10 @@ public class VisionCalc {
 			break;
 		// ----------------------------------------------------------------------------------------------
 		case WAITFORSHOOTER: 
-			if (isUpToSpeed) {
+			if (!autoAlign) {
+				Reset();
+				visionState = state.WAITING;
+			} else if (isUpToSpeed) {
 				shootFlag = true;
 				visionState = state.SHOOT;
 			}
@@ -137,7 +142,10 @@ public class VisionCalc {
 			if (isShot) {
 				Reset();
 				visionState = state.WAITING;
-			}
+			} /*else if (!autoAlign){
+				Reset();
+				visionState = state.WAITING;
+			}*/
 			break;
 		}
 	}
