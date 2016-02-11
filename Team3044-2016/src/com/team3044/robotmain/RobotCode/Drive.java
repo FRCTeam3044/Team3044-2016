@@ -10,7 +10,7 @@ public class Drive {
 	FirstController controller = FirstController.getInstance();
 
 	public enum state {
-		stopped, moveLeftMotor, moveRightMotor, moveBothMotors
+		stopped, moveLeftMotor, moveRightMotor, moveBothMotors, manualDrive
 	}
 
 	state autoDriveState = state.stopped;
@@ -29,8 +29,8 @@ public class Drive {
 	public double encoderTolerance = 50;
 
 	public boolean isAtDistance(double current, double desired) {
-		if (desired + encoderTolerance < current
-				|| desired - encoderTolerance > current) {
+		if (desired + encoderTolerance > current
+				|| current > desired - encoderTolerance) {
 			return true;
 		} else {
 			return false;
@@ -55,32 +55,24 @@ public class Drive {
 
 	public void driveAutoPeriodic() {
 		boolean movexFeet = CommonArea.movexFeet;
-		double rightCurrentEncoderValue = rightFrontDrive.getAnalogInRaw();
-		double leftCurrentEncoderValue = leftFrontDrive.getAnalogInRaw();
-
-		boolean leftOnTarget = isAtDistance(leftCurrentEncoderValue,
-				leftDesiredEncoderValue);
-		boolean rightOnTarget = isAtDistance(rightCurrentEncoderValue,
-				rightDesiredEncoderValue);
-
+		
 		leftAutoSpeed = CommonArea.leftAutoSpeed;
 		rightAutoSpeed = -CommonArea.rightAutoSpeed;
+		
+			double rightCurrentEncoderValue = rightFrontDrive.getAnalogInRaw();
+			double leftCurrentEncoderValue = leftFrontDrive.getAnalogInRaw();
 
-		if (Math.abs(leftAutoSpeed) < .1) {
-			leftAutoSpeed = 0;
-		}
-		if (Math.abs(rightAutoSpeed) < .1) {
-			rightAutoSpeed = 0;
-		}
-
-		leftFrontDrive.set(leftAutoSpeed);
-		leftBackDrive.set(leftAutoSpeed);
-		rightFrontDrive.set(rightAutoSpeed);
-		rightBackDrive.set(rightAutoSpeed);
+			boolean leftOnTarget = isAtDistance(leftCurrentEncoderValue,
+					leftDesiredEncoderValue);
+			boolean rightOnTarget = isAtDistance(rightCurrentEncoderValue,
+					rightDesiredEncoderValue);
 
 		switch (autoDriveState) {
 		case stopped:
-			if (!rightOnTarget && leftOnTarget && movexFeet) {
+			if (!movexFeet){
+				autoDriveState = state.manualDrive;
+				
+			} else if (!rightOnTarget && leftOnTarget && movexFeet) {
 				rightFrontDrive.set(rightAutoSpeed);
 				rightBackDrive.set(rightAutoSpeed);
 				autoDriveState = state.moveRightMotor;
@@ -98,10 +90,13 @@ public class Drive {
 				autoDriveState = state.moveBothMotors;
 			} else if (leftOnTarget && rightOnTarget && movexFeet) {
 				CommonArea.atDistance = true;
-			}
+			} 
 			break;
 		case moveLeftMotor:
-			if (rightOnTarget && leftOnTarget) {
+			if (!movexFeet){
+				autoDriveState = state.manualDrive;
+				
+			} else if (rightOnTarget && leftOnTarget) {
 				autoDriveState = state.stopped;
 
 			} else if (!rightOnTarget && !leftOnTarget) {
@@ -113,7 +108,10 @@ public class Drive {
 			}
 			break;
 		case moveRightMotor:
-			if (rightOnTarget && leftOnTarget) {
+			if (!movexFeet){
+				autoDriveState = state.manualDrive;
+				
+			} else if (rightOnTarget && leftOnTarget) {
 				autoDriveState = state.stopped;
 
 			} else if (!rightOnTarget && !leftOnTarget) {
@@ -125,7 +123,10 @@ public class Drive {
 			}
 			break;
 		case moveBothMotors:
-			if (rightOnTarget && leftOnTarget) {
+			if (!movexFeet){
+				autoDriveState = state.manualDrive;
+				
+			} else if (rightOnTarget && leftOnTarget) {
 				autoDriveState = state.stopped;
 
 			} else if (!rightOnTarget && leftOnTarget) {
@@ -137,6 +138,23 @@ public class Drive {
 				leftFrontDrive.set(leftAutoSpeed);
 				leftBackDrive.set(leftAutoSpeed);
 				autoDriveState = state.moveLeftMotor;
+			}
+			break;
+		case manualDrive:
+			if (movexFeet){
+				autoDriveState = state.stopped;
+			} else {
+			if (Math.abs(leftAutoSpeed) < .2) {
+				leftAutoSpeed = 0;
+			}
+			if (Math.abs(rightAutoSpeed) < .2) {
+				rightAutoSpeed = 0;
+			}
+
+			leftFrontDrive.set(leftAutoSpeed);
+			leftBackDrive.set(leftAutoSpeed);
+			rightFrontDrive.set(rightAutoSpeed);
+			rightBackDrive.set(rightAutoSpeed);
 			}
 			break;
 		}
@@ -158,10 +176,10 @@ public class Drive {
 			}
 		}
 
-		if (Math.abs(leftDriveSpeed) < .1) {
+		if (Math.abs(leftDriveSpeed) < .2) {
 			leftDriveSpeed = 0;
 		}
-		if (Math.abs(rightDriveSpeed) < .1) {
+		if (Math.abs(rightDriveSpeed) < .2) {
 			rightDriveSpeed = 0;
 		}
 		leftFrontDrive.set(leftDriveSpeed);
