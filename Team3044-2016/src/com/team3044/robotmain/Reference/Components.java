@@ -45,12 +45,12 @@ public class Components {
 
 	// Digital IOs
 	public DigitalInput conflict = new DigitalInput(0);
-	public DigitalInput topTacho = new DigitalInput(1);
-	public DigitalInput botTacho = new DigitalInput(2);
+	public DigitalInput topTacho = new DigitalInput(5);
+	public DigitalInput botTacho = new DigitalInput(4);
 
-	public DigitalInput GateUpLimit = new DigitalInput(3);
-	public DigitalInput GateDownLimit = new DigitalInput(4);
-	public DigitalInput BallInLimit = new DigitalInput(5);
+	public DigitalInput GateUpLimit = new DigitalInput(1);
+	public DigitalInput GateDownLimit = new DigitalInput(2);
+	public DigitalInput BallInLimit = new DigitalInput(3);
 
 	public Counter topTachoCounter = new Counter(topTacho);
 	public Counter botTachoCounter = new Counter(botTacho);
