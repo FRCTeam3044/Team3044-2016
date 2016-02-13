@@ -4,7 +4,9 @@ package com.team3044.robotmain.RobotCode;
 import com.team3044.robotmain.Reference.*;
 import com.team3044.robotmain.RobotCode.Gate.state;
 
+import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter {
 	//Inputs
@@ -55,10 +57,7 @@ public class Shooter {
 		startVisionShoot = CommonArea.isAligned;
 		shooterVisionTopSpeed = CommonArea.shooterVisionTopSpeed;
 		shooterVisionBotSpeed = CommonArea.shooterVisionBotSpeed;
-		
-		Components.getInstance().topShooter.set(DB/Slider1""");
-		Components.getInstance().botShooter.set(DB/Slider2""");
-		
+
 		/*switch(shooterState){
 
 
@@ -144,7 +143,16 @@ public class Shooter {
 				Components.getInstance().botShooter.set(0);
 				shooterState = state.Stopped;
 				}break;
-
+<<<<<<< HEAD
+	
 		}*/
+		Components.getInstance().topShooter.set(SmartDashboard.getDouble("DB/Slider 0"));
+		Components.getInstance().botShooter.set(SmartDashboard.getDouble("DB/Slider 1"));
+		SmartDashboard.putString("DB/String 0", String.valueOf((1/Components.getInstance().topTachoCounter.getPeriod())));
+		SmartDashboard.putString("DB/String 1", String.valueOf((1/Components.getInstance().botTachoCounter.getPeriod())));
+
+
+		}
+
 	}
-}
+
