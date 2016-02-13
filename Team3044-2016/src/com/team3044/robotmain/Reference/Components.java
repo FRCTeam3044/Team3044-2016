@@ -44,7 +44,7 @@ public class Components {
 	public CANTalon Pickup3;
 
 	// Digital IOs
-	public DigitalInput conflict = new DigitalInput(0);
+	public DigitalInput conflict = new DigitalInput(7);
 	public DigitalInput topTacho = new DigitalInput(5);
 	public DigitalInput botTacho = new DigitalInput(4);
 
