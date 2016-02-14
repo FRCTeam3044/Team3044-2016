@@ -1,6 +1,5 @@
 package com.team3044.robotmain.Reference;
 
-import edu.wpi.first.wpilibj.IterativeRobot;
 import com.team3044.robotmain.Reference.FirstController;
 import com.team3044.robotmain.Reference.SecondaryController;
 
@@ -44,20 +43,24 @@ public class CommonArea {
 	public static double distanceFromTarget;
 	
 	//FirstController
-	public static boolean pickRollersOut = firstJoy.getRawButton(FirstController.BUTTON_LT);
-	public static boolean pickRollersIn = firstJoy.getRawButton(FirstController.BUTTON_RT);
-	public static boolean gateUp = firstJoy.getRawButton(FirstController.BUTTON_Y);
-	public static boolean gateDown = firstJoy.getRawButton(FirstController.BUTTON_A);
+	public static boolean autoAlign = firstJoy.getRawButton(FirstController.BUTTON_Y);
+	public static boolean gateUp = firstJoy.getRawButton(FirstController.BUTTON_X);
+	public static boolean getShootertoManualSpeed = firstJoy.getRawButton(FirstController.BUTTON_A);
+	public static boolean gateDown = firstJoy.getRawButton(FirstController.BUTTON_B);
+	public static boolean pickRollersOut = firstJoy.getRawButton(FirstController.BUTTON_LB);
+	public static boolean pickRollersIn = firstJoy.getRawButton(FirstController.BUTTON_RB);
+	public static boolean getShootertoAutoSpeed = firstJoy.getRawButton(FirstController.BUTTON_BACK);
+	public static boolean manualFire = firstJoy.getRawButton(FirstController.BUTTON_START);
+	
 	public static boolean autoPortcullis = firstJoy.getRawButton(FirstController.BUTTON_X);
-	public static boolean autoAlign = firstJoy.getRawButton(FirstController.BUTTON_START);
 		
 	//SecondaryController
 	public static boolean setShooterSpeed1 = secondaryJoy.getRawButton(SecondaryController.BUTTON_A);
 	public static boolean setShooterSpeed2 = secondaryJoy.getRawButton(SecondaryController.BUTTON_X);
 	public static boolean setShooterSpeed3 = secondaryJoy.getRawButton(SecondaryController.BUTTON_B);
 	public static boolean setShooterSpeed4 = secondaryJoy.getRawButton(SecondaryController.BUTTON_Y);
-	public static boolean shootBall = secondaryJoy.getRawButton(SecondaryController.BUTTON_RT);
-	public static boolean startShooterAtSetSpeed = secondaryJoy.getRawButton(SecondaryController.BUTTON_RT); //this is button for vision shoot
+	public static boolean shootBall = secondaryJoy.getRawButton(SecondaryController.BUTTON_RB);
+	public static boolean startShooterAtSetSpeed = secondaryJoy.getRawButton(SecondaryController.BUTTON_RB); //this is button for vision shoot
 	public static boolean dPadLeft = secondaryJoy.getDPadLeft();
 	public static boolean dPadRight = secondaryJoy.getDPadRight();
 	public static boolean dPadUp = secondaryJoy.getDPadUp();

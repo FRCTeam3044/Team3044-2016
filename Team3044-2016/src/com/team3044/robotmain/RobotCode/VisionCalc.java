@@ -12,7 +12,7 @@ public class VisionCalc {
 
 	state visionState = state.WAITING;
 
-	final double SHOOTERSTARTSPEED = .5;
+	final double SHOOTERSTARTSPEED = .2;
 	final double DRIVETURNSPEED = .4;
 	
 	boolean autoAlign = CommonArea.autoAlign;
@@ -64,6 +64,10 @@ public class VisionCalc {
 	}
 
 	public void Vision() {
+		if(SmartDashboard.getBoolean("DB/Button 1")){
+			isTargetSeen = true;
+			isAligned = true;
+		}
 		if (autoAlign) {
 			aimFlag = true;
 		}
@@ -76,7 +80,7 @@ public class VisionCalc {
 				leftDriveSpeed = 0;
 				rightDriveSpeed = 0;
 				shooterVisionTopSpeed = SHOOTERSTARTSPEED;
-				shooterVisionBotSpeed = -SHOOTERSTARTSPEED;
+				shooterVisionBotSpeed = SHOOTERSTARTSPEED;
 				visionState = state.SPINSHOOTER;
 			}
 			break;
@@ -86,19 +90,21 @@ public class VisionCalc {
 				Reset(); 
 				visionState = state.WAITING;
 			} else if (!isTargetSeen) {
-				if (SmartDashboard.getBoolean("DB/Button 1")) {
-					leftDriveSpeed = DRIVETURNSPEED;
-					rightDriveSpeed = -DRIVETURNSPEED;
+				if (SmartDashboard.getBoolean("DB/Button 2")) {
+					//leftDriveSpeed = DRIVETURNSPEED;
+					//rightDriveSpeed = -DRIVETURNSPEED;
 				} else {
-					leftDriveSpeed = -DRIVETURNSPEED;
-					rightDriveSpeed = DRIVETURNSPEED;
+					//leftDriveSpeed = -DRIVETURNSPEED;
+					//rightDriveSpeed = DRIVETURNSPEED;
 				}
 				visionState = state.AUTOFIND;
 			} else if (isTargetSeen && !isAligned) {
 				visionState = state.ALIGN;
 			} else if (isTargetSeen && isAligned) {
-				shooterVisionTopSpeed = CalculatedTopSpeed(distanceFromTarget);
-				shooterVisionBotSpeed = -CalculatedBotSpeed(distanceFromTarget);
+				//shooterVisionTopSpeed = CalculatedTopSpeed(distanceFromTarget);
+				//shooterVisionBotSpeed = -CalculatedBotSpeed(distanceFromTarget);
+				shooterVisionTopSpeed = CalculatedTopSpeed(.3);
+				shooterVisionBotSpeed = CalculatedBotSpeed(.3);
 				visionState = state.WAITFORSHOOTER;
 			}
 			break;
@@ -120,7 +126,7 @@ public class VisionCalc {
 				leftDriveSpeed = 0;
 				rightDriveSpeed = 0;
 				shooterVisionTopSpeed = CalculatedTopSpeed(distanceFromTarget);
-				shooterVisionBotSpeed = -CalculatedBotSpeed(distanceFromTarget);
+				shooterVisionBotSpeed = CalculatedBotSpeed(distanceFromTarget);
 				visionState = state.WAITFORSHOOTER;
 			} else {
 				leftDriveSpeed = CalculatedTurnSpeed(angleToTarget);

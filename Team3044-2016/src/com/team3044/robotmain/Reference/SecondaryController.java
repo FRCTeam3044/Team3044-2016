@@ -13,8 +13,8 @@ public class SecondaryController {
 	public static int BUTTON_B = 2; 
 	public static int BUTTON_A = 1; 
 
-	public static int BUTTON_RT = 6;
-	public static int BUTTON_LT = 5;
+	public static int BUTTON_RB = 6;
+	public static int BUTTON_LB = 5;
 	public static int BUTTON_BACK = 7;
 	public static int BUTTON_START = 8;
 	

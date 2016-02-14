@@ -13,15 +13,15 @@ public class Robot extends IterativeRobot {
 	public 
 	//Defense defense = new Defense();
 	//Drive drive = new Drive();
-	//Shooter shooter = new Shooter();
-	Gate gate = new Gate();
+	Shooter shooter = new Shooter();
+	//Gate gate = new Gate();
 	//VisionCalc vision = new VisionCalc();
 
 	public void robotInit() {
 		Components.getInstance().init();
 		//drive.driveInit();
 		//defense.defenseInit();
-		//shooter.shooterInit();
+		shooter.shooterInit();
 		//gate.gateInit();
 	}
 
@@ -32,7 +32,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		//drive.driveAutoPeriodic();
 		//defense.defenseAutoPeriodic();
-		//shooter.shooterAutoPeriodic();
+		shooter.shooterAutoPeriodic();
 		//gate.gateAutoPeriodic();
 		//vision.Vision();
 	}
@@ -44,7 +44,7 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		//drive.driveTeleopPeriodic();
 		//defense.defenseTeleopPeriodic();
-		//shooter.shooterTeleopPeriodic();
+		shooter.shooterTeleopPeriodic();
 		//gate.gateTeleopPeriodic();
 		//vision.Vision();
 	}
@@ -80,7 +80,8 @@ public class Robot extends IterativeRobot {
 	int subtract = 0;
 
 	public void testPeriodic() {
-		gate.gateTestPeriodic();
+		shooter.shooterTestPeriodic();
+		//gate.gateTestPeriodic();
 		/*
 		//drive.testPeriodic();
 		//Components.getInstance().leftBackDrive.set(.3);

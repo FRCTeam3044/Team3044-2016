@@ -1,6 +1,7 @@
 package com.team3044.robotmain.RobotCode;
 
 import com.team3044.robotmain.Reference.*;
+
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSourceType;
@@ -22,9 +23,11 @@ public class Shooter {
 	// 1/Components.botTachoCounter.getPeriod();
 
 	// Motor Speeds
-	final double TRACKMOTORSPEED = 1;
+	final double TRACKMOTORSPEED = .2;
 	boolean lastStaging = false;
 	Timer mytimer = new Timer();
+	Components comp = Components.getInstance();
+	FirstController controller = FirstController.getInstance();
 
 	// VISION CODE SPEEDS
 	// CommonArea.shooterTopSpeed;
@@ -37,20 +40,25 @@ public class Shooter {
 
 	state shooterState = state.Stopped;
 
-	Counter topCounter = Components.getInstance().topTachoCounter;
-	Counter botCounter = Components.getInstance().botTachoCounter;
+	Counter topCounter = comp.topTachoCounter;
+	Counter botCounter = comp.botTachoCounter;
 	PIDController botShooterPID;
 	PIDController topShooterPID;
 	
 	final double p = .001, i = 0, d = 0; //NEEDS TO BE SET
 
+	 
+	
+	
+	
+	
 	public void shooterInit() {
 		topCounter.setDistancePerPulse(1);
 		botCounter.setDistancePerPulse(1);
 		topCounter.setPIDSourceType(PIDSourceType.kRate);
 		botCounter.setPIDSourceType(PIDSourceType.kRate);
-		topShooterPID = new PIDController(p,i,d,topCounter,Components.getInstance().topShooter);
-		botShooterPID = new PIDController(p,i,d,botCounter,Components.getInstance().botShooter);
+		topShooterPID = new PIDController(p,i,d,topCounter,comp.topShooter);
+		botShooterPID = new PIDController(p,i,d,botCounter,comp.botShooter);
 		topShooterPID.setInputRange(0, 150);
 		botShooterPID.setInputRange(0, 150);
 		topShooterPID.setOutputRange(0, 1);
@@ -63,8 +71,8 @@ public class Shooter {
 		//Set 
 		topShooterPID.setAbsoluteTolerance(toleranceShooter);
 		botShooterPID.setAbsoluteTolerance(toleranceShooter);
-		Components.getInstance().topShooter.setPIDSourceType(PIDSourceType.kRate);
-		Components.getInstance().botShooter.setPIDSourceType(PIDSourceType.kRate);
+		comp.topShooter.setPIDSourceType(PIDSourceType.kRate);
+		comp.botShooter.setPIDSourceType(PIDSourceType.kRate);
 	}
 
 	public void shooterAutoPeriodic() {
@@ -77,31 +85,33 @@ public class Shooter {
 		startShooterAtVisionSpeed = CommonArea.startShooterAtSetSpeed;
 		shootBall = CommonArea.shootFlag;
 		startVisionShoot = CommonArea.isAligned;
-		shooterVisionTopSpeed = CommonArea.shooterVisionTopSpeed;
-		shooterVisionBotSpeed = CommonArea.shooterVisionBotSpeed;
+		shooterVisionTopSpeed = -CommonArea.shooterVisionTopSpeed;
+		shooterVisionBotSpeed = -CommonArea.shooterVisionBotSpeed;
 		
 		
 		switch (shooterState) {
 
 		case Stopped:
-			if (startVisionShoot && Components.getInstance().BallInLimit.get()) {
-				topShooterPID.setSetpoint(shooterVisionTopSpeed);
-				botShooterPID.setSetpoint(shooterVisionBotSpeed);
+			if (startVisionShoot && comp.BallInLimit.get()) {
+				//topShooterPID.setSetpoint(shooterVisionTopSpeed);
+				//botShooterPID.setSetpoint(shooterVisionBotSpeed);
+				comp.topShooter.set(shooterVisionTopSpeed);
+				comp.botShooter.set(shooterVisionBotSpeed);
 				shooterState = state.startingVisionShoot;
 			} else if (pickRollersIn
-					&& !Components.getInstance().BallInLimit.get()) {
-				Components.getInstance().shooterTrack.set(TRACKMOTORSPEED);
+					/*&& !comp.BallInLimit.get()*/) {
+				comp.shooterTrack.set(TRACKMOTORSPEED);
 				shooterState = state.ingestingBoulder;
 			} else if (pickRollersOut) {
-				Components.getInstance().shooterTrack.set(-TRACKMOTORSPEED);
+				comp.shooterTrack.set(-TRACKMOTORSPEED);
 				shooterState = state.ejectingBoulder;
 			}
 			break;
 
 		// PickUp
 		case ingestingBoulder:
-			if (Components.getInstance().BallInLimit.get() || !pickRollersIn) {
-				Components.getInstance().shooterTrack.set(0);
+			if (/*comp.BallInLimit.get() ||*/ !pickRollersIn) {
+				comp.shooterTrack.set(0);
 				shooterState = state.Stopped;
 			}
 			break;
@@ -109,7 +119,7 @@ public class Shooter {
 		// Ejecting
 		case ejectingBoulder:
 			if (!pickRollersOut) {
-				Components.getInstance().shooterTrack.set(0);
+				comp.shooterTrack.set(0);
 				shooterState = state.Stopped;
 			}
 			break;
@@ -118,7 +128,7 @@ public class Shooter {
 		case startingVisionShoot:
 
 			if (shootBall) {
-				Components.getInstance().shooterTrack.set(TRACKMOTORSPEED);
+				comp.shooterTrack.set(TRACKMOTORSPEED);
 				shooterState = state.Shooting;
 			}
 
@@ -136,13 +146,13 @@ public class Shooter {
 			break;
 
 		case Shooting:
-			if (!Components.getInstance().BallInLimit.get()) {
+			//if (!comp.BallInLimit.get()) {
 				mytimer.reset();
 				mytimer.start();
 				shooterState = state.ShootingDelay;
-			} else if (!startVisionShoot) {
-				Components.getInstance().topShooter.set(0);
-				Components.getInstance().botShooter.set(0);
+			 if (!startVisionShoot) {
+				comp.topShooter.set(0);
+				comp.botShooter.set(0);
 				shooterState = state.Stopped;
 			}
 			break;
@@ -151,30 +161,41 @@ public class Shooter {
 
 			if (mytimer.get() > 2) {
 				CommonArea.isShot = true;
-				Components.getInstance().shooterTrack.set(0);
-				Components.getInstance().topShooter.set(0);
-				Components.getInstance().botShooter.set(0);
+				comp.shooterTrack.set(0);
+				comp.topShooter.set(0);
+				comp.botShooter.set(0);
 				mytimer.stop();
 				shooterState = state.Stopped;
 			} else if (!startVisionShoot) {
 				CommonArea.isShot = true;
-				Components.getInstance().shooterTrack.set(0);
-				Components.getInstance().topShooter.set(0);
-				Components.getInstance().botShooter.set(0);
+				comp.shooterTrack.set(0);
+				comp.topShooter.set(0);
+				comp.botShooter.set(0);
 				shooterState = state.Stopped;
 			}
 			break;
 
 		}
-		Components.getInstance().topShooter.set(SmartDashboard
+		SmartDashboard.putString("DB/String 0", String.valueOf(shooterState));
+
+	}
+	public void shooterTestPeriodic() {
+		comp.topShooter.set(SmartDashboard
 				.getDouble("DB/Slider 0"));
-		Components.getInstance().botShooter.set(SmartDashboard
+		comp.botShooter.set(SmartDashboard
 				.getDouble("DB/Slider 1"));
 		SmartDashboard.putString("DB/String 0", String.valueOf((1 / Components
 				.getInstance().topTachoCounter.getPeriod())));
 		SmartDashboard.putString("DB/String 1", String.valueOf((1 / Components
 				.getInstance().botTachoCounter.getPeriod())));
-
+		
+		
+		/*comp.topShooter.set(controller.getRightY());
+		comp.botShooter.set(controller.getLeftY());
+		SmartDashboard.putString("DB/String 0", String.valueOf((1 / Components
+				.getInstance().topTachoCounter.getPeriod())));
+		SmartDashboard.putString("DB/String 1", String.valueOf((1 / Components
+				.getInstance().botTachoCounter.getPeriod())));*/
 	}
 
 }
