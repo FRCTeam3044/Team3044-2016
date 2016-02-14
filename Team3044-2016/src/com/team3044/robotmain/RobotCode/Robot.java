@@ -13,15 +13,15 @@ public class Robot extends IterativeRobot {
 	public 
 	//Defense defense = new Defense();
 	//Drive drive = new Drive();
-	Shooter shooter = new Shooter();
-	//Gate gate = new Gate();
+	//Shooter shooter = new Shooter();
+	Gate gate = new Gate();
 	//VisionCalc vision = new VisionCalc();
 
 	public void robotInit() {
 		Components.getInstance().init();
 		//drive.driveInit();
 		//defense.defenseInit();
-		shooter.shooterInit();
+		//shooter.shooterInit();
 		//gate.gateInit();
 	}
 
@@ -44,7 +44,7 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		//drive.driveTeleopPeriodic();
 		//defense.defenseTeleopPeriodic();
-		shooter.shooterTeleopPeriodic();
+		//shooter.shooterTeleopPeriodic();
 		//gate.gateTeleopPeriodic();
 		//vision.Vision();
 	}
@@ -65,21 +65,22 @@ public class Robot extends IterativeRobot {
 	int count = 0;
 
 	public void testInit() {
-		count = 0;
-		TEST_DRIVE_STATE = DRIVE_NORMAL;
-		CommonArea.isManualDrive = true;
-		Components.getInstance().leftFrontDrive.setFeedbackDevice(FeedbackDevice.AnalogEncoder);
-		Components.getInstance().rightFrontDrive.setFeedbackDevice(FeedbackDevice.AnalogEncoder);
-		Components.getInstance().leftFrontDrive.setAnalogPosition(0);
-		Components.getInstance().rightFrontDrive.setAnalogPosition(0);
-		Components.getInstance().leftFrontDrive.setPosition(0);
-		Components.getInstance().rightFrontDrive.setPosition(0);
+		//count = 0;
+		//TEST_DRIVE_STATE = DRIVE_NORMAL;
+		//CommonArea.isManualDrive = true;
+		//Components.getInstance().leftFrontDrive.setFeedbackDevice(FeedbackDevice.AnalogEncoder);
+		//Components.getInstance().rightFrontDrive.setFeedbackDevice(FeedbackDevice.AnalogEncoder);
+		//Components.getInstance().leftFrontDrive.setAnalogPosition(0);
+		//Components.getInstance().rightFrontDrive.setAnalogPosition(0);
+		//Components.getInstance().leftFrontDrive.setPosition(0);
+		//Components.getInstance().rightFrontDrive.setPosition(0);
 		
 		//Components.getInstance().leftFrontDrive.getAnalogInPosition();
 	}
 	int subtract = 0;
 
 	public void testPeriodic() {
+		gate.gateTestPeriodic();
 		/*
 		//drive.testPeriodic();
 		//Components.getInstance().leftBackDrive.set(.3);

@@ -42,7 +42,7 @@ public class Shooter {
 	PIDController botShooterPID;
 	PIDController topShooterPID;
 	
-	double p = .1, i = 0, d = 0; //NEEDS TO BE SET
+	final double p = .001, i = 0, d = 0; //NEEDS TO BE SET
 
 	public void shooterInit() {
 		topCounter.setDistancePerPulse(1);
@@ -57,6 +57,12 @@ public class Shooter {
 		botShooterPID.setOutputRange(0, 1);
 		topShooterPID.enable();
 		botShooterPID.enable();
+		topShooterPID.setPID(p,i,d);
+		botShooterPID.setPID(p,i,d);
+		
+		//Set 
+		topShooterPID.setAbsoluteTolerance(toleranceShooter);
+		botShooterPID.setAbsoluteTolerance(toleranceShooter);
 		Components.getInstance().topShooter.setPIDSourceType(PIDSourceType.kRate);
 		Components.getInstance().botShooter.setPIDSourceType(PIDSourceType.kRate);
 	}
@@ -110,28 +116,18 @@ public class Shooter {
 
 		// Vision
 		case startingVisionShoot:
-			topShooterPID.setPID(p,i,d);
-			botShooterPID.setPID(p,i,d);
-			topShooterPID.enable();
-			botShooterPID.enable();
-			
+
 			if (shootBall) {
 				Components.getInstance().shooterTrack.set(TRACKMOTORSPEED);
 				shooterState = state.Shooting;
 			}
 
 			else if (!startVisionShoot) {
-				Components.getInstance().topShooter.set(0);
-				Components.getInstance().botShooter.set(0);
+				topShooterPID.setSetpoint(0);
+				botShooterPID.setSetpoint(0);
+				
 				shooterState = state.Stopped;
-			} else if (Utilities.tolerance(shooterVisionTopSpeed
-					- toleranceShooter,
-					Components.getInstance().topTachoCounter.get(),
-					shooterVisionTopSpeed + toleranceShooter)
-					&& Utilities.tolerance(shooterVisionBotSpeed
-							- toleranceShooter,
-							Components.getInstance().botTachoCounter.get(),
-							shooterVisionBotSpeed + toleranceShooter)) {
+			} else if (topShooterPID.onTarget() && botShooterPID.onTarget()){
 				CommonArea.isUpToSpeed = true;
 
 			} else {

@@ -3,8 +3,11 @@ package com.team3044.robotmain.RobotCode;
 
 import com.team3044.robotmain.Reference.*;
 
+import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class Gate {
-	//Inputs
+	/*//Inputs
 	boolean gateUp = CommonArea.gateUp;
 	boolean gateDown = CommonArea.gateDown;
 	boolean chevalStart = CommonArea.chevalFlag;
@@ -13,11 +16,13 @@ public class Gate {
 	//Components.gateTalon.getEncPosition()
 	//Components.BallInLimit.get()
 	boolean encoderCalibrated = false;
-
-
+*/
+	Components comp = Components.getInstance();
+	final double currentLimit=2;
+	FirstController controller = FirstController.getInstance();
 	//States
-	public enum state{
-		Init, encoderZeroing, Stopped, movingUp, movingDown, autoCheval
+	/*public enum state{
+		Init, encoderZeroing, Stopped, movingUp, movingDown, chevalGoingDown, chevalDown, chevalMovingUp, stoppedChevalMid
 	}
 	state gateState = state.Init;
 
@@ -33,6 +38,8 @@ public class Gate {
 	public double initialAngleDifference;
 	public double Desired;
 	
+
+	
 	//Calculation for AnglefromVertical
 	public double angleEncoder (double encoderPosition){
 		double currentActualDegrees;
@@ -41,10 +48,11 @@ public class Gate {
 		supplementOfDesired = currentActualDegrees - initialAngleDifference;
 		Desired = supplementOfDesired-180;
 		return Desired;
-	}
+	}*/
 
 	public void gateInit() {
-
+		
+		
 	}
 
 	public void gateAutoPeriodic() {
@@ -52,15 +60,16 @@ public class Gate {
 	}
 
 	public void gateTeleopPeriodic() {
-		switch (gateState){
+		
+		/*switch (gateState){
 
 		//INIT
 		case Init:
-			if (!Components.getInstance().GateUpLimit.get()){
-				Components.getInstance().gateTalon.set(motorSpeedUp);
+			if (!comp.GateUpLimit.get()){
+				comp.gateTalon.set(motorSpeedUp);
 				gateState = state.encoderZeroing;
 			}else{
-				Components.getInstance().gateTalon.setPosition(0);
+				comp.gateTalon.setPosition(0);
 				encoderCalibrated = true;
 				gateState = state.Stopped;
 			}
@@ -68,15 +77,15 @@ public class Gate {
 		
 		//ENCODERZEROING
 		case encoderZeroing:
-			if (Components.getInstance().GateUpLimit.get()){
-				Components.getInstance().gateTalon.set(0);
-				Components.getInstance().gateTalon.setPosition(0);
+			if (comp.GateUpLimit.get()){
+				comp.gateTalon.set(0);
+				comp.gateTalon.setPosition(0);
 				encoderCalibrated = true;
 				gateState = state.Stopped;
 			}else if (gateUp){
 				gateState = state.movingUp;
 			}else if (gateDown){
-				Components.getInstance().gateTalon.set(motorSpeedDown);
+				comp.getInstance().gateTalon.set(motorSpeedDown);
 				gateState = state.movingDown;
 			}
 			break;
@@ -89,9 +98,9 @@ public class Gate {
 			}else if (gateDown && !Components.getInstance().GateDownLimit.get()){
 				Components.getInstance().gateTalon.set(motorSpeedDown);
 				gateState = state.movingDown;
-			/*}else if (ChevalStart && !Components.getInstance().GateUpLimit.get() && encoderCalibrated){	//<---- look at this
+			}else if (ChevalStart && !Components.getInstance().GateUpLimit.get() && encoderCalibrated){	//<---- look at this
 				Components.getInstance().gateTalon.set(motorSpeedUp);
-				gateState = state.autoCheval;*/
+				gateState = state.autoCheval;
 			}
 			break;
 
@@ -108,18 +117,26 @@ public class Gate {
 			if (Components.getInstance().GateDownLimit.get() || !gateDown){
 				Components.getInstance().gateTalon.set(0);
 				gateState = state.Stopped;
-			}
-			break;
+			}if(comp.gateTalon.getOutputCurrent() > currentLimit){}
+			break;*/
 
 			//Cheval AUTO
 		/*case autoCheval:
-			if(angleEncoder(Components.getInstance().gateTalon.getAnalogInRaw())==7){
+			if(angleEncoder(Components.getInstance().gateTalon.getEncPosition())==7){
 				
 			}else if (Components.getInstance().GateUpLimit.get() || !ChevalStart || Utilities.tolerance(lowerEncoderLimit, Components.getInstance().gateTalon.getEncPosition(), upperEncoderLimit)){
 				Components.getInstance().gateTalon.set(0);
 				gateState = state.Stopped;
 			}
-			break;*/
-		}
+			break;
+		}*/
+	}
+	public void gateTestPeriodic(){
+		comp.gateTalon.set(controller.getRightY());
+		SmartDashboard.putString("Current "+"DB/String 0", String.valueOf(comp.gateTalon.getOutputCurrent()));
+		SmartDashboard.putString("Gate Up Limit " + "DB/String 1", String.valueOf(comp.GateUpLimit.get()));
+		SmartDashboard.putString("Gate Down limit " + "DB/String 2", String.valueOf(comp.GateDownLimit.get()));
+		SmartDashboard.putString("Motor Speed" + "DB/String 3", String.valueOf(controller.getRightY()));
+		
 	}
 }
