@@ -134,7 +134,7 @@ public class VisionCalc {
 			}
 			break;
 		// ----------------------------------------------------------------------------------------------
-		case WAITFORSHOOTER: 
+		case WAITFORSHOOTER:
 			if (!autoAlign) {
 				Reset();
 				visionState = state.WAITING;
