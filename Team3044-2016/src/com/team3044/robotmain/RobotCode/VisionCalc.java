@@ -128,7 +128,7 @@ public class VisionCalc {
 				shooterVisionTopSpeed = CalculatedTopSpeed(distanceFromTarget);
 				shooterVisionBotSpeed = CalculatedBotSpeed(distanceFromTarget);
 				visionState = state.WAITFORSHOOTER;
-			} else {
+			} else { 
 				leftDriveSpeed = CalculatedTurnSpeed(angleToTarget);
 				rightDriveSpeed = CalculatedTurnSpeed(angleToTarget);
 			}
