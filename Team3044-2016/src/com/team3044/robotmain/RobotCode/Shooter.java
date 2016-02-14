@@ -91,7 +91,7 @@ public class Shooter {
 		
 		switch (shooterState) {
 
-		case Stopped:
+		case Stopped: 
 			if (startVisionShoot && comp.BallInLimit.get()) {
 				//topShooterPID.setSetpoint(shooterVisionTopSpeed);
 				//botShooterPID.setSetpoint(shooterVisionBotSpeed);
