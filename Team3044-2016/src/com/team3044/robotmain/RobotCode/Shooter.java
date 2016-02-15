@@ -158,8 +158,16 @@ public class Shooter {
 			break;
 		
 		case startManualShoot:
+			if (CommonArea.isUpToSpeed == true){
+				shooterState = state.readyManualFire;
+			}else if (topShooterPID.onTarget() && botShooterPID.onTarget()){
+				CommonArea.isUpToSpeed = true;
+			}break;
+			
+		case readyManualFire:
 			if (){
-				
+				comp.shooterTrack.set(TRACKMOTORSPEED);
+				shooterState = state.Shooting;
 			}
 			
 		case Shooting:
