@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Gate {
-	/*//Inputs
+	//Inputs
 	boolean gateUp = CommonArea.gateUp;
 	boolean gateDown = CommonArea.gateDown;
 	boolean chevalStart = CommonArea.chevalFlag;
@@ -16,30 +16,32 @@ public class Gate {
 	//Components.gateTalon.getEncPosition()
 	//Components.BallInLimit.get()
 	boolean encoderCalibrated = false;
-*/
+
 	Components comp = Components.getInstance();
 	final double currentLimit=2;
 	FirstController controller = FirstController.getInstance();
+
 	//States
-	/*public enum state{
+	public enum state{
 		Init, encoderZeroing, Stopped, movingUp, movingDown, chevalGoingDown, chevalDown, chevalMovingUp, stoppedChevalMid
 	}
-	state gateState = state.Init;
+	state gateState = state.Stopped;
+	//state gateState = state.Init;
 
 	//Motor Speeds
-	double motorSpeedUp = 1;
-	double motorSpeedDown = -1;
+	double motorSpeedUp = -.3;
+	double motorSpeedDown = .4;
 
 	//Encoder tolerance Values
-	double upperEncoderLimit = -.7;
-	double lowerEncoderLimit = -.8;//check values
+	double upperEncoderLimit = -150;
+	double lowerEncoderLimit = -1450;//check values
 
 	//variables
 	public double initialAngleDifference;
 	public double Desired;
-	
 
-	
+
+
 	//Calculation for AnglefromVertical
 	public double angleEncoder (double encoderPosition){
 		double currentActualDegrees;
@@ -48,11 +50,11 @@ public class Gate {
 		supplementOfDesired = currentActualDegrees - initialAngleDifference;
 		Desired = supplementOfDesired-180;
 		return Desired;
-	}*/
+	}
 
 	public void gateInit() {
-		
-		
+		comp.gateTalon.enableBrakeMode(true);
+		comp.gateTalon.setEncPosition(0);
 	}
 
 	public void gateAutoPeriodic() {
@@ -60,8 +62,8 @@ public class Gate {
 	}
 
 	public void gateTeleopPeriodic() {
-		
-		/*switch (gateState){
+
+		switch (gateState){
 
 		//INIT
 		case Init:
@@ -74,8 +76,8 @@ public class Gate {
 				gateState = state.Stopped;
 			}
 			break;
-		
-		//ENCODERZEROING
+
+			//ENCODERZEROING
 		case encoderZeroing:
 			if (comp.GateUpLimit.get()){
 				comp.gateTalon.set(0);
@@ -89,8 +91,8 @@ public class Gate {
 				gateState = state.movingDown;
 			}
 			break;
-		
-		//STOPPED
+
+			//STOPPED
 		case Stopped:
 			if (gateUp && !Components.getInstance().GateUpLimit.get()){
 				Components.getInstance().gateTalon.set(motorSpeedUp);
@@ -98,10 +100,10 @@ public class Gate {
 			}else if (gateDown && !Components.getInstance().GateDownLimit.get()){
 				Components.getInstance().gateTalon.set(motorSpeedDown);
 				gateState = state.movingDown;
-			}else if (ChevalStart && !Components.getInstance().GateUpLimit.get() && encoderCalibrated){	//<---- look at this
+			}/*else if (ChevalStart && !Components.getInstance().GateUpLimit.get() && encoderCalibrated){	//<---- look at this
 				Components.getInstance().gateTalon.set(motorSpeedUp);
 				gateState = state.autoCheval;
-			}
+			}*/
 			break;
 
 			//MOVING UP
@@ -117,26 +119,76 @@ public class Gate {
 			if (Components.getInstance().GateDownLimit.get() || !gateDown){
 				Components.getInstance().gateTalon.set(0);
 				gateState = state.Stopped;
-			}if(comp.gateTalon.getOutputCurrent() > currentLimit){}
-			break;*/
+			}/*if(comp.gateTalon.getOutputCurrent() > currentLimit){
+				}*/
+
+			break;
+
 
 			//Cheval AUTO
-		/*case autoCheval:
+			/*case autoCheval:
 			if(angleEncoder(Components.getInstance().gateTalon.getEncPosition())==7){
-				
+
 			}else if (Components.getInstance().GateUpLimit.get() || !ChevalStart || Utilities.tolerance(lowerEncoderLimit, Components.getInstance().gateTalon.getEncPosition(), upperEncoderLimit)){
 				Components.getInstance().gateTalon.set(0);
 				gateState = state.Stopped;
-			}
-			break;
-		}*/
+			}controller.getRightY()
+			break;*/
+		}
 	}
 	public void gateTestPeriodic(){
-		comp.gateTalon.set(controller.getRightY());
-		SmartDashboard.putString("Current "+"DB/String 0", String.valueOf(comp.gateTalon.getOutputCurrent()));
-		SmartDashboard.putString("Gate Up Limit " + "DB/String 1", String.valueOf(comp.GateUpLimit.get()));
-		SmartDashboard.putString("Gate Down limit " + "DB/String 2", String.valueOf(comp.GateDownLimit.get()));
-		SmartDashboard.putString("Motor Speed" + "DB/String 3", String.valueOf(controller.getRightY()));
-		
+
+		if(controller.getRawButton(3)){
+			if (comp.BallInLimit.get()){
+				comp.shooterTrack.set(0);
+			}else{
+				comp.shooterTrack.set(-1);
+			}
+		}else if (controller.getRawButton(2)){
+			comp.shooterTrack.set(1);
+
+		}else if (controller.getRawButton(6)){
+			comp.shooterTrack.set(-1);
+		}else{
+			comp.shooterTrack.set(0);
+		}
+
+
+
+
+
+		if(controller.getRawButton(4)){
+			if(comp.gateTalon.getEncPosition() > -1450){
+				comp.gateTalon.set(-.3);
+			}else{
+				comp.gateTalon.set(0);
+			}
+		}else if (controller.getRawButton(1)){
+			if(comp.gateTalon.getEncPosition() < -150 ){
+				comp.gateTalon.set(.4);;
+			}else{
+				comp.gateTalon.set(0);
+			}
+
+		}
+		else{
+			comp.gateTalon.set(0);
+
+		}
+
+
+		//Components comp = Components.getInstance();
+		//comp.gateTalon.set(SmartDashboard
+		//	.getDouble("DB/Slider 0"));
+		SmartDashboard.putString("DB/String 0", String.valueOf(comp.gateTalon.getEncPosition()));
+		SmartDashboard.putString("DB/String 1", String.valueOf(comp.BallInLimit.get()));
+
+		//SmartDashboard.putString("Current "+"DB/String 0", String.valueOf(comp.gateTalon.getOutputCurrent()));
+		//SmartDashboard.putString("Encoder "+ "DB/String 0 ", String.valueOf(comp.gateTalon.getEncPosition()));
+
+		//SmartDashboard.putString("Gate Up Limit " + "DB/String 1", String.valueOf(comp.GateUpLimit.get()));
+		//SmartDashboard.putString("Gate Down limit " + "DB/String 2", String.valueOf(comp.GateDownLimit.get()));
+		//SmartDashboard.putString("Motor Speed" + "DB/String 3", String.valueOf(controller.getRightY()));
+
 	}
 }
