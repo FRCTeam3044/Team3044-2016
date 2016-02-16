@@ -22,7 +22,7 @@ public class CommonArea {
 	public static double shooterVisionBotSpeed;
 	public static boolean aimFlag = false;
 	public static boolean shooterMotorFlag = false;
-	public static boolean shootFlag = false;
+	public static boolean shootFlag = false; 
 	public static boolean isShot = false;
 	
 	//Gate
@@ -57,6 +57,7 @@ public class CommonArea {
 	public static boolean AVALIABLEDLEFT = firstJoy.getDPadLeft();
 	public static boolean shooterToSpeed = firstJoy.getTriggerLeft();
 	public static boolean autoAlign = firstJoy.getTriggerRight();
+	
 	//SecondaryController
 	public static boolean X1 = secondaryJoy.getRawButton(SecondaryController.BUTTON_Y);
 	public static boolean X2 = secondaryJoy.getRawButton(SecondaryController.BUTTON_X);
