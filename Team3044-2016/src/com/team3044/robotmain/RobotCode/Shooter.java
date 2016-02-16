@@ -92,7 +92,6 @@ public class Shooter {
 		pickRollersOut = controller.getRawButton(5);
 		
 		startShooterAtManualSpeed = controller.getRawButton(1);
-		startShooterAtVisionSpeed = CommonArea.startShooterAtSetSpeed;
 		shootBall = CommonArea.shootFlag;
 		startVisionShoot = CommonArea.isAligned;
 		shooterVisionTopSpeed = -CommonArea.shooterVisionTopSpeed;
@@ -162,14 +161,17 @@ public class Shooter {
 				shooterState = state.readyManualFire;
 			}else if (topShooterPID.onTarget() && botShooterPID.onTarget()){
 				CommonArea.isUpToSpeed = true;
-			}break;
+			} else {
+				CommonArea.isUpToSpeed = false;
+			}
+			break;
 			
 		case readyManualFire:
-			if (){
+			if(CommonArea.manualFire){
 				comp.shooterTrack.set(TRACKMOTORSPEED);
 				shooterState = state.Shooting;
 			}
-			
+			break;
 		case Shooting:
 			if (!comp.BallInLimit.get()) {
 				mytimer.reset();
@@ -182,10 +184,6 @@ public class Shooter {
 			}
 			break;
 
-			
-		
-			
-			
 		case ShootingDelay:
 
 			if (mytimer.get() > 2) {
@@ -212,13 +210,19 @@ public class Shooter {
 
 	}
 	public void shooterTestPeriodic() {
-		comp.topShooter.set(SmartDashboard
-				.getDouble("DB/Slider 0"));
-		comp.botShooter.set(SmartDashboard
-				.getDouble("DB/Slider 1"));
-		SmartDashboard.putString("DB/String 5", String.valueOf((1 / Components
+		if(controller.getRawButton(controller.BUTTON_LB)){
+			comp.topShooter.set(SmartDashboard
+					.getDouble("DB/Slider 0"));
+			comp.botShooter.set(SmartDashboard
+					.getDouble("DB/Slider 1"));
+		} else{
+			comp.topShooter.set(0);
+			comp.botShooter.set(0);
+		}
+		
+		SmartDashboard.putString("DB/String 2", String.valueOf((1 / Components
 				.getInstance().topTachoCounter.getPeriod())));
-		SmartDashboard.putString("DB/String 5", String.valueOf((1 / Components
+		SmartDashboard.putString("DB/String 3", String.valueOf((1 / Components
 				.getInstance().botTachoCounter.getPeriod())));
 		
 		
