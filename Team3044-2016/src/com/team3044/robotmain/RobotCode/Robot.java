@@ -29,7 +29,7 @@ public class Robot extends IterativeRobot {
 
 	}
 
-	public void autonomousPeriodic() { 
+	public void autonomousPeriodic() {
 		if(SmartDashboard.getDouble("DB/Slider 0") == 0){
 			
 		} else if(SmartDashboard.getDouble("DB/Slider 0") == 1){
