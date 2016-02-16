@@ -43,28 +43,33 @@ public class CommonArea {
 	public static double distanceFromTarget;
 	
 	//FirstController
-	public static boolean autoAlign = firstJoy.getRawButton(FirstController.BUTTON_Y);
-	public static boolean gateUp = firstJoy.getRawButton(FirstController.BUTTON_X);
-	public static boolean getShootertoManualSpeed = firstJoy.getRawButton(FirstController.BUTTON_A);
-	public static boolean gateDown = firstJoy.getRawButton(FirstController.BUTTON_B);
+	public static boolean gateUp = firstJoy.getRawButton(FirstController.BUTTON_Y);
+	public static boolean manualFire = firstJoy.getRawButton(FirstController.BUTTON_X);
+	public static boolean gateDown = firstJoy.getRawButton(FirstController.BUTTON_A);
+	public static boolean AVALIABLEB = firstJoy.getRawButton(FirstController.BUTTON_B);
 	public static boolean pickRollersOut = firstJoy.getRawButton(FirstController.BUTTON_LB);
 	public static boolean pickRollersIn = firstJoy.getRawButton(FirstController.BUTTON_RB);
 	public static boolean getShootertoAutoSpeed = firstJoy.getRawButton(FirstController.BUTTON_BACK);
-	public static boolean manualFire = firstJoy.getRawButton(FirstController.BUTTON_START);
-	
-	public static boolean autoPortcullis = firstJoy.getRawButton(FirstController.BUTTON_X);
-		
+	public static boolean setSpeed = firstJoy.getRawButton(FirstController.BUTTON_START);
+	public static boolean portcullius = firstJoy.getDPadUp();
+	public static boolean calibrate = firstJoy.getDPadRight();
+	public static boolean chevalDeFrise = firstJoy.getDPadDown();
+	public static boolean AVALIABLEDLEFT = firstJoy.getDPadLeft();
+	public static boolean shooterToSpeed = firstJoy.getTriggerLeft();
+	public static boolean autoAlign = firstJoy.getTriggerRight();
 	//SecondaryController
-	public static boolean setShooterSpeed1 = secondaryJoy.getRawButton(SecondaryController.BUTTON_A);
-	public static boolean setShooterSpeed2 = secondaryJoy.getRawButton(SecondaryController.BUTTON_X);
-	public static boolean setShooterSpeed3 = secondaryJoy.getRawButton(SecondaryController.BUTTON_B);
-	public static boolean setShooterSpeed4 = secondaryJoy.getRawButton(SecondaryController.BUTTON_Y);
-	public static boolean shootBall = secondaryJoy.getRawButton(SecondaryController.BUTTON_RB);
-	public static boolean startShooterAtSetSpeed = secondaryJoy.getRawButton(SecondaryController.BUTTON_RB); //this is button for vision shoot
-	public static boolean dPadLeft = secondaryJoy.getDPadLeft();
-	public static boolean dPadRight = secondaryJoy.getDPadRight();
-	public static boolean dPadUp = secondaryJoy.getDPadUp();
-	public static boolean dPadDown = secondaryJoy.getDPadDown();
-	public static boolean homeArmStart = secondaryJoy.getRawButton(SecondaryController.BUTTON_BACK);
-	public static boolean homeArmEnd = secondaryJoy.getRawButton(SecondaryController.BUTTON_START);
+	public static boolean X1 = secondaryJoy.getRawButton(SecondaryController.BUTTON_Y);
+	public static boolean X2 = secondaryJoy.getRawButton(SecondaryController.BUTTON_X);
+	public static boolean Y2 = secondaryJoy.getRawButton(SecondaryController.BUTTON_A);
+	public static boolean Y1 = secondaryJoy.getRawButton(SecondaryController.BUTTON_B);
+	public static boolean H2 = secondaryJoy.getRawButton(SecondaryController.BUTTON_LB);
+	public static boolean H1 = secondaryJoy.getRawButton(SecondaryController.BUTTON_RB);
+	public static boolean CAL = secondaryJoy.getRawButton(SecondaryController.BUTTON_BACK);
+	public static boolean STOP_TARGETING = secondaryJoy.getRawButton(SecondaryController.BUTTON_START);
+	public static boolean UA_Up = secondaryJoy.getDPadUp();
+	public static boolean LA_Up = secondaryJoy.getDPadRight();
+	public static boolean UA_Down = secondaryJoy.getDPadDown();
+	public static boolean LA_Down = secondaryJoy.getDPadLeft();
+	public static boolean AVALAIBLELT = secondaryJoy.getTriggerLeft();
+	public static boolean AVALAIBLERT = secondaryJoy.getTriggerRight();
 }

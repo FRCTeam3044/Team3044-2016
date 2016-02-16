@@ -47,12 +47,20 @@ public class FirstController {
 		return firstJoy.getRawAxis(5);
 	}
 
-	public double getTriggerRight() {
-		return firstJoy.getRawAxis(3);
+	public boolean getTriggerRight() {
+		if(Math.abs(firstJoy.getRawAxis(3))>0){
+			return true;
+		} else {
+			return false;
+		}
 	}
 
-	public double getTriggerLeft() {
-		return firstJoy.getRawAxis(2);
+	public boolean getTriggerLeft() {
+		if(Math.abs(firstJoy.getRawAxis(2))>0){
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public boolean getDPadLeft(){

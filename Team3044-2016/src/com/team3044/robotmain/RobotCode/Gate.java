@@ -153,18 +153,14 @@ public class Gate {
 			comp.shooterTrack.set(0);
 		}
 
-
-
-
-
 		if(controller.getRawButton(4)){
-			if(comp.gateTalon.getEncPosition() > -1450){
+			if(comp.gateTalon.getEncPosition() > -500){
 				comp.gateTalon.set(-.3);
 			}else{
 				comp.gateTalon.set(0);
 			}
 		}else if (controller.getRawButton(1)){
-			if(comp.gateTalon.getEncPosition() < -150 ){
+			if(comp.gateTalon.getEncPosition() < 2500 ){
 				comp.gateTalon.set(.4);;
 			}else{
 				comp.gateTalon.set(0);
@@ -180,8 +176,8 @@ public class Gate {
 		//Components comp = Components.getInstance();
 		//comp.gateTalon.set(SmartDashboard
 		//	.getDouble("DB/Slider 0"));
-		SmartDashboard.putString("DB/String 0", String.valueOf(comp.gateTalon.getEncPosition()));
-		SmartDashboard.putString("DB/String 1", String.valueOf(comp.BallInLimit.get()));
+		SmartDashboard.putString("DB/String 5", String.valueOf(comp.gateTalon.getEncPosition()));
+		SmartDashboard.putString("DB/String 6", String.valueOf(comp.BallInLimit.get()));
 
 		//SmartDashboard.putString("Current "+"DB/String 0", String.valueOf(comp.gateTalon.getOutputCurrent()));
 		//SmartDashboard.putString("Encoder "+ "DB/String 0 ", String.valueOf(comp.gateTalon.getEncPosition()));

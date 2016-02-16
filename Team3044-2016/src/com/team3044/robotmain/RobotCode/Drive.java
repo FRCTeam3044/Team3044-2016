@@ -198,10 +198,10 @@ public class Drive {
 			leftDriveSpeed = (controller.getLeftY());
 			rightDriveSpeed = (-controller.getRightY());
 
-			if (controller.getTriggerLeft() > .5) {
+			/*if (controller.getTriggerLeft() > .5) {
 				leftDriveSpeed = leftDriveSpeed * .5;
 				rightDriveSpeed = rightDriveSpeed * .5;
-			}
+			}*/
 		}
 
 		if (Math.abs(leftDriveSpeed) < deadband) {
@@ -217,17 +217,12 @@ public class Drive {
 	}
 
 	public void testPeriodic() {
-
+		/*
 		leftFrontDrive.set(SmartDashboard.getDouble("DB/Slider 0"));
 		leftBackDrive.set(SmartDashboard.getDouble("DB/Slider 1"));
 		rightFrontDrive.set(SmartDashboard.getDouble("DB/Slider 2"));
 		rightBackDrive.set(SmartDashboard.getDouble("DB/Slider 3"));
-
-		SmartDashboard.putString("DB/String 0",
-				String.valueOf(leftFrontDrive.getAnalogInRaw()));
-		SmartDashboard.putString("DB/String 1",
-				String.valueOf(rightFrontDrive.getAnalogInRaw()));
-
+		*/
 		driveTeleopPeriodic();
 	}
 }

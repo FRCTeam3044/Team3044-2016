@@ -97,12 +97,12 @@ public class Defense {
 		lowerArmEncoder = Components.getInstance().lowerArm.getEncPosition();
 		upperArmEncoder = Components.getInstance().upperArm.getEncPosition();
 
-		X1 = CommonArea.dPadUp;
-		X2 = CommonArea.dPadDown;
-		Y1 = CommonArea.dPadLeft;
-		Y2 = CommonArea.dPadRight;
-		H1 = CommonArea.homeArmStart;
-		H2 = CommonArea.homeArmEnd;
+		X1 = CommonArea.X1;
+		X2 = CommonArea.X2;
+		Y1 = CommonArea.Y1;
+		Y2 = CommonArea.Y2;
+		H1 = CommonArea.H1;
+		H2 = CommonArea.H2;
 		switch(CALIBRATION){
 		
 		case CALIBRATED:

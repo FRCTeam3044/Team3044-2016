@@ -46,12 +46,20 @@ public class SecondaryController {
 		return secondJoy.getRawAxis(5);
 	}
 
-	public double getTriggerRight() {
-		return secondJoy.getRawAxis(3);
+	public boolean getTriggerRight() {
+		if(Math.abs(secondJoy.getRawAxis(3))>0){
+			return true;
+		} else {
+			return false;
+		}
 	}
 
-	public double getTriggerLeft() {
-		return secondJoy.getRawAxis(2);
+	public boolean getTriggerLeft() {
+		if(Math.abs(secondJoy.getRawAxis(2))>0){
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public boolean getDPadLeft(){
