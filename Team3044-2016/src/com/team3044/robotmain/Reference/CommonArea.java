@@ -8,7 +8,7 @@ public class CommonArea {
 	static FirstController firstJoy = FirstController.getInstance();
 	static SecondaryController secondaryJoy = SecondaryController.getInstance();
 	
-	//Drive
+	//Drive 
 	public static double leftDriveSpeed;
 	public static double rightDriveSpeed;
 	public static double leftAutoSpeed;
