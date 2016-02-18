@@ -10,7 +10,7 @@ public class Defense {
 	public enum state {
 		LA_MOVING_UP, LA_MOVING_UP_TARGET, LA_MOVING_DOWN, LA_MOVING_DOWN_TARGET, LA_CONFLICT, LA_STOPPED,
 		LA_CALIBRATING, UA_CALIBRATING,UA_MOVING_UP, UA_MOVING_UP_TARGET, UA_MOVING_DOWN, UA_MOVING_DOWN_TARGET, 
-		UA_CONFLICT, UA_STOPPED, CALIBRATED, UNCALIBRATED, OPEN_UPPER, CLOSE_LOWER, CLOSE_UPPER
+		UA_CONFLICT, UA_STOPPED, CALIBRATED, UNCALIBRATED, UNCALIBRATED_BLOCKED, OPEN_UPPER, CLOSE_LOWER, CLOSE_UPPER
 	}
 
 	public final double TARGET_LA_X1 = 0.9; // DEFENSE ENCODER POSITIONS
@@ -103,7 +103,15 @@ public class Defense {
 		Y2 = CommonArea.Y2;
 		H1 = CommonArea.H1;
 		H2 = CommonArea.H2;
+		
 		switch(CALIBRATION){
+		
+		default:
+			CALIBRATION = state.UNCALIBRATED;
+			lowerArmMotor.set(calibrationStopSpeed);
+			upperArmMotor.set(calibrationStopSpeed);
+			calibrated = false;
+			break;
 		
 		case CALIBRATED:
 			if(LOWER_ARM == state.LA_STOPPED && UPPER_ARM == state.UA_STOPPED && !limitSwitchConflict && !stopTargeting){
@@ -117,7 +125,96 @@ public class Defense {
 				upperArmMotor.set(calibrationStopSpeed);
 				calibrated = true;
 			}
-		
+			break;
+			
+		case UNCALIBRATED:
+			if(calibrationButton && lowerArmLimitSwitchHome && upperArmLimitSwitchHome){
+				CALIBRATION = state.CALIBRATED;
+				lowerArmMotor.set(calibrationStopSpeed);
+				upperArmMotor.set(calibrationStopSpeed);
+				calibrated = true;
+			} else if(calibrationButton && !limitSwitchConflict && !stopTargeting && !lowerArmLimitSwitchHome && !upperArmLimitSwitchHome && LOWER_ARM == state.LA_STOPPED && UPPER_ARM == state.UA_STOPPED){
+				CALIBRATION = state.OPEN_UPPER;
+				upperArmMotor.set(calibrationMovingUpSpeed);
+				calibrated = false;
+			} else if(calibrationButton && !limitSwitchConflict && !stopTargeting && !lowerArmLimitSwitchHome && upperArmLimitSwitchHome){
+				CALIBRATION = state.CLOSE_LOWER;
+				lowerArmMotor.set(calibrationMovingDownSpeed);
+				calibrated = false;
+			} else if(calibrationButton && !limitSwitchConflict && !stopTargeting && lowerArmLimitSwitchHome && !upperArmLimitSwitchHome){
+				CALIBRATION = state.CLOSE_UPPER;
+				upperArmMotor.set(calibrationMovingDownSpeed);
+				calibrated = false;
+			}
+			break;
+			
+		case OPEN_UPPER:
+			if(!calibrationButton){
+				CALIBRATION = state.UNCALIBRATED;
+				upperArmMotor.set(calibrationStopSpeed);
+				lowerArmMotor.set(calibrationStopSpeed);
+				calibrated = false;
+			} else if((upperArmCalibrated && lowerArmCalibrated) || lowerArmLimitSwitchTooFar){
+				CALIBRATION = state.CLOSE_LOWER;
+				lowerArmMotor.set(calibrationMovingDownSpeed);
+				calibrated = false;
+			} else if(limitSwitchConflict || stopTargeting){
+				CALIBRATION = state.UNCALIBRATED_BLOCKED;
+				lowerArmMotor.set(calibrationStopSpeed);
+				upperArmMotor.set(calibrationStopSpeed);
+				calibrated = false;
+			}
+			break;
+			
+		case CLOSE_LOWER:
+			if(!calibrationButton){
+				CALIBRATION = state.UNCALIBRATED;
+				upperArmMotor.set(calibrationStopSpeed);
+				lowerArmMotor.set(calibrationStopSpeed);
+				calibrated = false;
+			} else if(limitSwitchConflict || stopTargeting){
+				CALIBRATION = state.UNCALIBRATED_BLOCKED;
+				lowerArmMotor.set(calibrationStopSpeed);
+				upperArmMotor.set(calibrationStopSpeed);
+				calibrated = false;
+			} else if(lowerArmLimitSwitchHome && upperArmLimitSwitchHome){
+				CALIBRATION = state.CALIBRATED;
+				lowerArmMotor.set(calibrationStopSpeed);
+				upperArmMotor.set(calibrationStopSpeed);
+				calibrated = true;
+			} else if(lowerArmLimitSwitchHome && !upperArmLimitSwitchHome){
+				CALIBRATION = state.CLOSE_UPPER;
+				upperArmMotor.set(calibrationMovingDownSpeed);
+				calibrated = false;
+			}
+			break;
+			
+		case CLOSE_UPPER:
+			if(!upperArmLimitSwitchHome && !calibrationButton){
+				CALIBRATION = state.UNCALIBRATED;
+				lowerArmMotor.set(calibrationStopSpeed);
+				upperArmMotor.set(calibrationStopSpeed);
+				calibrated = false;
+			} else if(!upperArmLimitSwitchHome && limitSwitchConflict && stopTargeting){
+				CALIBRATION = state.UNCALIBRATED_BLOCKED;
+				lowerArmMotor.set(calibrationStopSpeed);
+				upperArmMotor.set(calibrationStopSpeed);
+				calibrated = false;
+			} else if(upperArmLimitSwitchHome){
+				CALIBRATION = state.CALIBRATED;
+				lowerArmMotor.set(calibrationStopSpeed);
+				upperArmMotor.set(calibrationStopSpeed);
+				calibrated = true;
+			}
+			break;
+			
+		case UNCALIBRATED_BLOCKED:
+			if(!calibrationButton){
+				CALIBRATION = state.UNCALIBRATED;
+				lowerArmMotor.set(calibrationStopSpeed);
+				upperArmMotor.set(calibrationStopSpeed);
+				calibrated = false;
+			}
 		
 		
 		}
