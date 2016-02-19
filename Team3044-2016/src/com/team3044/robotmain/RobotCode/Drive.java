@@ -2,8 +2,6 @@ package com.team3044.robotmain.RobotCode;
 
 import com.team3044.robotmain.Reference.*;
 import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.AnalogInput;
 
 public class Drive {
 
@@ -27,14 +25,15 @@ public class Drive {
 	public CANTalon rightBackDrive;
 
 	public double encoderTolerance = 50;
-	
+
 	private final double deadband = .2;
 
 	private Components comp = Components.getInstance();
+
 	public boolean isAtDistance(double current, double desired) {
-		return (desired + encoderTolerance > current
-				|| current > desired - encoderTolerance);
-		
+		return (desired + encoderTolerance > current || current > desired
+				- encoderTolerance);
+
 	}
 
 	public void driveInit() {
@@ -55,33 +54,33 @@ public class Drive {
 		rightFrontDrive.enableBrakeMode(true);
 		leftBackDrive.enableBrakeMode(true);
 		rightBackDrive.enableBrakeMode(true);
-	} 
+	}
 
 	public void driveAutoPeriodic() {
 		boolean movexFeet = CommonArea.movexFeet;
-		
+
 		leftAutoSpeed = CommonArea.leftAutoSpeed;
 		rightAutoSpeed = -CommonArea.rightAutoSpeed;
-		
-			double rightCurrentEncoderValue = rightFrontDrive.getAnalogInRaw();
-			double leftCurrentEncoderValue = leftFrontDrive.getAnalogInRaw();
 
-			boolean leftOnTarget = isAtDistance(leftCurrentEncoderValue,
-					leftDesiredEncoderValue);
-			boolean rightOnTarget = isAtDistance(rightCurrentEncoderValue,
-					rightDesiredEncoderValue);
+		double rightCurrentEncoderValue = rightFrontDrive.getAnalogInRaw();
+		double leftCurrentEncoderValue = leftFrontDrive.getAnalogInRaw();
+
+		boolean leftOnTarget = isAtDistance(leftCurrentEncoderValue,
+				leftDesiredEncoderValue);
+		boolean rightOnTarget = isAtDistance(rightCurrentEncoderValue,
+				rightDesiredEncoderValue);
 
 		switch (autoDriveState) {
 		case stopped:
-			if (!movexFeet){
+			if (!movexFeet) {
 				autoDriveState = state.manualDrive;
-				
+
 			} else if (!rightOnTarget && leftOnTarget) {
 				rightFrontDrive.set(rightAutoSpeed);
 				rightBackDrive.set(rightAutoSpeed);
 				autoDriveState = state.moveRightMotor;
 
-			} else if (!leftOnTarget && rightOnTarget ) {
+			} else if (!leftOnTarget && rightOnTarget) {
 				leftFrontDrive.set(leftAutoSpeed);
 				leftBackDrive.set(leftAutoSpeed);
 				autoDriveState = state.moveLeftMotor;
@@ -94,12 +93,12 @@ public class Drive {
 				autoDriveState = state.moveBothMotors;
 			} else if (leftOnTarget && rightOnTarget) {
 				CommonArea.atDistance = true;
-			} 
+			}
 			break;
 		case moveLeftMotor:
-			if (!movexFeet){
+			if (!movexFeet) {
 				autoDriveState = state.manualDrive;
-				
+
 			} else if (rightOnTarget && leftOnTarget) {
 				leftFrontDrive.set(0);
 				leftBackDrive.set(0);
@@ -116,9 +115,9 @@ public class Drive {
 			}
 			break;
 		case moveRightMotor:
-			if (!movexFeet){
+			if (!movexFeet) {
 				autoDriveState = state.manualDrive;
-				
+
 			} else if (rightOnTarget && leftOnTarget) {
 				leftFrontDrive.set(0);
 				leftBackDrive.set(0);
@@ -135,9 +134,9 @@ public class Drive {
 			}
 			break;
 		case moveBothMotors:
-			if (!movexFeet){
+			if (!movexFeet) {
 				autoDriveState = state.manualDrive;
-				
+
 			} else if (rightOnTarget && leftOnTarget) {
 				leftFrontDrive.set(0);
 				leftBackDrive.set(0);
@@ -161,28 +160,28 @@ public class Drive {
 			}
 			break;
 		case manualDrive:
-			if (movexFeet){
-				if (leftDesiredEncoderValue == 0){
+			if (movexFeet) {
+				if (leftDesiredEncoderValue == 0) {
 					leftFrontDrive.set(0);
 					leftBackDrive.set(0);
 				}
-				if (rightDesiredEncoderValue == 0){
+				if (rightDesiredEncoderValue == 0) {
 					rightFrontDrive.set(0);
 					rightBackDrive.set(0);
 				}
 				autoDriveState = state.stopped;
 			} else {
-			if (Math.abs(leftAutoSpeed) < deadband) {
-				leftAutoSpeed = 0;
-			}
-			if (Math.abs(rightAutoSpeed) < deadband) {
-				rightAutoSpeed = 0;
-			}
+				if (Math.abs(leftAutoSpeed) < deadband) {
+					leftAutoSpeed = 0;
+				}
+				if (Math.abs(rightAutoSpeed) < deadband) {
+					rightAutoSpeed = 0;
+				}
 
-			leftFrontDrive.set(leftAutoSpeed);
-			leftBackDrive.set(leftAutoSpeed);
-			rightFrontDrive.set(rightAutoSpeed);
-			rightBackDrive.set(rightAutoSpeed);
+				leftFrontDrive.set(leftAutoSpeed);
+				leftBackDrive.set(leftAutoSpeed);
+				rightFrontDrive.set(rightAutoSpeed);
+				rightBackDrive.set(rightAutoSpeed);
 			}
 			break;
 		}
@@ -198,10 +197,10 @@ public class Drive {
 			leftDriveSpeed = (controller.getLeftY());
 			rightDriveSpeed = (-controller.getRightY());
 
-			/*if (controller.getTriggerLeft() > .5) {
-				leftDriveSpeed = leftDriveSpeed * .5;
-				rightDriveSpeed = rightDriveSpeed * .5;
-			}*/
+			/*
+			 * if (controller.getTriggerLeft() > .5) { leftDriveSpeed =
+			 * leftDriveSpeed * .5; rightDriveSpeed = rightDriveSpeed * .5; }
+			 */
 		}
 
 		if (Math.abs(leftDriveSpeed) < deadband) {
@@ -218,11 +217,11 @@ public class Drive {
 
 	public void testPeriodic() {
 		/*
-		leftFrontDrive.set(SmartDashboard.getDouble("DB/Slider 0"));
-		leftBackDrive.set(SmartDashboard.getDouble("DB/Slider 1"));
-		rightFrontDrive.set(SmartDashboard.getDouble("DB/Slider 2"));
-		rightBackDrive.set(SmartDashboard.getDouble("DB/Slider 3"));
-		*/
+		 * leftFrontDrive.set(SmartDashboard.getDouble("DB/Slider 0"));
+		 * leftBackDrive.set(SmartDashboard.getDouble("DB/Slider 1"));
+		 * rightFrontDrive.set(SmartDashboard.getDouble("DB/Slider 2"));
+		 * rightBackDrive.set(SmartDashboard.getDouble("DB/Slider 3"));
+		 */
 		driveTeleopPeriodic();
 	}
 }
