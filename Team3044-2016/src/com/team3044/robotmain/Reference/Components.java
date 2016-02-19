@@ -1,9 +1,7 @@
 package com.team3044.robotmain.Reference;
 
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
-import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
 
@@ -28,9 +26,6 @@ public class Components {
 	public CANTalon rightFrontDrive;
 	public CANTalon rightBackDrive;
 
-	public static double leftDriveEncoder;
-	public static double rightDriveEncoder;
-
 	// Shooter
 	public CANTalon topShooter;
 	public CANTalon botShooter;
@@ -49,14 +44,14 @@ public class Components {
 	public DigitalInput topTacho = new DigitalInput(5);
 	public DigitalInput botTacho = new DigitalInput(4);
 	public DigitalInput BallInLimit = new DigitalInput(6);
-	public DigitalInput GateUpLimit = new DigitalInput(1);
-	public DigitalInput GateDownLimit = new DigitalInput(2);
+	public DigitalInput GateUpLimit = new DigitalInput(9);
+	public DigitalInput GateDownLimit = new DigitalInput(8);
 	
 
 	private DigitalOutput DIO0 = new DigitalOutput(0);
 	private DigitalOutput DIO3 = new DigitalOutput(3);
-	private DigitalOutput DIO8 = new DigitalOutput(8);
-	private DigitalOutput DIO9 = new DigitalOutput(9);
+	//private DigitalOutput DIO8 = new DigitalOutput(8);
+	//private DigitalOutput DIO9 = new DigitalOutput(9);
 	private DigitalOutput DIO10 = new DigitalOutput(10);
 	private DigitalOutput DIO11 = new DigitalOutput(11);
 	private DigitalOutput DIO12 = new DigitalOutput(12);
@@ -74,8 +69,8 @@ public class Components {
 	private DigitalOutput DIO24 = new DigitalOutput(24);
 	private DigitalOutput DIO25 = new DigitalOutput(25);
 	
-	public Counter topTachoCounter = new Counter(topTacho);
-	public Counter botTachoCounter = new Counter(botTacho);
+	public DummyTacho topTachoCounter = new DummyTacho(topTacho);
+	public DummyTacho botTachoCounter = new DummyTacho(botTacho);
 
 	public void init() {
 		leftFrontDrive = new CANTalon(1);
@@ -98,8 +93,8 @@ public class Components {
 		
 		DIO0.set(false); 
 		DIO3.set(false); 
-		DIO8.set(false); 
-		DIO9.set(false); 
+		//DIO8.set(false); 
+		//DIO9.set(false); 
 		DIO10.set(false); 
 		DIO11.set(false); 
 		DIO12.set(false); 
