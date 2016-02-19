@@ -5,31 +5,30 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class SecondaryController {
 	private static SecondaryController instance = null;
-	
+
 	private Joystick secondJoy;
-	
-	public static int BUTTON_X = 3; 
-	public static int BUTTON_Y = 4; 
-	public static int BUTTON_B = 2; 
-	public static int BUTTON_A = 1; 
+
+	public static int BUTTON_X = 3;
+	public static int BUTTON_Y = 4;
+	public static int BUTTON_B = 2;
+	public static int BUTTON_A = 1;
 
 	public static int BUTTON_RB = 6;
 	public static int BUTTON_LB = 5;
 	public static int BUTTON_BACK = 7;
 	public static int BUTTON_START = 8;
-	
+
 	private SecondaryController() {
 		secondJoy = new Joystick(1);
 	}
-	
+
 	public static SecondaryController getInstance() {
 		if (instance == null) {
 			instance = new SecondaryController();
 		}
-
 		return instance;
 	}
-	
+
 	public double getLeftX() {
 		return secondJoy.getRawAxis(0);
 	}
@@ -47,61 +46,53 @@ public class SecondaryController {
 	}
 
 	public boolean getTriggerRight() {
-		if(Math.abs(secondJoy.getRawAxis(3))>0){
+		return Math.abs(secondJoy.getRawAxis(3)) > 0.1;
+	}
+
+	public boolean getTriggerLeft() {
+		return Math.abs(secondJoy.getRawAxis(2)) > 0.1;
+	}
+
+	public boolean getDPadLeft() {
+		if (secondJoy.getPOV() == 270) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	public boolean getTriggerLeft() {
-		if(Math.abs(secondJoy.getRawAxis(2))>0){
+	public boolean getDPadRight() {
+		if (secondJoy.getPOV() == 90) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
-	public boolean getDPadLeft(){
-		if(secondJoy.getPOV() == 270){ //DEFENSE
+
+	public boolean getDPadUp() {
+		if (secondJoy.getPOV() == 0) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
-	public boolean getDPadRight(){ //DEFENSE
-		if(secondJoy.getPOV() == 90){
+
+	public boolean getDPadDown() {
+		if (secondJoy.getPOV() == 180) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
-	public boolean getDPadUp(){ //DEFENSE
-		if(secondJoy.getPOV() == 0){
+
+	public boolean getDPadOther() {
+		if (secondJoy.getPOV() == -1) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
-	public boolean getDPadDown(){ //DEFENSE
-		if(secondJoy.getPOV() == 180){
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	public boolean getDPadOther(){
-		if(secondJoy.getPOV() == -1){
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
+
 	public boolean getRawButton(int num) {
 		if (!DriverStation.getInstance().isAutonomous()) {
 			return secondJoy.getRawButton(num);
