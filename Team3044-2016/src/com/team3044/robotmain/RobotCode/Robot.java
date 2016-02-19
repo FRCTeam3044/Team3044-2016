@@ -10,56 +10,129 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
-	//Defense defense = new Defense();
+	// Defense defense = new Defense();
 	Drive drive = new Drive();
 	Shooter shooter = new Shooter();
 	Gate gate = new Gate();
-
-	// VisionCalc vision = new VisionCalc();
+	VisionCalc vision = new VisionCalc();
+	
+	private double movexFeetSpeed = .4;
+	private double Dashboard;
 
 	public void robotInit() {
 		Components.getInstance().init();
 		drive.driveInit();
+		vision.Reset();
 		// defense.defenseInit();
 		shooter.shooterInit();
 		gate.gateInit();
 	}
 
 	public void autonomousInit() {
+		// Drive
+		CommonArea.leftAutoSpeed = 0;
+		CommonArea.rightAutoSpeed = 0;
+		CommonArea.leftDesiredEncoderValue = 0;
+		CommonArea.rightDesiredEncoderValue = 0;
+		CommonArea.movexFeet = false;
+		CommonArea.atDistance = false;
+
+		// Shooter
+		CommonArea.shooterVisionTopSpeed = 0;
+		CommonArea.shooterVisionBotSpeed = 0;
+		CommonArea.aimFlag = false;
+		CommonArea.shooterMotorFlag = false;
+		CommonArea.shootFlag = false;
+		CommonArea.isShot = false;
+
+		// Gate
+		CommonArea.gateCalibrated = false;
+
+		// PickUp
+		CommonArea.portcullisFlag = false;
+
+		// Arm
+		CommonArea.armCalibrated = false;
+
+		// Vision
+		CommonArea.isTargetSeen = false;
+		CommonArea.isAligned = false;
+		CommonArea.isUpToSpeed = false;
+		CommonArea.angleToTarget = 0;
+		CommonArea.distanceFromTarget = 0;
 
 	}
 
 	public void autonomousPeriodic() {
-		if(SmartDashboard.getDouble("DB/Slider 0") == 0){
-			
-		} else if(SmartDashboard.getDouble("DB/Slider 0") == 1){
-			
-		} else if(SmartDashboard.getDouble("DB/Slider 0") == 2){
-			
-		} else if(SmartDashboard.getDouble("DB/Slider 0") == 3){
-			
-		} else if(SmartDashboard.getDouble("DB/Slider 0") == 4){
-			
-		} else if(SmartDashboard.getDouble("DB/Slider 0") == 5){
-			
+		
+		Dashboard = SmartDashboard.getDouble("DB/Slider 0");
+		if (Dashboard == 0) {
+			if (CommonArea.atDistance = false) {
+				CommonArea.movexFeet = true;
+				CommonArea.rightAutoSpeed = movexFeetSpeed;
+				CommonArea.leftAutoSpeed = movexFeetSpeed;
+				CommonArea.rightDesiredEncoderValue = 1024;
+				CommonArea.leftDesiredEncoderValue = 1024;
+			} else if (!CommonArea.armCalibrated) {
+				CommonArea.CAL = true;
+			} else if (!CommonArea.gateCalibrated) {
+				CommonArea.calibrate = true;
+			}
+		} else if (Dashboard == 1) {
+			if (!CommonArea.gateCalibrated) {
+				CommonArea.calibrate = true;
+			} else if (!Components.getInstance().GateDownLimit.get()) {
+				CommonArea.gateDown = true;
+			} else if (CommonArea.atDistance = false) {
+				CommonArea.movexFeet = true;
+				CommonArea.rightAutoSpeed = movexFeetSpeed;
+				CommonArea.leftAutoSpeed = movexFeetSpeed;
+				CommonArea.rightDesiredEncoderValue = 1024;
+				CommonArea.leftDesiredEncoderValue = 1024;
+			} else if (!CommonArea.autoShot) {
+				CommonArea.autoAlign = true;
+			} else if (!CommonArea.armCalibrated) {
+				CommonArea.CAL = true;
+			}
+		} else if (Dashboard == 2) {
+			if (CommonArea.atDistance = false) {
+				CommonArea.movexFeet = true;
+				CommonArea.rightAutoSpeed = movexFeetSpeed;
+				CommonArea.leftAutoSpeed = movexFeetSpeed;
+				CommonArea.rightDesiredEncoderValue = 1024;
+				CommonArea.leftDesiredEncoderValue = 1024;
+			} else if (!CommonArea.autoShot) {
+				CommonArea.autoAlign = true;
+			} else if (!CommonArea.armCalibrated) {
+				CommonArea.CAL = true;
+			} else if (!CommonArea.gateCalibrated) {
+				CommonArea.calibrate = true;
+			}
+		} else if (Dashboard == 3) {
+			if (!CommonArea.autoShot) {
+				CommonArea.autoAlign = true;
+			}
 		}
 		// drive.driveAutoPeriodic();
 		// defense.defenseAutoPeriodic();
 		// shooter.shooterAutoPeriodic();
 		// gate.gateAutoPeriodic();
 		// vision.Vision();
+		 
 	}
 
 	public void teleopInit() {
-
+		vision.Reset();
+		
 	}
 
 	public void teleopPeriodic() {
-		// drive.driveTeleopPeriodic();
+		CommonArea.CommonPeriodic();
+		drive.driveTeleopPeriodic();
 		// defense.defenseTeleopPeriodic();
-		// shooter.shooterTeleopPeriodic();
-		// gate.gateTeleopPeriodic();
-		// vision.Vision();
+		shooter.shooterTeleopPeriodic();
+		gate.gateTeleopPeriodic();
+		vision.Vision();
 	}
 
 	public void disabledInit() {
@@ -74,7 +147,7 @@ public class Robot extends IterativeRobot {
 	final int DRIVE_FORWARD = 0;
 	final int DRIVE_BACK = 1;
 	final int DRIVE_NORMAL = 2;
-	final int ENCODER_DISTANCE_ONE_METER_Left = 3000; // Need to change
+	final int ENCODER_DISTANCE_ONE_METER_Left = 3000; 
 	int count = 0;
 
 	public void testInit() {
@@ -90,12 +163,14 @@ public class Robot extends IterativeRobot {
 
 		// Components.getInstance().leftFrontDrive.getAnalogInPosition();
 	}
-
-	int subtract = 0;
-
 	public void testPeriodic() {
-		shooter.shooterTestPeriodic();
+		CommonArea.CommonPeriodic();
 		gate.gateTestPeriodic();
+		System.out.println(FirstController.getInstance().getTriggerLeft());
+	
+		/*
+		shooter.shooterTestPeriodic();
+		//gate.gateTestPeriodic();
 		drive.testPeriodic();
 		// Components.getInstance().leftBackDrive.set(.3);
 		// Components.getInstance().leftFrontDrive.set(.3);
