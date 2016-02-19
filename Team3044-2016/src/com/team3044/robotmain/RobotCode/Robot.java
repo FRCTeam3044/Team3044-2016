@@ -3,9 +3,6 @@ package com.team3044.robotmain.RobotCode;
 import com.team3044.robotmain.Reference.CommonArea;
 import com.team3044.robotmain.Reference.Components;
 import com.team3044.robotmain.Reference.FirstController;
-
-import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
