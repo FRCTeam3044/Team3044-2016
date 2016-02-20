@@ -1,8 +1,12 @@
 package com.team3044.robotmain.RobotCode;
 
+import java.awt.Component;
+
 import com.team3044.robotmain.Reference.CommonArea;
 import com.team3044.robotmain.Reference.Components;
 import com.team3044.robotmain.Reference.FirstController;
+import com.team3044.robotmain.RobotCode.Gate.state;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -12,7 +16,7 @@ public class Robot extends IterativeRobot {
 	Shooter shooter = new Shooter();
 	Gate gate = new Gate();
 	VisionCalc vision = new VisionCalc();
-	
+
 	private double movexFeetSpeed = .3;
 	private double Dashboard;
 
@@ -60,21 +64,60 @@ public class Robot extends IterativeRobot {
 
 	}
 
+	int autoOneState = 0;
+	final int LEFTENC = 3000;
+	final int RIGHTENC = 3000;
+	int startLeft = 0;
+	int startRight = 0;
+
+	void autoDriveForward() {
+		switch (autoOneState) {
+		case 0:
+			CommonArea.isManualDrive = false;
+			CommonArea.leftDriveSpeed = .5;
+			CommonArea.rightDriveSpeed = .5;
+			Components.getInstance().leftFrontDrive.setAnalogPosition(0);
+			Components.getInstance().rightFrontDrive.setAnalogPosition(0);
+			startLeft = Components.getInstance().leftFrontDrive.getAnalogInPosition();
+			startRight = Components.getInstance().rightFrontDrive.getAnalogInPosition();
+			autoOneState = 1;
+			break;
+		case 1:
+			if (Components.getInstance().leftFrontDrive.getAnalogInPosition() + startLeft < -LEFTENC) {
+				CommonArea.leftDriveSpeed = 0;
+			}
+			if (Components.getInstance().rightFrontDrive.getAnalogInPosition() - startRight > RIGHTENC) {
+				CommonArea.rightDriveSpeed = 0;
+			}
+			if ((Components.getInstance().rightFrontDrive.getAnalogInPosition() - startRight < RIGHTENC)
+					&& (Components.getInstance().leftFrontDrive.getAnalogInPosition() - startLeft > LEFTENC)) {
+				autoOneState = 2;
+			}
+			break;
+
+		}
+	}
+
 	public void autonomousPeriodic() {
-		
+
 		Dashboard = SmartDashboard.getDouble("DB/Slider 0");
 		if (Dashboard == 0) {
-			if (CommonArea.atDistance = false) {
-				CommonArea.movexFeet = true;
-				CommonArea.rightAutoSpeed = movexFeetSpeed;
-				CommonArea.leftAutoSpeed = movexFeetSpeed;
-				CommonArea.rightDesiredEncoderValue = 1024;
-				CommonArea.leftDesiredEncoderValue = 1024;
-			} /*else if (!CommonArea.armCalibrated) {
-				CommonArea.CAL = true;
-			}*/ else if (!CommonArea.gateCalibrated) {
-				CommonArea.calibrate = true;
-			}
+			autoDriveForward();
+			SmartDashboard.putString("DB/String 0", String.valueOf(Components.getInstance().leftFrontDrive.getAnalogInPosition()));
+			SmartDashboard.putString("DB/String 1", String.valueOf(Components.getInstance().rightFrontDrive.getAnalogInPosition()));
+			/*
+			 * if (CommonArea.atDistance == false) { CommonArea.movexFeet =
+			 * true; CommonArea.rightAutoSpeed = movexFeetSpeed;
+			 * CommonArea.leftAutoSpeed = movexFeetSpeed;
+			 * CommonArea.rightDesiredEncoderValue = 1024;
+			 * CommonArea.leftDesiredEncoderValue = 1024; } /*else if
+			 * (!CommonArea.armCalibrated) { CommonArea.CAL = true; } else if
+			 * (!Components.getInstance().GateUpLimit.get()) {
+			 * Components.getInstance().gateTalon.set(gate.motorSpeedUp);
+			 * gate.gateState = state.encoderZeroing;
+			 * 
+			 * }
+			 */
 		} else if (Dashboard == 1) {
 			if (!CommonArea.gateCalibrated) {
 				CommonArea.calibrate = true;
@@ -110,17 +153,18 @@ public class Robot extends IterativeRobot {
 				CommonArea.autoAlign = true;
 			}
 		}
-		// drive.driveAutoPeriodic();
+		drive.driveTeleopPeriodic();
+		//CommonArea.CommonPeriodic();
 		// defense.defenseAutoPeriodic();
 		// shooter.shooterAutoPeriodic();
 		// gate.gateAutoPeriodic();
 		// vision.Vision();
-		 
+
 	}
 
 	public void teleopInit() {
 		vision.Reset();
-		
+
 	}
 
 	public void teleopPeriodic() {
@@ -130,6 +174,7 @@ public class Robot extends IterativeRobot {
 		shooter.shooterTeleopPeriodic();
 		gate.gateTeleopPeriodic();
 		vision.Vision();
+
 	}
 
 	public void disabledInit() {
@@ -144,7 +189,7 @@ public class Robot extends IterativeRobot {
 	final int DRIVE_FORWARD = 0;
 	final int DRIVE_BACK = 1;
 	final int DRIVE_NORMAL = 2;
-	final int ENCODER_DISTANCE_ONE_METER_Left = 3000; 
+	final int ENCODER_DISTANCE_ONE_METER_Left = 3000;
 	int count = 0;
 
 	public void testInit() {
@@ -160,24 +205,23 @@ public class Robot extends IterativeRobot {
 
 		// Components.getInstance().leftFrontDrive.getAnalogInPosition();
 	}
+
 	public void testPeriodic() {
 		CommonArea.CommonPeriodic();
 		gate.gateTestPeriodic();
 		System.out.println(FirstController.getInstance().getTriggerLeft());
-	
-		/*
-		shooter.shooterTestPeriodic();
-		//gate.gateTestPeriodic();
-		drive.testPeriodic();
-		// Components.getInstance().leftBackDrive.set(.3);
-		// Components.getInstance().leftFrontDrive.set(.3);
 
-		SmartDashboard.putString("DB/String 0", String.valueOf(Components
-				.getInstance().leftFrontDrive.getAnalogInPosition()));
-		SmartDashboard.putString("DB/String 1", String.valueOf(Components
-				.getInstance().rightFrontDrive.getAnalogInPosition()));
 		/*
-		 * if (FirstController.getInstance()
+		 * shooter.shooterTestPeriodic(); //gate.gateTestPeriodic();
+		 * drive.testPeriodic(); //
+		 * Components.getInstance().leftBackDrive.set(.3); //
+		 * Components.getInstance().leftFrontDrive.set(.3);
+		 * 
+		 * SmartDashboard.putString("DB/String 0", String.valueOf(Components
+		 * .getInstance().leftFrontDrive.getAnalogInPosition()));
+		 * SmartDashboard.putString("DB/String 1", String.valueOf(Components
+		 * .getInstance().rightFrontDrive.getAnalogInPosition())); /* if
+		 * (FirstController.getInstance()
 		 * .getRawButton(FirstController.BUTTON_B)) { testInit(); } switch
 		 * (TEST_DRIVE_STATE) { /* case DRIVE_NORMAL: if
 		 * (FirstController.getInstance().getRawButton(

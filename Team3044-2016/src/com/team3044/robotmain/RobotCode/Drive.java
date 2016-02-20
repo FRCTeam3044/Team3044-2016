@@ -2,6 +2,7 @@ package com.team3044.robotmain.RobotCode;
 
 import com.team3044.robotmain.Reference.*;
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drive {
 
@@ -188,7 +189,7 @@ public class Drive {
 	}
 
 	public void driveTeleopPeriodic() {
-
+		SmartDashboard.putString("DB/String 4", String.valueOf(leftFrontDrive.getOutputCurrent()));
 		if (!CommonArea.isManualDrive) {
 			leftDriveSpeed = CommonArea.leftDriveSpeed;
 			rightDriveSpeed = -CommonArea.rightDriveSpeed;
