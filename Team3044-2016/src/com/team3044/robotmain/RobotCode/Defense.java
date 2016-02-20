@@ -26,8 +26,6 @@ public class Defense {
 	public final double TARGET_UA_H2 = 0.0;
 	public final double UPPER_ARM_RELATIVE = 0.1;
 
-	public boolean upperArmCalibrated; // TEST IF WE ARE CALIBRATED
-	public boolean lowerArmCalibrated;
 	public boolean calibrated = false;
 
 	public boolean lowerArmButtonDown; // MANUAL BUTTONS
@@ -49,17 +47,14 @@ public class Defense {
 	public double lowerArmEncoderTarget;
 	public double upperArmEncoderTarget;
 
-	public final double LOWER_ARM_ENCODER_TOLERANCE = 0.03;
-	public final double UPPER_ARM_ENCODER_TOLERANCE = 0.03;
-
 	public final double lowerArmMovingUpSpeed = 0.5; // MOTOR SPEEDS
 	public final double lowerArmMovingDownSpeed = 0.5;
-	public final double lowerArmStopSpeed = 0.5;
+	public final double lowerArmStopSpeed = 0;
 	public final double upperArmMovingUpSpeed = 0.5;
 	public final double upperArmMovingDownSpeed = 0.5;
-	public final double upperArmStopSpeed = 0.5;
+	public final double upperArmStopSpeed = 0;
 	public final double calibratingSpeed = 0.5;
-	public final double calibrationStopSpeed = 0.5;
+	public final double calibrationStopSpeed = 0;
 	public final double calibrationMovingUpSpeed = 0.5;
 	public final double calibrationMovingDownSpeed = 0.5;
 
@@ -83,6 +78,8 @@ public class Defense {
 
 		lowerArmMotor = Components.getInstance().lowerArm;
 		upperArmMotor = Components.getInstance().upperArm;
+		lowerArmMotor.set(lowerArmStopSpeed);
+		upperArmMotor.set(upperArmStopSpeed);
 
 		conflictDigitalIO = Components.getInstance().conflict;
 
@@ -90,8 +87,6 @@ public class Defense {
 		UPPER_ARM = state.UA_STOPPED;
 		CALIBRATION = state.UNCALIBRATED;
 
-		upperArmCalibrated = false;
-		lowerArmCalibrated = false;
 		calibrated = false;
 
 	}
@@ -240,106 +235,63 @@ public class Defense {
 				LOWER_ARM = state.LA_MOVING_DOWN;
 			} else if (calibrationButton && !limitSwitchConflict) {
 				LOWER_ARM = state.LA_CALIBRATING;
-			} else if (lowerArmCalibrated) {
+			} else if (calibrated) {
 				if (X1) {
-					if (lowerArmEncoder + LOWER_ARM_ENCODER_TOLERANCE < TARGET_LA_X1) {
-						if (!lowerArmLimitSwitchTooFar) {
-							lowerArmMotor.set(lowerArmMovingUpSpeed);
-							LOWER_ARM = state.LA_MOVING_UP_TARGET;
-						}
+					lowerArmEncoderTarget = TARGET_LA_X1;
+					if (lowerArmEncoder < TARGET_LA_X1 && !lowerArmLimitSwitchTooFar) {
+						lowerArmMotor.set(lowerArmMovingUpSpeed);
+						LOWER_ARM = state.LA_MOVING_UP_TARGET;
+					} else if (!lowerArmLimitSwitchHome) {
+						lowerArmMotor.set(lowerArmMovingDownSpeed);
+						LOWER_ARM = state.LA_MOVING_DOWN_TARGET;
+					}
+				} else if (X2) {
+					lowerArmEncoderTarget = TARGET_LA_X2;
+					if (lowerArmEncoder < TARGET_LA_X2 && !lowerArmLimitSwitchTooFar) {
+						lowerArmMotor.set(lowerArmMovingUpSpeed);
+						LOWER_ARM = state.LA_MOVING_UP_TARGET;
+					} else if (!lowerArmLimitSwitchHome) {
+						lowerArmMotor.set(lowerArmMovingDownSpeed);
+						LOWER_ARM = state.LA_MOVING_DOWN_TARGET;
+					}
+				} else if (Y1) {
+					lowerArmEncoderTarget = TARGET_LA_Y1;
+					if (lowerArmEncoder < TARGET_LA_Y1 && !lowerArmLimitSwitchTooFar) {
+						lowerArmMotor.set(lowerArmMovingUpSpeed);
+						LOWER_ARM = state.LA_MOVING_UP_TARGET;
+					} else if (!lowerArmLimitSwitchHome) {
+						lowerArmMotor.set(lowerArmMovingDownSpeed);
+						LOWER_ARM = state.LA_MOVING_DOWN_TARGET;
+					}
+				} else if (Y2) {
+					lowerArmEncoderTarget = TARGET_LA_Y2;
+					if (lowerArmEncoder < TARGET_LA_Y2 && !lowerArmLimitSwitchTooFar) {
+						lowerArmMotor.set(lowerArmMovingUpSpeed);
+						LOWER_ARM = state.LA_MOVING_UP_TARGET;
+					} else if (!lowerArmLimitSwitchHome) {
+						lowerArmMotor.set(lowerArmMovingDownSpeed);
+						LOWER_ARM = state.LA_MOVING_DOWN_TARGET;
+					}
+				} else if (H1) {
+					lowerArmEncoderTarget = TARGET_LA_H1;
+					if (lowerArmEncoder < TARGET_LA_H1 && !lowerArmLimitSwitchTooFar) {
+						lowerArmMotor.set(lowerArmMovingUpSpeed);
+						LOWER_ARM = state.LA_MOVING_UP_TARGET;
+					} else if (!lowerArmLimitSwitchHome) {
+						lowerArmMotor.set(lowerArmMovingDownSpeed);
+						LOWER_ARM = state.LA_MOVING_DOWN_TARGET;
+					}
+				} else if (H2) {
+					lowerArmEncoderTarget = TARGET_LA_H2;
+					if (lowerArmEncoder < TARGET_LA_H2 && !lowerArmLimitSwitchTooFar) {
+						lowerArmMotor.set(lowerArmMovingUpSpeed);
+						LOWER_ARM = state.LA_MOVING_UP_TARGET;
+					} else if (!lowerArmLimitSwitchHome) {
+						lowerArmMotor.set(lowerArmMovingDownSpeed);
+						LOWER_ARM = state.LA_MOVING_DOWN_TARGET;
 					}
 				}
 
-				if (X2) {
-					if (lowerArmEncoder + LOWER_ARM_ENCODER_TOLERANCE < TARGET_LA_X2) {
-						if (!lowerArmLimitSwitchTooFar) {
-							lowerArmMotor.set(lowerArmMovingUpSpeed);
-							LOWER_ARM = state.LA_MOVING_UP_TARGET;
-						}
-					}
-				}
-				if (Y1) {
-					if (lowerArmEncoder + LOWER_ARM_ENCODER_TOLERANCE < TARGET_LA_Y1) {
-						if (!lowerArmLimitSwitchTooFar) {
-							lowerArmMotor.set(lowerArmMovingUpSpeed);
-							LOWER_ARM = state.LA_MOVING_UP_TARGET;
-						}
-					}
-				}
-				if (Y2) {
-					if (lowerArmEncoder + LOWER_ARM_ENCODER_TOLERANCE < TARGET_LA_Y2) {
-						if (!lowerArmLimitSwitchTooFar) {
-							lowerArmMotor.set(lowerArmMovingUpSpeed);
-							LOWER_ARM = state.LA_MOVING_UP_TARGET;
-						}
-					}
-				}
-				if (H1) {
-					if (lowerArmEncoder + LOWER_ARM_ENCODER_TOLERANCE < TARGET_LA_H1) {
-						if (!lowerArmLimitSwitchTooFar) {
-							lowerArmMotor.set(lowerArmMovingUpSpeed);
-							LOWER_ARM = state.LA_MOVING_UP_TARGET;
-						}
-					}
-				}
-				if (H2) {
-					if (lowerArmEncoder + LOWER_ARM_ENCODER_TOLERANCE < TARGET_LA_H2) {
-						if (!lowerArmLimitSwitchTooFar) {
-							lowerArmMotor.set(lowerArmMovingUpSpeed);
-							LOWER_ARM = state.LA_MOVING_UP_TARGET;
-						}
-					}
-				}
-			} else if (lowerArmCalibrated) {
-				if (X1) {
-					if (lowerArmEncoder - LOWER_ARM_ENCODER_TOLERANCE > TARGET_LA_X1) {
-						if (!lowerArmLimitSwitchHome) {
-							lowerArmMotor.set(lowerArmMovingDownSpeed);
-							LOWER_ARM = state.LA_MOVING_DOWN_TARGET;
-						}
-					}
-				}
-
-				if (X2) {
-					if (lowerArmEncoder - LOWER_ARM_ENCODER_TOLERANCE > TARGET_LA_X2) {
-						if (!lowerArmLimitSwitchHome) {
-							lowerArmMotor.set(lowerArmMovingDownSpeed);
-							LOWER_ARM = state.LA_MOVING_DOWN_TARGET;
-						}
-					}
-				}
-				if (Y1) {
-					if (lowerArmEncoder - LOWER_ARM_ENCODER_TOLERANCE > TARGET_LA_Y1) {
-						if (!lowerArmLimitSwitchHome) {
-							lowerArmMotor.set(lowerArmMovingDownSpeed);
-							LOWER_ARM = state.LA_MOVING_DOWN_TARGET;
-						}
-					}
-				}
-				if (Y2) {
-					if (lowerArmEncoder - LOWER_ARM_ENCODER_TOLERANCE > TARGET_LA_Y2) {
-						if (!lowerArmLimitSwitchHome) {
-							lowerArmMotor.set(lowerArmMovingDownSpeed);
-							LOWER_ARM = state.LA_MOVING_DOWN_TARGET;
-						}
-					}
-				}
-				if (H1) {
-					if (lowerArmEncoder - LOWER_ARM_ENCODER_TOLERANCE > TARGET_LA_H1) {
-						if (!lowerArmLimitSwitchHome) {
-							lowerArmMotor.set(lowerArmMovingDownSpeed);
-							LOWER_ARM = state.LA_MOVING_DOWN_TARGET;
-						}
-					}
-				}
-				if (H2) {
-					if (lowerArmEncoder - LOWER_ARM_ENCODER_TOLERANCE > TARGET_LA_H2) {
-						if (!lowerArmLimitSwitchHome) {
-							lowerArmMotor.set(lowerArmMovingDownSpeed);
-							LOWER_ARM = state.LA_MOVING_DOWN_TARGET;
-						}
-					}
-				}
 			}
 			break;
 
@@ -393,13 +345,13 @@ public class Defense {
 			if (limitSwitchConflict) {
 				lowerArmMotor.set(lowerArmStopSpeed);
 				LOWER_ARM = state.LA_CONFLICT;
+			} else if (lowerArmEncoder <= lowerArmEncoderTarget) {
+				lowerArmMotor.set(lowerArmStopSpeed);
+				LOWER_ARM = state.LA_STOPPED;
 			} else if (lowerArmLimitSwitchHome) {
 				lowerArmMotor.set(lowerArmStopSpeed);
 				LOWER_ARM = state.LA_STOPPED;
 			} else if (stopTargeting) {
-				lowerArmMotor.set(lowerArmStopSpeed);
-				LOWER_ARM = state.LA_STOPPED;
-			} else if (lowerArmEncoder <= lowerArmEncoderTarget) {
 				lowerArmMotor.set(lowerArmStopSpeed);
 				LOWER_ARM = state.LA_STOPPED;
 			}
@@ -409,13 +361,13 @@ public class Defense {
 			if (limitSwitchConflict) {
 				lowerArmMotor.set(lowerArmStopSpeed);
 				LOWER_ARM = state.LA_CONFLICT;
+			} else if (lowerArmEncoder >= lowerArmEncoderTarget) {
+				lowerArmMotor.set(lowerArmStopSpeed);
+				LOWER_ARM = state.LA_STOPPED;
 			} else if (lowerArmLimitSwitchTooFar) {
 				lowerArmMotor.set(lowerArmStopSpeed);
 				LOWER_ARM = state.LA_STOPPED;
 			} else if (stopTargeting) {
-				lowerArmMotor.set(lowerArmStopSpeed);
-				LOWER_ARM = state.LA_STOPPED;
-			} else if (lowerArmEncoder >= lowerArmEncoderTarget) {
 				lowerArmMotor.set(lowerArmStopSpeed);
 				LOWER_ARM = state.LA_STOPPED;
 			}
@@ -441,106 +393,63 @@ public class Defense {
 				UPPER_ARM = state.UA_MOVING_DOWN;
 			} else if (calibrationButton && !limitSwitchConflict) {
 				UPPER_ARM = state.UA_CALIBRATING;
-			} else if (upperArmCalibrated) {
+			} else if (calibrated) {
 				if (X1) {
-					if (upperArmEncoder + UPPER_ARM_ENCODER_TOLERANCE < TARGET_UA_X1) {
-						if (!upperArmLimitSwitchTooFar) {
-							upperArmMotor.set(upperArmMovingUpSpeed);
-							UPPER_ARM = state.UA_MOVING_UP_TARGET;
-						}
+					upperArmEncoderTarget = TARGET_UA_X1;
+					if (upperArmEncoder < TARGET_UA_X1 && !upperArmLimitSwitchTooFar) {
+						upperArmMotor.set(upperArmMovingUpSpeed);
+						UPPER_ARM = state.UA_MOVING_UP_TARGET;
+					} else if (!upperArmLimitSwitchHome) {
+						upperArmMotor.set(upperArmMovingDownSpeed);
+						UPPER_ARM = state.UA_MOVING_DOWN_TARGET;
+					}
+				} else if (X2) {
+					upperArmEncoderTarget = TARGET_UA_X2;
+					if (upperArmEncoder < TARGET_UA_X2 && !upperArmLimitSwitchTooFar) {
+						upperArmMotor.set(upperArmMovingUpSpeed);
+						UPPER_ARM = state.UA_MOVING_UP_TARGET;
+					} else if (!upperArmLimitSwitchHome) {
+						upperArmMotor.set(upperArmMovingDownSpeed);
+						UPPER_ARM = state.UA_MOVING_DOWN_TARGET;
+					}
+				} else if (Y1) {
+					upperArmEncoderTarget = TARGET_UA_Y1;
+					if (upperArmEncoder < TARGET_UA_Y1 && !upperArmLimitSwitchTooFar) {
+						upperArmMotor.set(upperArmMovingUpSpeed);
+						UPPER_ARM = state.UA_MOVING_UP_TARGET;
+					} else if (!upperArmLimitSwitchHome) {
+						upperArmMotor.set(upperArmMovingDownSpeed);
+						UPPER_ARM = state.UA_MOVING_DOWN_TARGET;
+					}
+				} else if (Y2) {
+					upperArmEncoderTarget = TARGET_UA_Y2;
+					if (upperArmEncoder < TARGET_UA_Y2 && !upperArmLimitSwitchTooFar) {
+						upperArmMotor.set(upperArmMovingUpSpeed);
+						UPPER_ARM = state.UA_MOVING_UP_TARGET;
+					} else if (!upperArmLimitSwitchHome) {
+						upperArmMotor.set(upperArmMovingDownSpeed);
+						UPPER_ARM = state.UA_MOVING_DOWN_TARGET;
+					}
+				} else if (H1) {
+					upperArmEncoderTarget = TARGET_UA_H1;
+					if (upperArmEncoder < TARGET_UA_H1 && !upperArmLimitSwitchTooFar) {
+						upperArmMotor.set(upperArmMovingUpSpeed);
+						UPPER_ARM = state.UA_MOVING_UP_TARGET;
+					} else if (!upperArmLimitSwitchHome) {
+						upperArmMotor.set(upperArmMovingDownSpeed);
+						UPPER_ARM = state.UA_MOVING_DOWN_TARGET;
+					}
+				} else if (H2) {
+					upperArmEncoderTarget = TARGET_UA_H2;
+					if (upperArmEncoder < TARGET_UA_H2 && !upperArmLimitSwitchTooFar) {
+						upperArmMotor.set(upperArmMovingUpSpeed);
+						UPPER_ARM = state.UA_MOVING_UP_TARGET;
+					} else if (!upperArmLimitSwitchHome) {
+						upperArmMotor.set(upperArmMovingDownSpeed);
+						UPPER_ARM = state.UA_MOVING_DOWN_TARGET;
 					}
 				}
 
-				if (X2) {
-					if (upperArmEncoder + UPPER_ARM_ENCODER_TOLERANCE < TARGET_UA_X2) {
-						if (!upperArmLimitSwitchTooFar) {
-							upperArmMotor.set(upperArmMovingUpSpeed);
-							UPPER_ARM = state.UA_MOVING_UP_TARGET;
-						}
-					}
-				}
-				if (Y1) {
-					if (upperArmEncoder + UPPER_ARM_ENCODER_TOLERANCE < TARGET_UA_Y1) {
-						if (!upperArmLimitSwitchTooFar) {
-							upperArmMotor.set(upperArmMovingUpSpeed);
-							UPPER_ARM = state.UA_MOVING_UP_TARGET;
-						}
-					}
-				}
-				if (Y2) {
-					if (upperArmEncoder + UPPER_ARM_ENCODER_TOLERANCE < TARGET_UA_Y2) {
-						if (!upperArmLimitSwitchTooFar) {
-							upperArmMotor.set(upperArmMovingUpSpeed);
-							UPPER_ARM = state.UA_MOVING_UP_TARGET;
-						}
-					}
-				}
-				if (H1) {
-					if (upperArmEncoder + UPPER_ARM_ENCODER_TOLERANCE < TARGET_UA_H1) {
-						if (!upperArmLimitSwitchTooFar) {
-							upperArmMotor.set(upperArmMovingUpSpeed);
-							UPPER_ARM = state.UA_MOVING_UP_TARGET;
-						}
-					}
-				}
-				if (H2) {
-					if (upperArmEncoder + UPPER_ARM_ENCODER_TOLERANCE < TARGET_UA_H2) {
-						if (!upperArmLimitSwitchTooFar) {
-							upperArmMotor.set(upperArmMovingUpSpeed);
-							UPPER_ARM = state.UA_MOVING_UP_TARGET;
-						}
-					}
-				}
-			} else if (upperArmCalibrated) {
-				if (X1) {
-					if (upperArmEncoder - UPPER_ARM_ENCODER_TOLERANCE > TARGET_UA_X1) {
-						if (!upperArmLimitSwitchHome) {
-							upperArmMotor.set(upperArmMovingDownSpeed);
-							UPPER_ARM = state.UA_MOVING_DOWN_TARGET;
-						}
-					}
-				}
-
-				if (X2) {
-					if (upperArmEncoder - UPPER_ARM_ENCODER_TOLERANCE > TARGET_UA_X2) {
-						if (!upperArmLimitSwitchHome) {
-							upperArmMotor.set(upperArmMovingDownSpeed);
-							UPPER_ARM = state.UA_MOVING_DOWN_TARGET;
-						}
-					}
-				}
-				if (Y1) {
-					if (upperArmEncoder - UPPER_ARM_ENCODER_TOLERANCE > TARGET_UA_Y1) {
-						if (!upperArmLimitSwitchHome) {
-							upperArmMotor.set(upperArmMovingDownSpeed);
-							UPPER_ARM = state.UA_MOVING_DOWN_TARGET;
-						}
-					}
-				}
-				if (Y2) {
-					if (upperArmEncoder - UPPER_ARM_ENCODER_TOLERANCE > TARGET_UA_Y2) {
-						if (!upperArmLimitSwitchHome) {
-							upperArmMotor.set(upperArmMovingDownSpeed);
-							UPPER_ARM = state.UA_MOVING_DOWN_TARGET;
-						}
-					}
-				}
-				if (H1) {
-					if (upperArmEncoder - UPPER_ARM_ENCODER_TOLERANCE > TARGET_UA_H1) {
-						if (!upperArmLimitSwitchHome) {
-							upperArmMotor.set(upperArmMovingDownSpeed);
-							UPPER_ARM = state.UA_MOVING_DOWN_TARGET;
-						}
-					}
-				}
-				if (H2) {
-					if (upperArmEncoder - UPPER_ARM_ENCODER_TOLERANCE > TARGET_UA_H2) {
-						if (!upperArmLimitSwitchHome) {
-							upperArmMotor.set(upperArmMovingDownSpeed);
-							UPPER_ARM = state.UA_MOVING_DOWN_TARGET;
-						}
-					}
-				}
 			}
 			break;
 
@@ -594,13 +503,13 @@ public class Defense {
 			if (limitSwitchConflict) {
 				upperArmMotor.set(upperArmStopSpeed);
 				UPPER_ARM = state.UA_CONFLICT;
+			} else if (upperArmEncoder <= upperArmEncoderTarget) {
+				upperArmMotor.set(upperArmStopSpeed);
+				UPPER_ARM = state.UA_STOPPED;
 			} else if (upperArmLimitSwitchHome) {
 				upperArmMotor.set(upperArmStopSpeed);
 				UPPER_ARM = state.UA_STOPPED;
 			} else if (stopTargeting) {
-				upperArmMotor.set(upperArmStopSpeed);
-				UPPER_ARM = state.UA_STOPPED;
-			} else if (upperArmEncoder <= upperArmEncoderTarget) {
 				upperArmMotor.set(upperArmStopSpeed);
 				UPPER_ARM = state.UA_STOPPED;
 			}
@@ -610,13 +519,13 @@ public class Defense {
 			if (limitSwitchConflict) {
 				upperArmMotor.set(upperArmStopSpeed);
 				UPPER_ARM = state.UA_CONFLICT;
+			} else if (upperArmEncoder >= upperArmEncoderTarget) {
+				upperArmMotor.set(upperArmStopSpeed);
+				UPPER_ARM = state.UA_STOPPED;
 			} else if (upperArmLimitSwitchTooFar) {
 				upperArmMotor.set(upperArmStopSpeed);
 				UPPER_ARM = state.UA_STOPPED;
 			} else if (stopTargeting) {
-				upperArmMotor.set(upperArmStopSpeed);
-				UPPER_ARM = state.UA_STOPPED;
-			} else if (upperArmEncoder >= upperArmEncoderTarget) {
 				upperArmMotor.set(upperArmStopSpeed);
 				UPPER_ARM = state.UA_STOPPED;
 			}
