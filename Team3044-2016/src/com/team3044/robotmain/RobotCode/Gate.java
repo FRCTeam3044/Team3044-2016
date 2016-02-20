@@ -68,7 +68,7 @@ public class Gate {
 		//INIT
 		case Init:
 			System.out.println("GATEINIT");
-			if (!comp.GateUpLimit.get()){
+			if (comp.GateUpLimit.get()){
 				comp.gateTalon.set(motorSpeedUp);
 				gateState = state.encoderZeroing;
 			}else{
@@ -80,7 +80,7 @@ public class Gate {
 
 			//ENCODERZEROING
 		case encoderZeroing:
-			if (comp.GateUpLimit.get()){
+			if (!comp.GateUpLimit.get()){
 				comp.gateTalon.set(0);
 				comp.gateTalon.setEncPosition(0);
 				encoderCalibrated = true;
