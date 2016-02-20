@@ -16,16 +16,16 @@ public class VisionCalc {
 
 	public double CalculatedTurnSpeed(double Angle) {
 		double turnSpeed;
-		if (Math.abs(Angle + 9) > 0) {
-			if(Angle > 0){
-				turnSpeed = Angle / 160 + .1;
-			}else {
-				turnSpeed = Angle / 160 - .1;
+		if (Math.abs(Angle) > 0) {
+			if (Angle > 0) {
+				turnSpeed = (Angle / 220) * 4;
+			} else {
+				turnSpeed = (Angle / 220) * 4;
 			}
-			if (turnSpeed > .2) {
-				turnSpeed = .2;
-			} else if (turnSpeed < -.2) {
-				turnSpeed = -.2;
+			if (turnSpeed > .3) {
+				turnSpeed = .3;
+			} else if (turnSpeed < -.3) {
+				turnSpeed = -.3;
 			}
 		} else {
 			turnSpeed = 0;
@@ -50,6 +50,7 @@ public class VisionCalc {
 		CommonArea.shooterVisionBotSpeed = 0;
 		CommonArea.leftDriveSpeed = 0;
 		CommonArea.rightDriveSpeed = 0;
+		this.visionState = visionState.WAITING;
 		CommonArea.isManualDrive = true;
 		CommonArea.shooterMotorFlag = false;
 		CommonArea.shootFlag = false;
@@ -57,7 +58,7 @@ public class VisionCalc {
 	}
 
 	public boolean isAligned(double Angle, double tolerance) {
-		return Math.abs(Angle + 9) < tolerance;
+		return Math.abs(Angle) < tolerance;
 	}
 
 	int count = 0;
@@ -65,15 +66,15 @@ public class VisionCalc {
 	public void Vision() {
 
 		CommonArea.angleToTarget = (int) SmartDashboard.getNumber("ANGLE", 0);
-		SmartDashboard.putString("DB/String 0",
-				String.valueOf(CommonArea.angleToTarget));
-		SmartDashboard.putString("DB/String 7",
-				String.valueOf(CommonArea.autoAlign));
+		SmartDashboard.putString("DB/String 0", String.valueOf(CommonArea.angleToTarget));
+		SmartDashboard.putString("DB/String 7", String.valueOf(CommonArea.autoAlign));
 		SmartDashboard.putString("DB/String 8", String.valueOf(visionState));
-		SmartDashboard.putString("DB/String 1",
-				String.valueOf(isAligned(CommonArea.angleToTarget, 10)));
+		SmartDashboard.putString("DB/String 1", String.valueOf(CommonArea.isAligned));
 		System.out.println("MOTOR FLAG: " + CommonArea.shooterMotorFlag);
-		CommonArea.isAligned = isAligned(CommonArea.angleToTarget, 10);
+		CommonArea.isAligned = isAligned(CommonArea.angleToTarget, 4);
+		/*
+		 * if(!CommonArea.autoAlign){ Reset(); }
+		 */
 		switch (visionState) {
 		// ---------------------------------------------------------------------------------------------
 		case WAITING:
@@ -85,6 +86,8 @@ public class VisionCalc {
 				CommonArea.shooterVisionTopSpeed = SHOOTERSTARTSPEED;
 				CommonArea.shooterVisionBotSpeed = SHOOTERSTARTSPEED;
 				visionState = state.SPINSHOOTER;
+			} else {
+				CommonArea.shooterMotorFlag = false;
 			}
 			break;
 		// ----------------------------------------------------------------------------------------------
@@ -102,14 +105,13 @@ public class VisionCalc {
 					CommonArea.rightDriveSpeed = -DRIVETURNSPEED;
 				}
 				visionState = state.AUTOFIND;
-			} else if (SmartDashboard.getBoolean("TARGET", false)
-					&& !isAligned(CommonArea.angleToTarget, 10)) {
+			} else if (SmartDashboard.getBoolean("TARGET", false) && !isAligned(CommonArea.angleToTarget, 10)) {
 				count = 0;
 				visionState = state.ALIGN;
-			} else if (SmartDashboard.getBoolean("TARGET", false)
-					&& isAligned(CommonArea.angleToTarget, 10)) {
+			} else if (SmartDashboard.getBoolean("TARGET", false) && isAligned(CommonArea.angleToTarget, 10)) {
 				CommonArea.shooterVisionTopSpeed = CalculatedTopSpeed(75);
 				CommonArea.shooterVisionBotSpeed = CalculatedBotSpeed(60);
+				count = 0;
 				System.out.println("Aligned");
 				visionState = state.WAITFORSHOOTER;
 			}
@@ -127,19 +129,33 @@ public class VisionCalc {
 		case ALIGN:
 			if (!CommonArea.autoAlign) {
 				Reset();
+				count = 0;
 				visionState = state.WAITING;
-			} else if (CommonArea.isAligned && count >= 10) {
+			} else if (CommonArea.isAligned && count >= 20) {
 				System.out.println("aligned");
 				CommonArea.leftDriveSpeed = 0;
 				CommonArea.rightDriveSpeed = 0;
 				CommonArea.shooterVisionTopSpeed = CalculatedTopSpeed(100);
 				CommonArea.shooterVisionBotSpeed = CalculatedBotSpeed(75);
 				visionState = state.WAITFORSHOOTER;
+				count = 0;
+				SmartDashboard.putBoolean("ALIGNED", true);
+			} else if (CommonArea.isAligned && count <= 20) {
+				count += 1;
 			} else {
 				System.out.println("aligning");
-				count += 1;
-				CommonArea.leftDriveSpeed = CalculatedTurnSpeed(CommonArea.angleToTarget);
-				CommonArea.rightDriveSpeed = -CalculatedTurnSpeed(CommonArea.angleToTarget);
+				SmartDashboard.putBoolean("ALIGNED", false);
+				// count += 1;
+				if (CommonArea.angleToTarget < -4) {
+					CommonArea.leftDriveSpeed = CalculatedTurnSpeed(CommonArea.angleToTarget);
+					CommonArea.rightDriveSpeed = 0;
+				} else if(CommonArea.angleToTarget >= 4){
+					CommonArea.rightDriveSpeed = -CalculatedTurnSpeed(CommonArea.angleToTarget);
+					CommonArea.leftDriveSpeed = 0;
+				}else{
+					CommonArea.leftDriveSpeed = 0;
+					CommonArea.rightDriveSpeed = 0;
+				}
 
 			}
 			break;
@@ -161,8 +177,7 @@ public class VisionCalc {
 			break;
 		// ----------------------------------------------------------------------------------------------
 		case SHOOT:
-			if (CommonArea.isShot
-					&& CommonArea.autoAlign) {
+			if (CommonArea.isShot) {
 				CommonArea.autoShot = true;
 				Reset();
 				visionState = state.WAITING;

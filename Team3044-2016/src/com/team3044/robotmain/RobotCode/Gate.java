@@ -25,8 +25,8 @@ public class Gate {
 	//state gateState = state.Stopped;
 	state gateState = state.Init;
 
-	double motorSpeedUp = -.3;
-	double motorSpeedDown = .4;
+	double motorSpeedUp = -.6;
+	double motorSpeedDown = .7;
 
 	double upperEncoderLimit = -150;
 	double lowerEncoderLimit = -1450;//check values
@@ -60,11 +60,14 @@ public class Gate {
 		chevalStart = CommonArea.chevalFlag;
 		gateUp = CommonArea.gateUp;
 		gateDown = CommonArea.gateDown;
-		
+		System.out.println("GATE");
+		SmartDashboard.putString("DB/String 2", String.valueOf(gateState));
+		SmartDashboard.putString("DB/String 3", String.valueOf(comp.GateDownLimit.get()));
 		switch (gateState){
 
 		//INIT
 		case Init:
+			System.out.println("GATEINIT");
 			if (!comp.GateUpLimit.get()){
 				comp.gateTalon.set(motorSpeedUp);
 				gateState = state.encoderZeroing;

@@ -13,7 +13,7 @@ public class Robot extends IterativeRobot {
 	Gate gate = new Gate();
 	VisionCalc vision = new VisionCalc();
 	
-	private double movexFeetSpeed = .4;
+	private double movexFeetSpeed = .3;
 	private double Dashboard;
 
 	public void robotInit() {
@@ -70,9 +70,9 @@ public class Robot extends IterativeRobot {
 				CommonArea.leftAutoSpeed = movexFeetSpeed;
 				CommonArea.rightDesiredEncoderValue = 1024;
 				CommonArea.leftDesiredEncoderValue = 1024;
-			} else if (!CommonArea.armCalibrated) {
+			} /*else if (!CommonArea.armCalibrated) {
 				CommonArea.CAL = true;
-			} else if (!CommonArea.gateCalibrated) {
+			}*/ else if (!CommonArea.gateCalibrated) {
 				CommonArea.calibrate = true;
 			}
 		} else if (Dashboard == 1) {

@@ -35,7 +35,7 @@ public class Shooter {
 		Stopped, ingestingBoulder, ejectingBoulder, startingVisionShoot, waitingForVisionShoot, Shooting, ShootingDelay, startManualShoot, readyManualFire,
 	}
 
-	state shooterState = state.Stopped;
+	public state shooterState = state.Stopped;
 
 	DummyTacho topCounter = comp.topTachoCounter;
 	DummyTacho botCounter = comp.botTachoCounter;
@@ -91,13 +91,11 @@ public class Shooter {
 		pickRollersOut = CommonArea.pickRollersOut;
 		/*
 		 * SmartDashboard.putString("DB/String 3",
-		 * String.valueOf(topShooterPID.onTarget()));
-		 * SmartDashboard.putString("DB/String 4",
-		 * String.valueOf(botShooterPID.onTarget()));
+		 * String.valueOf(topShooterPID.onTarget())); SmartDashboard.putString(
+		 * "DB/String 4", String.valueOf(botShooterPID.onTarget()));
 		 * SmartDashboard.putString("DB/String 5",
-		 * String.valueOf(topCounter.getRate()));
-		 * SmartDashboard.putString("DB/String 6",
-		 * String.valueOf(botCounter.getRate()));
+		 * String.valueOf(topCounter.getRate())); SmartDashboard.putString(
+		 * "DB/String 6", String.valueOf(botCounter.getRate()));
 		 */
 		topSpeed = SmartDashboard.getNumber("DB/Slider 2");
 		botSpeed = SmartDashboard.getNumber("DB/Slider 3");
@@ -156,10 +154,10 @@ public class Shooter {
 				topShooterPID.setSetpoint(0);
 				botShooterPID.setSetpoint(0);
 				shooterState = state.Stopped;
-			} else if (OnTarget(topShooterPID.getSetpoint(),
-					topCounter.getRate(), 5)
-					&& OnTarget(botShooterPID.getSetpoint(),
-							botCounter.getRate(), 5)) {
+			} 
+			
+			if (OnTarget(topShooterPID.getSetpoint(), topCounter.getRate(), 5)
+					&& OnTarget(botShooterPID.getSetpoint(), botCounter.getRate(), 5)) {
 				CommonArea.isUpToSpeed = true;
 
 			} else {
@@ -177,22 +175,15 @@ public class Shooter {
 			} else if (CommonArea.isUpToSpeed == true) {
 				shooterState = state.readyManualFire;
 
-			} else if (OnTarget(topShooterPID.getSetpoint(),
-					topCounter.getRate(), 5)
-					&& OnTarget(botShooterPID.getSetpoint(),
-							botCounter.getRate(), 5)) {
+			} else if (OnTarget(topShooterPID.getSetpoint(), topCounter.getRate(), 5)
+					&& OnTarget(botShooterPID.getSetpoint(), botCounter.getRate(), 5)) {
 				System.out.println("Up to speed");
 				CommonArea.isUpToSpeed = true;
 
 			} else {
 				CommonArea.isUpToSpeed = false;
-				System.out.println("TARGET: "
-						+ botShooterPID.getSetpoint()
-						+ "\n"
-						+ botCounter.getRate()
-						+ "\n"
-						+ OnTarget(botShooterPID.getSetpoint(),
-								botCounter.getRate(), 5));
+				System.out.println("TARGET: " + botShooterPID.getSetpoint() + "\n" + botCounter.getRate() + "\n"
+						+ OnTarget(botShooterPID.getSetpoint(), botCounter.getRate(), 5));
 			}
 			break;
 
@@ -200,8 +191,7 @@ public class Shooter {
 			System.out.println("READY To fire");
 
 			if (!OnTarget(topShooterPID.getSetpoint(), topCounter.getRate(), 5)
-					|| !OnTarget(botShooterPID.getSetpoint(),
-							botCounter.getRate(), 5)) {
+					|| !OnTarget(botShooterPID.getSetpoint(), botCounter.getRate(), 5)) {
 				shooterState = state.startManualShoot;
 			} else if (CommonArea.manualFire) {
 				comp.shooterTrack.set(-TRACKMOTORSPEED);
@@ -218,16 +208,16 @@ public class Shooter {
 				mytimer.reset();
 				mytimer.start();
 				shooterState = state.ShootingDelay;
+			} else if (!startVisionShoot) {
+				topShooterPID.setSetpoint(0);
+				botShooterPID.setSetpoint(0);
+				shooterState = state.Stopped;
 			}
-			/*
-			 * if (!startVisionShoot) { comp.topShooter.set(0);
-			 * comp.botShooter.set(0); shooterState = state.Stopped; }
-			 */
+
 			break;
 
 		case ShootingDelay:
-			if (!this.startShooterAtManualSpeed
-					&& !FirstController.getInstance().getTriggerRight()) {
+			if (!this.startShooterAtManualSpeed && !startVisionShoot) {
 				CommonArea.isShot = true;
 				comp.shooterTrack.set(0);
 				topShooterPID.setSetpoint(0);
@@ -235,11 +225,11 @@ public class Shooter {
 				mytimer.stop();
 				shooterState = state.Stopped;
 			} /*
-			 * else if (!FirstController.getInstance().getTriggerRight()) {
-			 * CommonArea.isShot = true; comp.shooterTrack.set(0);
-			 * topShooterPID.setSetpoint(0); botShooterPID.setSetpoint(0);
-			 * shooterState = state.Stopped; }
-			 */
+				 * else if (!FirstController.getInstance().getTriggerRight()) {
+				 * CommonArea.isShot = true; comp.shooterTrack.set(0);
+				 * topShooterPID.setSetpoint(0); botShooterPID.setSetpoint(0);
+				 * shooterState = state.Stopped; }
+				 */
 			break;
 
 		}
@@ -259,9 +249,9 @@ public class Shooter {
 		 * 
 		 * 
 		 * comp.topShooter.set(controller.getRightY());
-		 * comp.botShooter.set(controller.getLeftY());
-		 * SmartDashboard.putString("DB/String 0", String.valueOf((1 /
-		 * Components .getInstance().topTachoCounter.getPeriod())));
+		 * comp.botShooter.set(controller.getLeftY()); SmartDashboard.putString(
+		 * "DB/String 0", String.valueOf((1 / Components
+		 * .getInstance().topTachoCounter.getPeriod())));
 		 * SmartDashboard.putString("DB/String 1", String.valueOf((1 /
 		 * Components .getInstance().botTachoCounter.getPeriod())));
 		 */
