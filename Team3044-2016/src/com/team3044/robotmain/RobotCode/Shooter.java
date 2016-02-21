@@ -103,8 +103,8 @@ public class Shooter {
 		startShooterAtManualSpeed = FirstController.getInstance().getTriggerLeft();
 		shootBall = CommonArea.shootFlag;
 		startVisionShoot = CommonArea.shooterMotorFlag;
-		shooterVisionTopSpeed = 100;
-		shooterVisionBotSpeed = 75;
+		shooterVisionTopSpeed = 110;
+		shooterVisionBotSpeed = 90;
 		if (CommonArea.shooterInit) {
 			shooterInit();
 		}

@@ -20,7 +20,7 @@ public class Gate {
 	FirstController controller = FirstController.getInstance();
 
 	public enum state{
-		Init, encoderZeroing, Stopped, movingUp, movingDown, chevalGoingDown, chevalDown, chevalMovingUp, stoppedChevalMid
+		Init, encoderZeroing, Stopped, movingUp, movingDown, chevalGoingDown, chevalDown, chevalMovingUp, stoppedChevalMid, ballPickUpState
 	}
 	//state gateState = state.Stopped;
 	state gateState = state.Init;

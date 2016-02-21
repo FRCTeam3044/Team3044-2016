@@ -58,13 +58,13 @@ public class Drive {
 		rightFrontDrive.enableBrakeMode(true);
 		leftBackDrive.enableBrakeMode(true);
 		rightBackDrive.enableBrakeMode(true);
-		
+		/*
 		leftFrontDrive.setPIDSourceType(PIDSourceType.kRate);
 		rightFrontDrive.setPIDSourceType(PIDSourceType.kRate);
 		leftFrontDrive.setFeedbackDevice(FeedbackDevice.AnalogEncoder);
 		rightFrontDrive.setFeedbackDevice(FeedbackDevice.AnalogEncoder);
 		
-		rightFrontDrive.setInverted(true);
+		rightFrontDrive.setInverted(true);*/
 		
 		
 	}

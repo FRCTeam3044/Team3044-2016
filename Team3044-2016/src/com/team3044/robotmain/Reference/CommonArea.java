@@ -81,9 +81,9 @@ public class CommonArea {
 	
 	public static void CommonPeriodic(){
 		//FirstController
-		gateUp = firstJoy.getRawButton(FirstController.BUTTON_Y);
-		manualFire = firstJoy.getRawButton(FirstController.BUTTON_X);
-		gateDown = firstJoy.getRawButton(FirstController.BUTTON_A);
+		gateUp = firstJoy.getRawButton(FirstController.BUTTON_Y) || secondaryJoy.getRawButton(FirstController.BUTTON_Y);
+		manualFire = firstJoy.getRawButton(FirstController.BUTTON_X) || secondaryJoy.getRawButton(FirstController.BUTTON_X);
+		gateDown = firstJoy.getRawButton(FirstController.BUTTON_A) || secondaryJoy.getRawButton(FirstController.BUTTON_A);
 		shooterInit = firstJoy.getRawButton(FirstController.BUTTON_B);
 		pickRollersOut = firstJoy.getRawButton(FirstController.BUTTON_LB);
 		pickRollersIn = firstJoy.getRawButton(FirstController.BUTTON_RB);
@@ -93,13 +93,13 @@ public class CommonArea {
 		calibrate = firstJoy.getDPadRight();
 		chevalDeFrise = firstJoy.getDPadDown();
 		AVALIABLEDLEFT = firstJoy.getDPadLeft();
-		shooterToSpeed = firstJoy.getTriggerLeft();
+		shooterToSpeed = firstJoy.getTriggerLeft() || secondaryJoy.getTriggerLeft();
 		autoAlign = firstJoy.getTriggerRight();
 		
 		//SecondaryController
-		X1 = secondaryJoy.getRawButton(SecondaryController.BUTTON_Y);
-		X2 = secondaryJoy.getRawButton(SecondaryController.BUTTON_X);
-		Y2 = secondaryJoy.getRawButton(SecondaryController.BUTTON_A);
+		X1 = false;//secondaryJoy.getRawButton(SecondaryController.BUTTON_Y);
+		X2 = false; //secondaryJoy.getRawButton(SecondaryController.BUTTON_X);
+		Y2 = false;//secondaryJoy.getRawButton(SecondaryController.BUTTON_A);
 		Y1 = secondaryJoy.getRawButton(SecondaryController.BUTTON_B);
 		H2 = secondaryJoy.getRawButton(SecondaryController.BUTTON_LB);
 		H1 = secondaryJoy.getRawButton(SecondaryController.BUTTON_RB);
