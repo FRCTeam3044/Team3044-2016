@@ -1,6 +1,8 @@
 package com.team3044.robotmain.RobotCode;
 
 import com.team3044.robotmain.Reference.*;
+
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class VisionCalc {
@@ -13,24 +15,32 @@ public class VisionCalc {
 
 	final double SHOOTERSTARTSPEED = 60;
 	final double DRIVETURNSPEED = .4;
-
+	double p = .005, i = 0.00025, d = 0.0015;
+	
+	CameraPIDSource camAngle;
+	AlignPIDController pidController;
+	PIDController cameraPID;
+	public void init(){
+		SmartDashboard.putNumber("P", p * 100);
+		SmartDashboard.putNumber("I", i * 100);
+		SmartDashboard.putNumber("D", d * 100);
+		camAngle = new CameraPIDSource();
+		pidController = new AlignPIDController();
+		cameraPID = new PIDController(p,i,d,camAngle,pidController);
+		cameraPID.setSetpoint(0);
+		cameraPID.setOutputRange(-.35, .35);
+		cameraPID.setInputRange(-160, 160);
+		cameraPID.setAbsoluteTolerance(7);
+		cameraPID.setToleranceBuffer(3);
+		cameraPID.enable();
+		
+		
+	}
+	
 	public double CalculatedTurnSpeed(double Angle) {
-		double turnSpeed;
-		if (Math.abs(Angle) > 0) {
-			if (Angle > 0) {
-				turnSpeed = (Angle / 220) * 4;
-			} else {
-				turnSpeed = (Angle / 220) * 4;
-			}
-			if (turnSpeed > .3) {
-				turnSpeed = .3;
-			} else if (turnSpeed < -.3) {
-				turnSpeed = -.3;
-			}
-		} else {
-			turnSpeed = 0;
-		}
-		return turnSpeed;
+		
+		return pidController.getSpeed();
+		
 	}
 
 	public double CalculatedTopSpeed(double Distance) {
@@ -64,14 +74,17 @@ public class VisionCalc {
 	int count = 0;
 
 	public void Vision() {
-
+		//p = SmartDashboard.getNumber("P",0)/100;
+		//i = SmartDashboard.getNumber("I",0) / 100;
+		//d = SmartDashboard.getNumber("D",0)/100;
+		//this.cameraPID.setPID(p, i, d);
 		CommonArea.angleToTarget = (int) SmartDashboard.getNumber("ANGLE", 0);
 		SmartDashboard.putString("DB/String 0", String.valueOf(CommonArea.angleToTarget));
 		SmartDashboard.putString("DB/String 7", String.valueOf(CommonArea.autoAlign));
 		SmartDashboard.putString("DB/String 8", String.valueOf(visionState));
 		SmartDashboard.putString("DB/String 1", String.valueOf(CommonArea.isAligned));
 		System.out.println("MOTOR FLAG: " + CommonArea.shooterMotorFlag);
-		CommonArea.isAligned = isAligned(CommonArea.angleToTarget, 4);
+		CommonArea.isAligned = Math.abs(this.cameraPID.getError()) < 10;//isAligned(CommonArea.angleToTarget, 10);
 		/*
 		 * if(!CommonArea.autoAlign){ Reset(); }
 		 */
@@ -135,8 +148,8 @@ public class VisionCalc {
 				System.out.println("aligned");
 				CommonArea.leftDriveSpeed = 0;
 				CommonArea.rightDriveSpeed = 0;
-				CommonArea.shooterVisionTopSpeed = CalculatedTopSpeed(100);
-				CommonArea.shooterVisionBotSpeed = CalculatedBotSpeed(75);
+				CommonArea.shooterVisionTopSpeed = 100;
+				CommonArea.shooterVisionBotSpeed = 75;
 				visionState = state.WAITFORSHOOTER;
 				count = 0;
 				SmartDashboard.putBoolean("ALIGNED", true);
@@ -146,16 +159,10 @@ public class VisionCalc {
 				System.out.println("aligning");
 				SmartDashboard.putBoolean("ALIGNED", false);
 				// count += 1;
-				if (CommonArea.angleToTarget < -4) {
-					CommonArea.leftDriveSpeed = CalculatedTurnSpeed(CommonArea.angleToTarget);
-					CommonArea.rightDriveSpeed = 0;
-				} else if(CommonArea.angleToTarget >= 4){
-					CommonArea.rightDriveSpeed = -CalculatedTurnSpeed(CommonArea.angleToTarget);
-					CommonArea.leftDriveSpeed = 0;
-				}else{
-					CommonArea.leftDriveSpeed = 0;
-					CommonArea.rightDriveSpeed = 0;
-				}
+				
+				CommonArea.leftDriveSpeed = CalculatedTurnSpeed(CommonArea.angleToTarget);
+				//CommonArea.rightDriveSpeed = -CalculatedTurnSpeed(CommonArea.angleToTarget);;
+
 
 			}
 			break;
@@ -164,11 +171,11 @@ public class VisionCalc {
 			if (!CommonArea.autoAlign) {
 				Reset();
 				visionState = state.WAITING;
-			} else if (!CommonArea.isAligned) {
+			} /*else if (!CommonArea.isAligned) {
 				visionState = state.ALIGN;
 				CommonArea.leftDriveSpeed = CalculatedTurnSpeed(CommonArea.angleToTarget);
 				CommonArea.rightDriveSpeed = -CalculatedTurnSpeed(CommonArea.angleToTarget);
-			} else if (CommonArea.isUpToSpeed) {
+			}*/ else if (CommonArea.isUpToSpeed) {
 				CommonArea.shootFlag = true;
 				System.out.println("HITTING SHOOT FLAG");
 				visionState = state.SHOOT;

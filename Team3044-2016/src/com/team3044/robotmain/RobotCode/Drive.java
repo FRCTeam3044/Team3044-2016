@@ -2,6 +2,8 @@ package com.team3044.robotmain.RobotCode;
 
 import com.team3044.robotmain.Reference.*;
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drive {
@@ -19,7 +21,7 @@ public class Drive {
 	double rightDriveSpeed;
 	double rightDesiredEncoderValue;
 	double leftDesiredEncoderValue;
-
+	
 	public CANTalon leftFrontDrive;
 	public CANTalon leftBackDrive;
 	public CANTalon rightFrontDrive;
@@ -38,11 +40,12 @@ public class Drive {
 	}
 
 	public void driveInit() {
-
+		
 		leftFrontDrive = comp.leftFrontDrive;
 		leftBackDrive = comp.leftBackDrive;
 		rightFrontDrive = comp.rightFrontDrive;
 		rightBackDrive = comp.rightBackDrive;
+
 		leftFrontDrive.set(0);
 		leftBackDrive.set(0);
 		rightFrontDrive.set(0);
@@ -55,6 +58,49 @@ public class Drive {
 		rightFrontDrive.enableBrakeMode(true);
 		leftBackDrive.enableBrakeMode(true);
 		rightBackDrive.enableBrakeMode(true);
+		
+		leftFrontDrive.setPIDSourceType(PIDSourceType.kRate);
+		rightFrontDrive.setPIDSourceType(PIDSourceType.kRate);
+		leftFrontDrive.setFeedbackDevice(FeedbackDevice.AnalogEncoder);
+		rightFrontDrive.setFeedbackDevice(FeedbackDevice.AnalogEncoder);
+		
+		rightFrontDrive.setInverted(true);
+		
+		
+	}
+	
+	double p = 0, i = 0, d = 0;
+	
+	public void DriveRightPID(double speed){
+		if(!rightFrontDrive.isEnabled()){
+			rightFrontDrive.enable();
+			
+		}
+		p = SmartDashboard.getNumber("P",0);
+		i = SmartDashboard.getNumber("I",0);
+		d = SmartDashboard.getNumber("d",0);
+		rightFrontDrive.setPID(p, i, d);
+		rightFrontDrive.setSetpoint(speed);
+		rightBackDrive.setSetpoint(rightFrontDrive.getOutputVoltage());
+		
+		
+	}
+	public void DriveLeftPID(double speed){
+		if(!leftFrontDrive.isEnabled()){
+			leftFrontDrive.enable();
+		}
+		p = SmartDashboard.getNumber("P",0);
+		i = SmartDashboard.getNumber("I",0);
+		d = SmartDashboard.getNumber("d",0);
+		
+		leftFrontDrive.setPID(p, i, d);
+		leftFrontDrive.setSetpoint(speed);
+		leftBackDrive.setSetpoint(rightBackDrive.getOutputVoltage());
+	}
+	
+	public void disablePID(){
+		leftFrontDrive.disable();
+		rightFrontDrive.disable();
 	}
 
 	public void driveAutoPeriodic() {
