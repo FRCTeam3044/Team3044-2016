@@ -5,6 +5,7 @@ import com.team3044.robotmain.Reference.*;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Defense {
 
@@ -12,19 +13,20 @@ public class Defense {
 		LA_MOVING_UP, LA_MOVING_UP_TARGET, LA_MOVING_DOWN, LA_MOVING_DOWN_TARGET, LA_CONFLICT, LA_STOPPED, LA_CALIBRATING, UA_CALIBRATING, UA_MOVING_UP, UA_MOVING_UP_TARGET, UA_MOVING_DOWN, UA_MOVING_DOWN_TARGET, UA_CONFLICT, UA_STOPPED, CALIBRATED, UNCALIBRATED, UNCALIBRATED_BLOCKED, OPEN_UPPER, CLOSE_LOWER, CLOSE_UPPER
 	}
 
-	public final double TARGET_LA_X1 = 0.9; // DEFENSE ENCODER POSITIONS
-	public final double TARGET_LA_X2 = 0.5;
-	public final double TARGET_LA_Y1 = 0.9;
-	public final double TARGET_LA_Y2 = 0.9;
-	public final double TARGET_LA_H1 = 0.0;
-	public final double TARGET_LA_H2 = 0.0;
-	public final double TARGET_UA_X1 = 0.5;
-	public final double TARGET_UA_X2 = 0.5;
-	public final double TARGET_UA_Y1 = 0.5;
-	public final double TARGET_UA_Y2 = 0.9;
-	public final double TARGET_UA_H1 = 0.2;
-	public final double TARGET_UA_H2 = 0.0;
-	public final double UPPER_ARM_RELATIVE = 0.1;
+	public final int TARGET_LA_X1 = 256; // DEFENSE ENCODER POSITIONS LOWER ARM
+	public final int TARGET_LA_X2 = 300;
+	public final int TARGET_LA_Y1 = 256;
+	public final int TARGET_LA_Y2 = 400;
+	public final int TARGET_LA_H1 = 256;
+	public final int TARGET_LA_H2 = 512;
+	
+	public final int TARGET_UA_X1 = 767; // DEFENSE ENCODER POSITIONS UPPER ARM
+	public final int TARGET_UA_X2 = 896;
+	public final int TARGET_UA_Y1 = 612;
+	public final int TARGET_UA_Y2 = 767;
+	public final int TARGET_UA_H1 = 512;
+	public final int TARGET_UA_H2 = 128;
+	public final int UPPER_ARM_RELATIVE = 256;
 
 	public boolean calibrated = false;
 
@@ -42,21 +44,22 @@ public class Defense {
 	public boolean Y1;
 	public boolean Y2;
 
-	public double lowerArmEncoder; // ENCODERS
-	public double upperArmEncoder;
-	public double lowerArmEncoderTarget;
-	public double upperArmEncoderTarget;
+	public int lowerArmEncoder; // ENCODERS
+	public int upperArmEncoder;
+	public int lowerArmEncoderTarget;
+	public int upperArmEncoderTarget;
+	
+	public int testLimits; // DEFENSE TEST
 
-	public final double lowerArmMovingUpSpeed = 0.5; // MOTOR SPEEDS
-	public final double lowerArmMovingDownSpeed = 0.5;
+	public final double lowerArmMovingUpSpeed = -0.15; // MOTOR SPEEDS
+	public final double lowerArmMovingDownSpeed = 0.05;
 	public final double lowerArmStopSpeed = 0;
-	public final double upperArmMovingUpSpeed = 0.5;
-	public final double upperArmMovingDownSpeed = 0.5;
+	public final double upperArmMovingUpSpeed = -0.1;
+	public final double upperArmMovingDownSpeed = 0.1;
 	public final double upperArmStopSpeed = 0;
-	public final double calibratingSpeed = 0.5;
 	public final double calibrationStopSpeed = 0;
-	public final double calibrationMovingUpSpeed = 0.5;
-	public final double calibrationMovingDownSpeed = 0.5;
+	public final double calibrationMovingUpSpeed = -0.1;
+	public final double calibrationMovingDownSpeed = 0.1;
 
 	public CANTalon lowerArmMotor; // MOTORS
 	public CANTalon upperArmMotor;
@@ -96,16 +99,33 @@ public class Defense {
 	}
 
 	public void defenseTeleopPeriodic() {
-		lowerArmLimitSwitchHome = upperArmMotor.isFwdLimitSwitchClosed();
-		lowerArmLimitSwitchTooFar = upperArmMotor.isRevLimitSwitchClosed();
-		upperArmLimitSwitchHome = lowerArmMotor.isFwdLimitSwitchClosed();
-		upperArmLimitSwitchTooFar = lowerArmMotor.isRevLimitSwitchClosed();
+		
+		SmartDashboard.putString("DB/String 1", String.valueOf(CALIBRATION)); // DEFENSE TEST
+		SmartDashboard.putString("DB/String 2", String.valueOf(UPPER_ARM)); // DEFENSE TEST
+		SmartDashboard.putString("DB/String 3", String.valueOf(LOWER_ARM)); // DEFENSE TEST
+		
+		upperArmLimitSwitchHome = upperArmMotor.isFwdLimitSwitchClosed();
+		upperArmLimitSwitchTooFar = upperArmMotor.isRevLimitSwitchClosed();
+		lowerArmLimitSwitchHome = lowerArmMotor.isFwdLimitSwitchClosed();
+		lowerArmLimitSwitchTooFar = lowerArmMotor.isRevLimitSwitchClosed();
 
-		limitSwitchConflict = conflictDigitalIO.get();
+		limitSwitchConflict = !conflictDigitalIO.get(); 
+		
+		testLimits = 0; // DEFENSE TEST
+		testLimits = testLimits + ((limitSwitchConflict)?1:0); // DEFENSE TEST (CONFLICT)
+		testLimits = testLimits + ((lowerArmLimitSwitchHome)?2:0); // DEFENSE TEST (LA HOME)
+		testLimits = testLimits + ((lowerArmLimitSwitchTooFar)?4:0); // DEFENSE TEST (LA TOO FAR)
+		testLimits = testLimits + ((upperArmLimitSwitchHome)?8:0); // DEFENSE TEST (UA HOME)
+		testLimits = testLimits + ((upperArmLimitSwitchTooFar)?16:0); // DEFENSE TEST (UA TOO FAR)
+		
+		SmartDashboard.putString("DB/String 0", String.valueOf(testLimits)); // DEFENSE TEST (PRINTED VALUE)
+		
+		lowerArmEncoder = lowerArmMotor.getAnalogInRaw();
+		upperArmEncoder = upperArmMotor.getAnalogInRaw();
 
-		lowerArmEncoder = lowerArmMotor.getEncPosition();
-		upperArmEncoder = upperArmMotor.getEncPosition();
-
+		SmartDashboard.putString("DB/String 7", String.valueOf(upperArmEncoder)); // DEFENSE TEST
+		SmartDashboard.putString("DB/String 8", String.valueOf(lowerArmEncoder)); // DEFENSE TEST
+		
 		X1 = CommonArea.X1;
 		X2 = CommonArea.X2;
 		Y1 = CommonArea.Y1;
@@ -134,7 +154,7 @@ public class Defense {
 
 				if (lowerArmLimitSwitchHome && upperArmLimitSwitchHome) {
 					calibrated = true;
-				} else if (LOWER_ARM == state.LA_STOPPED && UPPER_ARM == state.UA_STOPPED && !limitSwitchConflict
+				} else if (LOWER_ARM == state.LA_STOPPED && UPPER_ARM == state.UA_STOPPED && !limitSwitchConflict	
 						&& !stopTargeting) {
 					calibrated = false;
 					CALIBRATION = state.UNCALIBRATED;
@@ -165,7 +185,7 @@ public class Defense {
 			break;
 
 		case OPEN_UPPER:
-			if (lowerArmLimitSwitchTooFar || upperArmEncoder > upperArmEncoderTarget) {
+			if (lowerArmLimitSwitchTooFar || upperArmEncoder <= upperArmEncoderTarget) {
 				upperArmMotor.set(calibrationStopSpeed);
 				lowerArmMotor.set(calibrationMovingDownSpeed);
 				CALIBRATION = state.CLOSE_LOWER;
@@ -309,12 +329,9 @@ public class Defense {
 			break;
 
 		case LA_CONFLICT:
-			if (!lowerArmLimitSwitchTooFar && lowerArmButtonUp) {
-				lowerArmMotor.set(lowerArmMovingUpSpeed);
-				LOWER_ARM = state.LA_MOVING_UP;
-			} else if (!lowerArmLimitSwitchHome && lowerArmButtonDown) {
-				lowerArmMotor.set(lowerArmMovingDownSpeed);
-				LOWER_ARM = state.LA_MOVING_DOWN;
+			if (!limitSwitchConflict){
+				lowerArmMotor.set(lowerArmStopSpeed);
+				LOWER_ARM = state.LA_STOPPED;
 			}
 			break;
 
@@ -345,7 +362,7 @@ public class Defense {
 			if (limitSwitchConflict) {
 				lowerArmMotor.set(lowerArmStopSpeed);
 				LOWER_ARM = state.LA_CONFLICT;
-			} else if (lowerArmEncoder <= lowerArmEncoderTarget) {
+			} else if (lowerArmEncoder >= lowerArmEncoderTarget) {
 				lowerArmMotor.set(lowerArmStopSpeed);
 				LOWER_ARM = state.LA_STOPPED;
 			} else if (lowerArmLimitSwitchHome) {
@@ -361,7 +378,7 @@ public class Defense {
 			if (limitSwitchConflict) {
 				lowerArmMotor.set(lowerArmStopSpeed);
 				LOWER_ARM = state.LA_CONFLICT;
-			} else if (lowerArmEncoder >= lowerArmEncoderTarget) {
+			} else if (lowerArmEncoder <= lowerArmEncoderTarget) {
 				lowerArmMotor.set(lowerArmStopSpeed);
 				LOWER_ARM = state.LA_STOPPED;
 			} else if (lowerArmLimitSwitchTooFar) {
@@ -467,12 +484,11 @@ public class Defense {
 			break;
 
 		case UA_CONFLICT:
-			if (!upperArmLimitSwitchTooFar && upperArmButtonUp) {
+			if(!limitSwitchConflict){
+				UPPER_ARM = state.UA_STOPPED;
+			} else if (!upperArmLimitSwitchTooFar && upperArmButtonUp) {
 				upperArmMotor.set(upperArmMovingUpSpeed);
 				UPPER_ARM = state.UA_MOVING_UP;
-			} else if (!upperArmLimitSwitchHome && upperArmButtonDown) {
-				upperArmMotor.set(upperArmMovingDownSpeed);
-				UPPER_ARM = state.UA_MOVING_DOWN;
 			}
 			break;
 
@@ -503,7 +519,7 @@ public class Defense {
 			if (limitSwitchConflict) {
 				upperArmMotor.set(upperArmStopSpeed);
 				UPPER_ARM = state.UA_CONFLICT;
-			} else if (upperArmEncoder <= upperArmEncoderTarget) {
+			} else if (upperArmEncoder >= upperArmEncoderTarget) {
 				upperArmMotor.set(upperArmStopSpeed);
 				UPPER_ARM = state.UA_STOPPED;
 			} else if (upperArmLimitSwitchHome) {
@@ -519,7 +535,7 @@ public class Defense {
 			if (limitSwitchConflict) {
 				upperArmMotor.set(upperArmStopSpeed);
 				UPPER_ARM = state.UA_CONFLICT;
-			} else if (upperArmEncoder >= upperArmEncoderTarget) {
+			} else if (upperArmEncoder <= upperArmEncoderTarget) {
 				upperArmMotor.set(upperArmStopSpeed);
 				UPPER_ARM = state.UA_STOPPED;
 			} else if (upperArmLimitSwitchTooFar) {

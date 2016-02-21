@@ -141,8 +141,8 @@ public class Gate {
 		
 		SmartDashboard.putString("DB/String 0", String.valueOf(comp.GateUpLimit.get()));
 		SmartDashboard.putString("DB/String 1", String.valueOf(comp.GateDownLimit.get()));
-		SmartDashboard.putString("DB/String 1", String.valueOf(comp.gateTalon.getAnalogInPosition()));
-		
+		SmartDashboard.putString("DB/String 2", String.valueOf(comp.gateTalon.getAnalogInPosition()));
+		SmartDashboard.putString("DB/String 3", String.valueOf(comp.gateTalon.getAnalogInRaw()));
 		/*if(controller.getRawButton(3)){
 			if (comp.BallInLimit.get()){
 				comp.shooterTrack.set(0);
