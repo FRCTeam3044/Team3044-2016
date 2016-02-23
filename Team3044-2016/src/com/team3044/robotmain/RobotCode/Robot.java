@@ -377,8 +377,9 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void disabledPeriodic(){
-		gate.gateTestPeriodic();
-		camController.step();
+		//gate.gateTestPeriodic();
+		//camController.step();
+		SmartDashboard.putString("DB/String 0", String.valueOf(Components.getInstance().gateTalon.getEncPosition()));
 	}
 
 	int TEST_DRIVE_STATE = 0;
