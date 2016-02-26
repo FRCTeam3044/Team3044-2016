@@ -281,51 +281,40 @@ public class Robot extends IterativeRobot {
 	void portcullis(){
 		switch (portcullisState) {
 		case 0:
-			j = 0;
-			if(j > 2){
-				CommonArea.gateDown = false;
-			}else{
-				j += 1;
-				CommonArea.gateDown = true;
-				portcullisState = 1;
+			if(Components.getInstance().GateUpLimit.get()){
+				CommonArea.gateUp = true;
 			}
 			CommonArea.isManualDrive = false;
 			CommonArea.leftDriveSpeed = -.4;
 			CommonArea.rightDriveSpeed = -.4;
+
 			Components.getInstance().leftFrontDrive.setAnalogPosition(0);
 			Components.getInstance().rightFrontDrive.setAnalogPosition(0);
 			
 			startLeft = Components.getInstance().leftFrontDrive.getAnalogInPosition();
 			startRight = Components.getInstance().rightFrontDrive.getAnalogInPosition();
-			
-			SmartDashboard.putString("DB/String 5",
-					String.valueOf(Components.getInstance().leftFrontDrive.getAnalogInPosition() - startLeft));
-			SmartDashboard.putString("DB/String 6",
-					String.valueOf(Components.getInstance().rightFrontDrive.getAnalogInPosition() - startRight));
+			portcullisState = 1;
+		
 			break;
 		case 1:
-			SmartDashboard.putString("DB/String 3",
-					String.valueOf(Components.getInstance().leftFrontDrive.getAnalogInPosition() - startLeft));
-			SmartDashboard.putString("DB/String 8",
-					String.valueOf(Components.getInstance().rightFrontDrive.getAnalogInPosition() - startRight));
-			if(Components.getInstance().leftFrontDrive.getOutputCurrent() > 4 && j > 50){
+			if(!Components.getInstance().GateUpLimit.get()){
+				CommonArea.gateUp = false;
+				Components.getInstance().gateTalon.setEncPosition(0);
 				CommonArea.gateDown = true;
-			}else{
-				j += 1;
-			}
-			if (Components.getInstance().rightFrontDrive.getAnalogInPosition() - startRight < -MOATENCMOVE) {
-				CommonArea.leftDriveSpeed = 0;
-				CommonArea.rightDriveSpeed = 0;
-			}
-			if ((Components.getInstance().rightFrontDrive.getAnalogInPosition() - startRight < -MOATENCMOVE)) {
-				CommonArea.leftDriveSpeed = 0;
-				CommonArea.rightDriveSpeed = 0;
-				//CommonArea.gateUp = true;
+				portcullisState = 2;
 			}
 			break;
+		case 2:
+			if(Components.getInstance().gateTalon.getEncPosition() > 1300){
+				CommonArea.gateDown = false;
+				CommonArea.leftDriveSpeed = 0;
+				CommonArea.rightDriveSpeed = 0;
+			}
+			break;
+			}
 		}
-	}
 	
+
 	public void autonomousPeriodic() {
 
 		Dashboard = SmartDashboard.getDouble("DB/Slider 0");

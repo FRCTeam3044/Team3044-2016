@@ -74,9 +74,9 @@ public class VisionCalc {
 	int count = 0;
 
 	public void Vision() {
-		//p = SmartDashboard.getNumber("P",0)/100;
-		//i = SmartDashboard.getNumber("I",0) / 100;
-		//d = SmartDashboard.getNumber("D",0)/100;
+		p = SmartDashboard.getNumber("P",0)/100;
+		i = SmartDashboard.getNumber("I",0) / 100;
+		d = SmartDashboard.getNumber("D",0)/100;
 		//this.cameraPID.setPID(p, i, d);
 		CommonArea.angleToTarget = (int) SmartDashboard.getNumber("ANGLE", 0);
 		SmartDashboard.putString("DB/String 0", String.valueOf(CommonArea.angleToTarget));

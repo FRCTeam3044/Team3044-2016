@@ -30,6 +30,7 @@ public class CommonArea {
 	//Gate
 	public static boolean chevalFlag = false;
 	public static boolean gateCalibrated = false;
+	public static boolean pickUpBoulder = false;
 	
 	//PickUp
 	public static boolean portcullisFlag = false;
@@ -92,7 +93,7 @@ public class CommonArea {
 		portcullius = firstJoy.getDPadUp();
 		calibrate = firstJoy.getDPadRight();
 		chevalDeFrise = firstJoy.getDPadDown();
-		AVALIABLEDLEFT = firstJoy.getDPadLeft();
+		pickUpBoulder = firstJoy.getDPadLeft();
 		shooterToSpeed = firstJoy.getTriggerLeft() || secondaryJoy.getTriggerLeft();
 		autoAlign = firstJoy.getTriggerRight();
 		
