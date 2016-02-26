@@ -49,6 +49,7 @@ public class Gate {
 		comp.gateTalon.enableBrakeMode(true);
 		comp.gateTalon.setEncPosition(0);
 		comp.gateTalon.setInverted(true);
+		
 	}
 
 	public void gateAutoPeriodic() {
@@ -101,12 +102,15 @@ public class Gate {
 				Components.getInstance().gateTalon.set(motorSpeedDown);
 				gateState = state.movingDown;
 			} else if (CommonArea.pickUpBoulder) {
+				if(encoderCalibrated == true){
 				if (Components.getInstance().gateTalon.getEncPosition() > 1325) {
 					Components.getInstance().gateTalon.set(motorSpeedUp);
 					gateState = state.ballPickUpState;
 				} else if (Components.getInstance().gateTalon.getEncPosition() < 1325) {
 					Components.getInstance().gateTalon.set(motorSpeedDown);
 					gateState = state.ballPickUpState;
+				}
+					
 				}
 			}
 				break;
