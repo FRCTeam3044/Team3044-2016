@@ -35,7 +35,7 @@ public class NewDefense {
 	public int lowerArmEncoderTarget;
 	public int upperArmEncoderTarget;
 
-	public int testLimits; // DEFENSE TEST
+	public final double margin = 50; // TOLERANCE
 
 	public final double lowerArmMovingUpSpeed = -0.15; // MOTOR SPEEDS
 	public final double lowerArmMovingDownSpeed = 0.05;
@@ -43,15 +43,9 @@ public class NewDefense {
 	public final double upperArmMovingUpSpeed = -0.1;
 	public final double upperArmMovingDownSpeed = 0.1;
 	public final double upperArmStopSpeed = 0;
-	public final double calibrationStopSpeed = 0;
-	public final double calibrationMovingUpSpeed = -0.1;
-	public final double calibrationMovingDownSpeed = 0.1;
 
 	public CANTalon lowerArmMotor; // MOTORS
 	public CANTalon upperArmMotor;
-
-	public DigitalInput conflictDigitalIO; // CONFLICT LIMIT SWITCH
-
 
 	public boolean lowerArmLimitSwitchHome; // LIMIT SWITCHES
 	public boolean lowerArmLimitSwitchTooFar;
@@ -66,8 +60,6 @@ public class NewDefense {
 		lowerArmMotor.set(lowerArmStopSpeed);
 		upperArmMotor.set(upperArmStopSpeed);
 
-		conflictDigitalIO = Components.getInstance().conflict;
-
 	}
 
 	public void defenseAutoPeriodic() {
@@ -75,6 +67,77 @@ public class NewDefense {
 	}
 
 	public void defenseTeleopPeriodic() {
+
+		upperArmLimitSwitchHome = upperArmMotor.isFwdLimitSwitchClosed();
+		upperArmLimitSwitchTooFar = upperArmMotor.isRevLimitSwitchClosed();
+		lowerArmLimitSwitchHome = lowerArmMotor.isFwdLimitSwitchClosed();
+		lowerArmLimitSwitchTooFar = lowerArmMotor.isRevLimitSwitchClosed();
+
+		lowerArmEncoder = lowerArmMotor.getAnalogInRaw();
+		upperArmEncoder = upperArmMotor.getAnalogInRaw();
+
+		X1 = CommonArea.X1;
+		X2 = CommonArea.X2;
+		Y1 = CommonArea.Y1;
+		Y2 = CommonArea.Y2;
+		H1 = CommonArea.H1;
+		H2 = CommonArea.H2;
+
+		// LOWER ARM
 		
+		// UPPER PART OF FLOW CHART
+		if(X1){
+			lowerArmEncoderTarget = TARGET_LA_X1;
+			upperArmEncoderTarget = TARGET_UA_X1;
+		}
+		
+		if(X2){
+			lowerArmEncoderTarget = TARGET_LA_X2;
+			upperArmEncoderTarget = TARGET_UA_X2;
+		}
+
+		if(Y1){
+			lowerArmEncoderTarget = TARGET_LA_Y1;
+			upperArmEncoderTarget = TARGET_UA_Y1;
+		}
+		
+		if(Y2){
+			lowerArmEncoderTarget = TARGET_LA_Y2;
+			upperArmEncoderTarget = TARGET_UA_Y2;
+		}
+		
+		if(H1){
+			lowerArmEncoderTarget = TARGET_LA_H1;
+			upperArmEncoderTarget = TARGET_UA_H1;
+		}
+		
+		if(H2){
+			lowerArmEncoderTarget = TARGET_LA_H2;
+			upperArmEncoderTarget = TARGET_UA_H2;
+		}
+		
+		
+		
+		// BOTTOM PART OF FLOW CHART
+		if (lowerArmEncoder > lowerArmEncoderTarget + margin) {
+			if (!lowerArmLimitSwitchHome) {
+				if (lowerArmMotor.getAnalogInVelocity() != lowerArmMovingDownSpeed) {
+					lowerArmMotor.set(lowerArmMovingDownSpeed);
+				}
+			} else if (lowerArmMotor.getAnalogInVelocity() != lowerArmStopSpeed) {
+				lowerArmMotor.set(lowerArmStopSpeed);
+			}
+		} else if (lowerArmEncoder < lowerArmEncoderTarget - margin) {
+			if (!lowerArmLimitSwitchTooFar) {
+				if (lowerArmMotor.getAnalogInVelocity() != lowerArmMovingUpSpeed) {
+					lowerArmMotor.set(lowerArmMovingUpSpeed);
+				}
+			} else if (lowerArmMotor.getAnalogInVelocity() != lowerArmStopSpeed) {
+				lowerArmMotor.set(lowerArmStopSpeed);
+			}
+		} else if (lowerArmMotor.getAnalogInVelocity() != lowerArmStopSpeed) {
+			lowerArmMotor.set(lowerArmStopSpeed);
+		}
+
 	}
 }
