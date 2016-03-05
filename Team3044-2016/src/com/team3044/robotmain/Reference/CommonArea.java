@@ -82,9 +82,9 @@ public class CommonArea {
 	
 	public static void CommonPeriodic(){
 		//FirstController
-		gateUp = firstJoy.getRawButton(FirstController.BUTTON_Y) || secondaryJoy.getRawButton(FirstController.BUTTON_Y);
-		manualFire = firstJoy.getRawButton(FirstController.BUTTON_X) || secondaryJoy.getRawButton(FirstController.BUTTON_X);
-		gateDown = firstJoy.getRawButton(FirstController.BUTTON_A) || secondaryJoy.getRawButton(FirstController.BUTTON_A);
+		gateUp = firstJoy.getRawButton(FirstController.BUTTON_Y);// || secondaryJoy.getRawButton(FirstController.BUTTON_Y);
+		manualFire = firstJoy.getRawButton(FirstController.BUTTON_X);// || secondaryJoy.getRawButton(FirstController.BUTTON_X);
+		gateDown = firstJoy.getRawButton(FirstController.BUTTON_A);// || secondaryJoy.getRawButton(FirstController.BUTTON_A);
 		shooterInit = firstJoy.getRawButton(FirstController.BUTTON_B);
 		pickRollersOut = firstJoy.getRawButton(FirstController.BUTTON_LB);
 		pickRollersIn = firstJoy.getRawButton(FirstController.BUTTON_RB);
