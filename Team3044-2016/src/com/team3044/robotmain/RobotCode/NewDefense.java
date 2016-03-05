@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class NewDefense {
 
+	// RE-MAKE VALUES
+	
 	public final int TARGET_LA_X1 = 256; // DEFENSE ENCODER POSITIONS LOWER ARM
 	public final int TARGET_LA_X2 = 300;
 	public final int TARGET_LA_Y1 = 256;
@@ -23,6 +25,8 @@ public class NewDefense {
 	public final int TARGET_UA_Y2 = 767;
 	public final int TARGET_UA_H1 = 512;
 	public final int TARGET_UA_H2 = 128;
+	
+	public final int TARGET_INCREMENT = 60;
 
 	public boolean H1; // TARGET BUTTONS
 	public boolean H2;
@@ -30,6 +34,11 @@ public class NewDefense {
 	public boolean X2;
 	public boolean Y1;
 	public boolean Y2;
+	
+	public boolean lowerArmButtonDown; // MANUAL BUTTONS
+	public boolean lowerArmButtonUp;
+	public boolean upperArmButtonDown;
+	public boolean upperArmButtonUp;
 
 	public int lowerArmEncoder; // ENCODERS
 	public int upperArmEncoder;
@@ -74,8 +83,8 @@ public class NewDefense {
 		lowerArmLimitSwitchHome = lowerArmMotor.isFwdLimitSwitchClosed();
 		lowerArmLimitSwitchTooFar = lowerArmMotor.isRevLimitSwitchClosed();
 
-		lowerArmEncoder = lowerArmMotor.getAnalogInRaw();
-		upperArmEncoder = upperArmMotor.getAnalogInRaw();
+		lowerArmEncoder = 1023 - lowerArmMotor.getAnalogInRaw();
+		upperArmEncoder = 1023 - upperArmMotor.getAnalogInRaw();
 
 		X1 = CommonArea.X1;
 		X2 = CommonArea.X2;
@@ -87,34 +96,26 @@ public class NewDefense {
 		// LOWER ARM
 		
 		// UPPER PART OF FLOW CHART
-		if(X1){
+		if(lowerArmButtonDown){
+			if(lowerArmMotor.getAnalogInVelocity() != lowerArmMovingDownSpeed){
+				lowerArmEncoderTarget = lowerArmEncoderTarget - TARGET_INCREMENT;
+			}
+		} else if(lowerArmButtonUp){
+			if(lowerArmMotor.getAnalogInVelocity() != lowerArmMovingUpSpeed){
+				lowerArmEncoderTarget = lowerArmEncoderTarget + TARGET_INCREMENT;
+			}
+		} else if(X1){
 			lowerArmEncoderTarget = TARGET_LA_X1;
-			upperArmEncoderTarget = TARGET_UA_X1;
-		}
-		
-		if(X2){
+		} else if(X2){
 			lowerArmEncoderTarget = TARGET_LA_X2;
-			upperArmEncoderTarget = TARGET_UA_X2;
-		}
-
-		if(Y1){
+		} else if(Y1){
 			lowerArmEncoderTarget = TARGET_LA_Y1;
-			upperArmEncoderTarget = TARGET_UA_Y1;
-		}
-		
-		if(Y2){
+		} else if(Y2){
 			lowerArmEncoderTarget = TARGET_LA_Y2;
-			upperArmEncoderTarget = TARGET_UA_Y2;
-		}
-		
-		if(H1){
+		} else if(H1){
 			lowerArmEncoderTarget = TARGET_LA_H1;
-			upperArmEncoderTarget = TARGET_UA_H1;
-		}
-		
-		if(H2){
+		} else if(H2){
 			lowerArmEncoderTarget = TARGET_LA_H2;
-			upperArmEncoderTarget = TARGET_UA_H2;
 		}
 		
 		
