@@ -8,14 +8,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class VisionCalc {
 
 	public enum state {
-		WAITING, SPINSHOOTER, AUTOFIND, ALIGN, WAITFORSHOOTER, SHOOT
+		WAITING, SPINSHOOTER, AUTOFIND, ALIGN, WAITFORSHOOTER, SHOOT, RETURN
 	}
 
 	state visionState = state.WAITING;
 
 	final double SHOOTERSTARTSPEED = 60;
-	final double DRIVETURNSPEED = .4;
-	double p = .005, i = 0.00025, d = 0.0015;
+	final double DRIVETURNSPEED = .7;
+	double p = .005, i = 0.00045, d = 0.003;
 	
 	CameraPIDSource camAngle;
 	AlignPIDController pidController;
@@ -28,10 +28,10 @@ public class VisionCalc {
 		pidController = new AlignPIDController();
 		cameraPID = new PIDController(p,i,d,camAngle,pidController);
 		cameraPID.setSetpoint(0);
-		cameraPID.setOutputRange(-.35, .35);
+		cameraPID.setOutputRange(-.5, .5);
 		cameraPID.setInputRange(-160, 160);
-		cameraPID.setAbsoluteTolerance(7);
-		cameraPID.setToleranceBuffer(3);
+		cameraPID.setAbsoluteTolerance(6);
+		cameraPID.setToleranceBuffer(4);
 		cameraPID.enable();
 		
 		
@@ -72,19 +72,20 @@ public class VisionCalc {
 	}
 
 	int count = 0;
-
+	int k = 0;
+	double value = 0;
 	public void Vision() {
 		p = SmartDashboard.getNumber("P",0)/100;
 		i = SmartDashboard.getNumber("I",0) / 100;
 		d = SmartDashboard.getNumber("D",0)/100;
-		//this.cameraPID.setPID(p, i, d);
+		this.cameraPID.setPID(p, i, d);
 		CommonArea.angleToTarget = (int) SmartDashboard.getNumber("ANGLE", 0);
 		SmartDashboard.putString("DB/String 0", String.valueOf(CommonArea.angleToTarget));
 		SmartDashboard.putString("DB/String 7", String.valueOf(CommonArea.autoAlign));
 		SmartDashboard.putString("DB/String 8", String.valueOf(visionState));
 		SmartDashboard.putString("DB/String 1", String.valueOf(CommonArea.isAligned));
 		System.out.println("MOTOR FLAG: " + CommonArea.shooterMotorFlag);
-		CommonArea.isAligned = Math.abs(this.cameraPID.getError()) < 10;//isAligned(CommonArea.angleToTarget, 10);
+		CommonArea.isAligned = Math.abs(this.cameraPID.getError()) < 6;//isAligned(CommonArea.angleToTarget, 10);
 		/*
 		 * if(!CommonArea.autoAlign){ Reset(); }
 		 */
@@ -118,10 +119,10 @@ public class VisionCalc {
 					CommonArea.rightDriveSpeed = -DRIVETURNSPEED;
 				}
 				visionState = state.AUTOFIND;
-			} else if (SmartDashboard.getBoolean("TARGET", false) && !isAligned(CommonArea.angleToTarget, 10)) {
+			} else if (SmartDashboard.getBoolean("TARGET", false) && !CommonArea.isAligned) {
 				count = 0;
 				visionState = state.ALIGN;
-			} else if (SmartDashboard.getBoolean("TARGET", false) && isAligned(CommonArea.angleToTarget, 10)) {
+			} else if (SmartDashboard.getBoolean("TARGET", false) && CommonArea.isAligned) {
 				CommonArea.shooterVisionTopSpeed = CalculatedTopSpeed(75);
 				CommonArea.shooterVisionBotSpeed = CalculatedBotSpeed(60);
 				count = 0;
@@ -131,14 +132,33 @@ public class VisionCalc {
 			break;
 		// ---------------------------------------------------------------------------------------------
 		case AUTOFIND:
+			if(SmartDashboard.getNumber("ANGLE",0) < 30){
+				
+				
+			}
 			if (!CommonArea.autoAlign) {
 				Reset();
 				visionState = state.WAITING;
 			} else if (SmartDashboard.getBoolean("TARGET", false)) {
-				visionState = state.ALIGN;
+				CommonArea.leftDriveSpeed = 0;
+				CommonArea.rightDriveSpeed = 0;
+				k = 0;
+				this.visionState = state.RETURN;
+				value = Components.getInstance().rightFrontDrive.getAnalogInPosition();
 			}
 			break;
 		// ---------------------------------------------------------------------------------------------
+		case RETURN:
+			
+			k += 1;
+			if(k > 10){
+				CommonArea.rightDriveSpeed = .4;
+			}
+			if( Components.getInstance().rightFrontDrive.getAnalogInPosition() - value > 500){
+				CommonArea.rightDriveSpeed = 0;
+				this.visionState = state.ALIGN;
+			}
+			break;
 		case ALIGN:
 			if (!CommonArea.autoAlign) {
 				Reset();
@@ -161,7 +181,7 @@ public class VisionCalc {
 				// count += 1;
 				
 				CommonArea.leftDriveSpeed = CalculatedTurnSpeed(CommonArea.angleToTarget);
-				//CommonArea.rightDriveSpeed = -CalculatedTurnSpeed(CommonArea.angleToTarget);;
+				CommonArea.rightDriveSpeed = -CalculatedTurnSpeed(CommonArea.angleToTarget);
 
 
 			}

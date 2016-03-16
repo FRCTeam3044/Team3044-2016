@@ -19,10 +19,10 @@ public class Robot extends IterativeRobot {
 
 	private double movexFeetSpeed = .3;
 	private double Dashboard;
-	CameraController camController;
+	//CameraController camController;
 
 	public void robotInit() {
-		camController = new CameraController();
+		//camController = new CameraController();
 		vision.init();
 		Components.getInstance().init();
 		drive.driveInit();
@@ -317,7 +317,7 @@ public class Robot extends IterativeRobot {
 
 	public void autonomousPeriodic() {
 
-		Dashboard = SmartDashboard.getDouble("DB/Slider 0");
+		Dashboard = SmartDashboard.getNumber("AUTO",4);
 		if (Dashboard == 0) {
 			this.lowBarShoot();
 		} else if (Dashboard == 1) {
@@ -334,6 +334,8 @@ public class Robot extends IterativeRobot {
 			this.moatShoot();
 		} else if (Dashboard == 5) {
 			this.portcullis();
+		}else if(Dashboard == 6){
+			//Do nothing
 		}
 		drive.driveTeleopPeriodic();
 		// CommonArea.CommonPeriodic();
@@ -357,7 +359,7 @@ public class Robot extends IterativeRobot {
 		gate.gateTeleopPeriodic();
 		vision.Vision();
 		SmartDashboard.putNumber("DRIVECURRENT", Components.getInstance().leftFrontDrive.getOutputCurrent());
-		camController.step();
+		//camController.step();
 
 	}
 
