@@ -89,16 +89,9 @@ public class Shooter {
 	public void shooterTeleopPeriodic() {
 		pickRollersIn = CommonArea.pickRollersIn;
 		pickRollersOut = CommonArea.pickRollersOut;
-		/*
-		 * SmartDashboard.putString("DB/String 3",
-		 * String.valueOf(topShooterPID.onTarget())); SmartDashboard.putString(
-		 * "DB/String 4", String.valueOf(botShooterPID.onTarget()));
-		 * SmartDashboard.putString("DB/String 5",
-		 * String.valueOf(topCounter.getRate())); SmartDashboard.putString(
-		 * "DB/String 6", String.valueOf(botCounter.getRate()));
-		 */
-		topSpeed = SmartDashboard.getNumber("DB/Slider 2");
-		botSpeed = SmartDashboard.getNumber("DB/Slider 3");
+
+		topSpeed = SmartDashboard.getNumber("DB/Slider 2",100);
+		botSpeed = SmartDashboard.getNumber("DB/Slider 3",75);
 
 		startShooterAtManualSpeed = FirstController.getInstance().getTriggerLeft();
 		shootBall = CommonArea.shootFlag;
@@ -236,25 +229,7 @@ public class Shooter {
 	}
 
 	public void shooterTestPeriodic() {
-		/*
-		 * if (controller.getRawButton(controller.BUTTON_LB)) {
-		 * comp.topShooter.set(SmartDashboard.getDouble("DB/Slider 0"));
-		 * comp.botShooter.set(SmartDashboard.getDouble("DB/Slider 1")); } else
-		 * { comp.topShooter.set(0); comp.botShooter.set(0); }
-		 * 
-		 * SmartDashboard.putString("DB/String 2", String.valueOf((1 /
-		 * Components .getInstance().topTachoCounter.getPeriod())));
-		 * SmartDashboard.putString("DB/String 3", String.valueOf((1 /
-		 * Components .getInstance().botTachoCounter.getPeriod())));
-		 * 
-		 * 
-		 * comp.topShooter.set(controller.getRightY());
-		 * comp.botShooter.set(controller.getLeftY()); SmartDashboard.putString(
-		 * "DB/String 0", String.valueOf((1 / Components
-		 * .getInstance().topTachoCounter.getPeriod())));
-		 * SmartDashboard.putString("DB/String 1", String.valueOf((1 /
-		 * Components .getInstance().botTachoCounter.getPeriod())));
-		 */
+
 	}
 
 }
