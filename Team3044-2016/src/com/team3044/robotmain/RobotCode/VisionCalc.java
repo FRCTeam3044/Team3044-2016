@@ -28,7 +28,7 @@ public class VisionCalc {
 		pidController = new AlignPIDController();
 		cameraPID = new PIDController(p,i,d,camAngle,pidController);
 		cameraPID.setSetpoint(0);
-		cameraPID.setOutputRange(-.5, .5);
+		cameraPID.setOutputRange(-.4, .4);
 		cameraPID.setInputRange(-160, 160);
 		cameraPID.setAbsoluteTolerance(6);
 		cameraPID.setToleranceBuffer(4);
@@ -85,7 +85,7 @@ public class VisionCalc {
 		SmartDashboard.putString("DB/String 8", String.valueOf(visionState));
 		SmartDashboard.putString("DB/String 1", String.valueOf(CommonArea.isAligned));
 		System.out.println("MOTOR FLAG: " + CommonArea.shooterMotorFlag);
-		CommonArea.isAligned = Math.abs(this.cameraPID.getError()) < 6;//isAligned(CommonArea.angleToTarget, 10);
+		CommonArea.isAligned = Math.abs(this.cameraPID.getError()) < 7;//isAligned(CommonArea.angleToTarget, 10);
 		/*
 		 * if(!CommonArea.autoAlign){ Reset(); }
 		 */
@@ -168,7 +168,7 @@ public class VisionCalc {
 				System.out.println("aligned");
 				CommonArea.leftDriveSpeed = 0;
 				CommonArea.rightDriveSpeed = 0;
-				CommonArea.shooterVisionTopSpeed = 100;
+				CommonArea.shooterVisionTopSpeed = 10;
 				CommonArea.shooterVisionBotSpeed = 75;
 				visionState = state.WAITFORSHOOTER;
 				count = 0;

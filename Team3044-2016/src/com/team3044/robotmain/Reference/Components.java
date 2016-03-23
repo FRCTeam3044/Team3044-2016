@@ -73,10 +73,10 @@ public class Components {
 	public DummyTacho botTachoCounter = new DummyTacho(botTacho);
 
 	public void init() {
-		leftFrontDrive = new CANTalon(11);//1);
-		leftBackDrive = new CANTalon(14);//2);
-		rightFrontDrive = new CANTalon(13);//3);
-		rightBackDrive = new CANTalon(12);//4);
+		leftFrontDrive = new CANTalon(1);
+		leftBackDrive = new CANTalon(2);
+		rightFrontDrive = new CANTalon(3);
+		rightBackDrive = new CANTalon(4);
 
 		leftFrontDrive.setFeedbackDevice(FeedbackDevice.AnalogEncoder);
 		rightFrontDrive.setFeedbackDevice(FeedbackDevice.AnalogEncoder);

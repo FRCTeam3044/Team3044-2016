@@ -16,6 +16,8 @@ public class Shooter {
 	boolean startVisionShoot;
 	double shooterVisionTopSpeed;
 	double shooterVisionBotSpeed;
+	
+	double lowShootSpeed = .5;
 
 	final double toleranceShooter = 4;
 	// Components.BallInLimit.get()
@@ -41,6 +43,8 @@ public class Shooter {
 	DummyTacho botCounter = comp.botTachoCounter;
 	PIDController botShooterPID;
 	PIDController topShooterPID;
+	
+	boolean startLowGoal = false;
 
 	double topSpeed = 0;
 	double botSpeed = 0;
@@ -89,15 +93,23 @@ public class Shooter {
 	public void shooterTeleopPeriodic() {
 		pickRollersIn = CommonArea.pickRollersIn;
 		pickRollersOut = CommonArea.pickRollersOut;
+		
+		
 
-		topSpeed = SmartDashboard.getNumber("DB/Slider 2",100);
-		botSpeed = SmartDashboard.getNumber("DB/Slider 3",75);
-
-		startShooterAtManualSpeed = FirstController.getInstance().getTriggerLeft();
+		startShooterAtManualSpeed = FirstController.getInstance().getTriggerLeft() || SecondaryController.getInstance().getTriggerRight();
+		startLowGoal = SecondaryController.getInstance().getTriggerRight();
+		if(FirstController.getInstance().getTriggerLeft()){
+			topSpeed = SmartDashboard.getNumber("DB/Slider 2",100);
+			botSpeed = SmartDashboard.getNumber("DB/Slider 3",75);
+		}else{
+			topSpeed = 70;
+			botSpeed = 0;
+		}
+		
 		shootBall = CommonArea.shootFlag;
 		startVisionShoot = CommonArea.shooterMotorFlag;
-		shooterVisionTopSpeed = 110;
-		shooterVisionBotSpeed = 90;
+		shooterVisionTopSpeed = 100;
+		shooterVisionBotSpeed = 75;
 		if (CommonArea.shooterInit) {
 			shooterInit();
 		}
@@ -120,7 +132,12 @@ public class Shooter {
 			} else if (pickRollersOut) {
 				comp.shooterTrack.set(TRACKMOTORSPEED);
 				shooterState = state.ejectingBoulder;
-			}
+			}/*else if(this.startLowGoal){
+				topShooterPID.setSetpoint(this.lowShootSpeed);
+				botShooterPID.setSetpoint(this.lowShootSpeed);
+				shooterState = state.startManualShoot;
+			}*/
+			
 
 			break;
 
@@ -160,7 +177,7 @@ public class Shooter {
 
 		case startManualShoot:
 
-			if (!startShooterAtManualSpeed) {
+			if (!startShooterAtManualSpeed && !this.startLowGoal) {
 				topShooterPID.setSetpoint(0);
 				botShooterPID.setSetpoint(0);
 				shooterState = state.Stopped;

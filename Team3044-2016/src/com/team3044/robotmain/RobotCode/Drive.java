@@ -111,7 +111,8 @@ public class Drive {
 
 		double rightCurrentEncoderValue = rightFrontDrive.getAnalogInRaw();
 		double leftCurrentEncoderValue = leftFrontDrive.getAnalogInRaw();
-
+		SmartDashboard.putDouble("DB/String 5", rightCurrentEncoderValue);
+		SmartDashboard.putDouble("DB/String 6", leftCurrentEncoderValue);
 		boolean leftOnTarget = isAtDistance(leftCurrentEncoderValue,
 				leftDesiredEncoderValue);
 		boolean rightOnTarget = isAtDistance(rightCurrentEncoderValue,
