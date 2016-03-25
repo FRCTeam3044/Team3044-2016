@@ -15,7 +15,7 @@ public class VisionCalc {
 
 	final double SHOOTERSTARTSPEED = 60;
 	final double DRIVETURNSPEED = .7;
-	double p = .005, i = 0.00045, d = 0.003;
+	double p = .005, i = 0.00035, d = 0.003;
 	
 	CameraPIDSource camAngle;
 	AlignPIDController pidController;
@@ -28,7 +28,7 @@ public class VisionCalc {
 		pidController = new AlignPIDController();
 		cameraPID = new PIDController(p,i,d,camAngle,pidController);
 		cameraPID.setSetpoint(0);
-		cameraPID.setOutputRange(-.4, .4);
+		cameraPID.setOutputRange(-.35, .35);
 		cameraPID.setInputRange(-160, 160);
 		cameraPID.setAbsoluteTolerance(6);
 		cameraPID.setToleranceBuffer(4);
@@ -168,8 +168,8 @@ public class VisionCalc {
 				System.out.println("aligned");
 				CommonArea.leftDriveSpeed = 0;
 				CommonArea.rightDriveSpeed = 0;
-				CommonArea.shooterVisionTopSpeed = 10;
-				CommonArea.shooterVisionBotSpeed = 75;
+				CommonArea.shooterVisionTopSpeed = 110;
+				CommonArea.shooterVisionBotSpeed = 85;
 				visionState = state.WAITFORSHOOTER;
 				count = 0;
 				SmartDashboard.putBoolean("ALIGNED", true);

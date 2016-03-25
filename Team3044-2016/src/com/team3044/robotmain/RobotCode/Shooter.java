@@ -16,7 +16,7 @@ public class Shooter {
 	boolean startVisionShoot;
 	double shooterVisionTopSpeed;
 	double shooterVisionBotSpeed;
-	
+
 	double lowShootSpeed = .5;
 
 	final double toleranceShooter = 4;
@@ -43,7 +43,7 @@ public class Shooter {
 	DummyTacho botCounter = comp.botTachoCounter;
 	PIDController botShooterPID;
 	PIDController topShooterPID;
-	
+
 	boolean startLowGoal = false;
 
 	double topSpeed = 0;
@@ -93,19 +93,33 @@ public class Shooter {
 	public void shooterTeleopPeriodic() {
 		pickRollersIn = CommonArea.pickRollersIn;
 		pickRollersOut = CommonArea.pickRollersOut;
-		
-		
 
-		startShooterAtManualSpeed = FirstController.getInstance().getTriggerLeft() || SecondaryController.getInstance().getTriggerRight();
-		startLowGoal = SecondaryController.getInstance().getTriggerRight();
-		if(FirstController.getInstance().getTriggerLeft()){
-			topSpeed = SmartDashboard.getNumber("DB/Slider 2",100);
-			botSpeed = SmartDashboard.getNumber("DB/Slider 3",75);
-		}else{
-			topSpeed = 70;
+		startShooterAtManualSpeed = FirstController.getInstance().getTriggerLeft()
+				|| SecondaryController.getInstance().getTriggerLeft() || SecondaryController.getInstance().getTriggerRight();
+		//startLowGoal = SecondaryController.getInstance().getTriggerRight();
+		
+		if (FirstController.getInstance().getTriggerLeft() && !FirstController.getInstance().getTriggerRight() || !SecondaryController.getInstance().getTriggerRight()) {
+			topSpeed = SmartDashboard.getNumber("DB/Slider 2", 100);
+			botSpeed = SmartDashboard.getNumber("DB/Slider 3", 75);
+
+		} else {
+			topSpeed = 65;
 			botSpeed = 0;
 		}
-		
+		if (botSpeed < 0) {
+			// SmartDashboard.putString("DB/String 8", "Negative");
+
+			comp.botShooter.setInverted(false);
+			//SmartDashboard.putString("DB/String 8", "INVERTED");
+
+		} else {
+			// SmartDashboard.putString("DB/String 8", "POS");
+
+			comp.botShooter.setInverted(true);
+			//SmartDashboard.putString("DB/String 8", "NOT INVERTED");
+
+		}
+
 		shootBall = CommonArea.shootFlag;
 		startVisionShoot = CommonArea.shooterMotorFlag;
 		shooterVisionTopSpeed = 100;
@@ -132,12 +146,12 @@ public class Shooter {
 			} else if (pickRollersOut) {
 				comp.shooterTrack.set(TRACKMOTORSPEED);
 				shooterState = state.ejectingBoulder;
-			}/*else if(this.startLowGoal){
-				topShooterPID.setSetpoint(this.lowShootSpeed);
-				botShooterPID.setSetpoint(this.lowShootSpeed);
-				shooterState = state.startManualShoot;
-			}*/
-			
+			} /*
+				 * else if(this.startLowGoal){
+				 * topShooterPID.setSetpoint(this.lowShootSpeed);
+				 * botShooterPID.setSetpoint(this.lowShootSpeed); shooterState =
+				 * state.startManualShoot; }
+				 */
 
 			break;
 
@@ -164,8 +178,8 @@ public class Shooter {
 				topShooterPID.setSetpoint(0);
 				botShooterPID.setSetpoint(0);
 				shooterState = state.Stopped;
-			} 
-			
+			}
+
 			if (OnTarget(topShooterPID.getSetpoint(), topCounter.getRate(), 5)
 					&& OnTarget(botShooterPID.getSetpoint(), botCounter.getRate(), 5)) {
 				CommonArea.isUpToSpeed = true;
