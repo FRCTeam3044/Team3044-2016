@@ -162,6 +162,19 @@ public class Robot extends IterativeRobot {
 			break;
 		case 6:
 
+			if (SmartDashboard.getNumber("ANGLE", 0) < -12) {
+				CommonArea.rightDriveSpeed = 0.25;
+				CommonArea.leftDriveSpeed = 0;
+			} else if (SmartDashboard.getNumber("ANGLE", 0) > 12) {
+				CommonArea.rightDriveSpeed = 0;
+				CommonArea.leftDriveSpeed = 0.25;
+			} else {
+				CommonArea.rightDriveSpeed = 0;
+				CommonArea.leftDriveSpeed = 0;
+				CommonArea.autoAlign = true;
+				autoZeroState = 7;
+			}
+
 			break;
 		}
 	}
@@ -332,10 +345,11 @@ public class Robot extends IterativeRobot {
 			this.portcullis();
 		} else if (Dashboard == 6) {
 			// Do nothing
+		} else if (Dashboard == 7) {
+			this.altMoatShoot();
 		}
 		drive.driveTeleopPeriodic();
-		// CommonArea.CommonPeriodic();
-		// defense.defenseAutoPeriodic();
+
 		shooter.shooterTeleopPeriodic();
 		gate.gateTeleopPeriodic();
 		vision.Vision();
@@ -353,15 +367,15 @@ public class Robot extends IterativeRobot {
 			j = 0;
 			Components.getInstance().leftFrontDrive.setAnalogPosition(0);
 			Components.getInstance().rightFrontDrive.setAnalogPosition(0);
-			
+
 			startLeft = Components.getInstance().leftFrontDrive.getAnalogInPosition();
 			startRight = Components.getInstance().rightFrontDrive.getAnalogInPosition();
-			
+
 			CommonArea.isManualDrive = false;
 			CommonArea.leftDriveSpeed = .6;
 			CommonArea.rightDriveSpeed = .55;
 			CommonArea.gateDown = false;
-			
+
 			altMoatState = 2;
 
 			break;
@@ -392,20 +406,20 @@ public class Robot extends IterativeRobot {
 			break;
 		case 5:
 			if (SmartDashboard.getNumber("DIST", 0) > 140) {
-				if (SmartDashboard.getNumber("ANGLE", 0) < -10) {
+				if (SmartDashboard.getNumber("ANGLE", 0) < -12) {
 					CommonArea.rightDriveSpeed = 0.25;
 					CommonArea.leftDriveSpeed = 0;
-				} else if(SmartDashboard.getNumber("ANGLE", 0)>10){
+				} else if (SmartDashboard.getNumber("ANGLE", 0) > 12) {
 					CommonArea.rightDriveSpeed = 0;
 					CommonArea.leftDriveSpeed = 0.25;
-				}else{
+				} else {
 					CommonArea.rightDriveSpeed = 0;
 					CommonArea.leftDriveSpeed = 0;
 					CommonArea.autoAlign = true;
 					altMoatState = 6;
 				}
 				// CommonArea.autoAlign = true;
-				
+
 				SmartDashboard.putString("DB/String 3", "STATE 6");
 			} else {
 				CommonArea.rightDriveSpeed = -.4;
@@ -413,15 +427,15 @@ public class Robot extends IterativeRobot {
 			}
 			break;
 		case 6:
-			if(!CommonArea.autoAlign)
+			if (!CommonArea.autoAlign)
 				CommonArea.autoAlign = true;
-			
-			if(DriverStation.getInstance().getMatchTime() > 13 && Utilities.deadband(SmartDashboard.getNumber("ANGLE",0), 5) == 0){
+
+			if (DriverStation.getInstance().getMatchTime() > 13
+					&& Utilities.deadband(SmartDashboard.getNumber("ANGLE", 0), 5) == 0) {
 				CommonArea.autoAlign = false;
 				shooter.startShooterAtManualSpeed = true;
 				CommonArea.manualFire = true;
 			}
-			
 
 			break;
 		}
