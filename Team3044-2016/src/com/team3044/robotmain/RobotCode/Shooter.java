@@ -24,7 +24,7 @@ public class Shooter {
 	// 1/Components.topTachoCounter.getPeriod(); <willgivespeedofturning
 	// 1/Components.botTachoCounter.getPeriod();
 
-	final double TRACKMOTORSPEED = 1;
+	final double TRACKMOTORSPEED = .9;
 	final double TOPMANUALSPEED = -.5;
 	final double BOTMANUALSPEED = -.5;
 
@@ -146,7 +146,11 @@ public class Shooter {
 			} else if (pickRollersOut) {
 				comp.shooterTrack.set(TRACKMOTORSPEED);
 				shooterState = state.ejectingBoulder;
-			} /*
+			}
+			if(comp.shooterTrack.getSetpoint() != 0 && !pickRollersIn && !pickRollersOut){
+				comp.shooterTrack.set(0);
+			}
+			/*
 				 * else if(this.startLowGoal){
 				 * topShooterPID.setSetpoint(this.lowShootSpeed);
 				 * botShooterPID.setSetpoint(this.lowShootSpeed); shooterState =
