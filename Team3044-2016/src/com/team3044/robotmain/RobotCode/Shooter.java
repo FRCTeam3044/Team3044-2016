@@ -1,6 +1,11 @@
 package com.team3044.robotmain.RobotCode;
 
-import com.team3044.robotmain.Reference.*;
+import com.team3044.robotmain.Reference.CommonArea;
+import com.team3044.robotmain.Reference.Components;
+import com.team3044.robotmain.Reference.DummyTacho;
+import com.team3044.robotmain.Reference.FirstController;
+import com.team3044.robotmain.Reference.SecondaryController;
+
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Timer;
@@ -106,9 +111,9 @@ public class Shooter {
 			if (SmartDashboard.getBoolean("DB/Button 0")) {
 				topSpeed = 110;
 				botSpeed = 85;
-			}else{
-				topSpeed = SmartDashboard.getNumber("DB/Slider 0",100);
-				botSpeed = SmartDashboard.getNumber("DB/Slider 2",75);
+			} else {
+				topSpeed = SmartDashboard.getNumber("DB/Slider 0", 100);
+				botSpeed = SmartDashboard.getNumber("DB/Slider 2", 75);
 			}
 
 		} else {
@@ -127,9 +132,15 @@ public class Shooter {
 
 		shootBall = CommonArea.shootFlag;
 		startVisionShoot = CommonArea.shooterMotorFlag;
-		
-		if(CommonArea.ejectBack){
+
+		if (CommonArea.ejectBack) {
 			shooterState = state.EJECT_BALL_BACK;
+		}
+
+		// Send Information About Shooter To DRIVERSTATION
+		if (topShooterPID.getError() != 0) {
+			SmartDashboard.putNumber("SSPEED", (topShooterPID.getSetpoint() - topShooterPID.getError()));
+			SmartDashboard.putBoolean("BALL", comp.BallInLimit.get());
 		}
 
 		switch (shooterState) {
@@ -260,7 +271,7 @@ public class Shooter {
 			}
 			break;
 		case EJECT_BALL_BACK:
-			if(!CommonArea.ejectBack){
+			if (!CommonArea.ejectBack) {
 				comp.botShooter.set(0);
 				comp.topShooter.set(0);
 				topShooterPID.enable();

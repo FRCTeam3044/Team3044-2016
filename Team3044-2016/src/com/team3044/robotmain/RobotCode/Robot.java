@@ -326,7 +326,7 @@ public class Robot extends IterativeRobot {
 
 	public void autonomousPeriodic() {
 
-		Dashboard = SmartDashboard.getNumber("DB/Slider 0", 4);
+		Dashboard = SmartDashboard.getNumber("DB/Slider 0", 7);
 		if (Dashboard == 0) {
 			this.lowBarShoot();
 		} else if (Dashboard == 1) {
