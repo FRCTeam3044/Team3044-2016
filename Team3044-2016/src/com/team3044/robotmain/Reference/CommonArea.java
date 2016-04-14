@@ -79,13 +79,15 @@ public class CommonArea {
 	public static boolean LA_Down;
 	public static boolean AVALAIBLELT;
 	public static boolean AVALAIBLERT;
+	public static boolean ejectBack;
 	
 	public static void CommonPeriodic(){
+		
 		//FirstController
 		gateUp = firstJoy.getRawButton(FirstController.BUTTON_Y) || secondaryJoy.getRawButton(FirstController.BUTTON_Y);
 		manualFire = firstJoy.getRawButton(FirstController.BUTTON_X) || secondaryJoy.getRawButton(FirstController.BUTTON_X);
 		gateDown = firstJoy.getRawButton(FirstController.BUTTON_A) || secondaryJoy.getRawButton(FirstController.BUTTON_A);
-		shooterInit = firstJoy.getRawButton(FirstController.BUTTON_B);
+		ejectBack = firstJoy.getRawButton(FirstController.BUTTON_B);
 		pickRollersOut = firstJoy.getRawButton(FirstController.BUTTON_LB) || secondaryJoy.getRawButton(FirstController.BUTTON_LB);
 		pickRollersIn = firstJoy.getRawButton(FirstController.BUTTON_RB) || secondaryJoy.getRawButton(FirstController.BUTTON_RB);
 		getShootertoAutoSpeed = firstJoy.getRawButton(FirstController.BUTTON_BACK);

@@ -71,6 +71,7 @@ public class Components {
 	
 	public DummyTacho topTachoCounter = new DummyTacho(topTacho);
 	public DummyTacho botTachoCounter = new DummyTacho(botTacho);
+	public boolean ejectBack = false;;
 
 	public void init() {
 		leftFrontDrive = new CANTalon(1);

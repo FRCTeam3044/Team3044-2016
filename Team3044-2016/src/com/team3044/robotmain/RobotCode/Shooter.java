@@ -14,8 +14,8 @@ public class Shooter {
 	boolean startShooterAtVisionSpeed;
 	boolean shootBall;
 	boolean startVisionShoot;
-	double shooterVisionTopSpeed;
-	double shooterVisionBotSpeed;
+	double shooterVisionTopSpeed = 110;
+	double shooterVisionBotSpeed = 85;
 
 	double lowShootSpeed = .5;
 
@@ -34,7 +34,7 @@ public class Shooter {
 	FirstController controller = FirstController.getInstance();
 
 	public enum state {
-		Stopped, ingestingBoulder, ejectingBoulder, startingVisionShoot, waitingForVisionShoot, Shooting, ShootingDelay, startManualShoot, readyManualFire,
+		Stopped, ingestingBoulder, ejectingBoulder, startingVisionShoot, EJECT_BALL_BACK, Shooting, ShootingDelay, startManualShoot, readyManualFire,
 	}
 
 	public state shooterState = state.Stopped;
@@ -93,40 +93,45 @@ public class Shooter {
 	public void shooterTeleopPeriodic() {
 		pickRollersIn = CommonArea.pickRollersIn;
 		pickRollersOut = CommonArea.pickRollersOut;
-
+		if (CommonArea.shooterInit) {
+			shooterInit();
+			shooterState = state.Stopped;
+		}
 		startShooterAtManualSpeed = FirstController.getInstance().getTriggerLeft()
-				|| SecondaryController.getInstance().getTriggerLeft() || SecondaryController.getInstance().getTriggerRight();
-		//startLowGoal = SecondaryController.getInstance().getTriggerRight();
-		
-		if (FirstController.getInstance().getTriggerLeft() && !FirstController.getInstance().getTriggerRight() || !SecondaryController.getInstance().getTriggerRight()) {
-			topSpeed = SmartDashboard.getNumber("DB/Slider 2", 100);
-			botSpeed = SmartDashboard.getNumber("DB/Slider 3", 75);
+				|| SecondaryController.getInstance().getTriggerLeft()
+				|| SecondaryController.getInstance().getTriggerRight();
+
+		if (FirstController.getInstance().getTriggerLeft() && !FirstController.getInstance().getTriggerRight()
+				|| !SecondaryController.getInstance().getTriggerRight()) {
+			if (SmartDashboard.getBoolean("DB/Button 0")) {
+				topSpeed = 110;
+				botSpeed = 85;
+			}else{
+				topSpeed = SmartDashboard.getNumber("DB/Slider 0",100);
+				botSpeed = SmartDashboard.getNumber("DB/Slider 2",75);
+			}
 
 		} else {
 			topSpeed = 65;
 			botSpeed = 0;
 		}
 		if (botSpeed < 0) {
-			// SmartDashboard.putString("DB/String 8", "Negative");
 
 			comp.botShooter.setInverted(false);
-			//SmartDashboard.putString("DB/String 8", "INVERTED");
 
 		} else {
-			// SmartDashboard.putString("DB/String 8", "POS");
 
 			comp.botShooter.setInverted(true);
-			//SmartDashboard.putString("DB/String 8", "NOT INVERTED");
 
 		}
 
 		shootBall = CommonArea.shootFlag;
 		startVisionShoot = CommonArea.shooterMotorFlag;
-		shooterVisionTopSpeed = 100;
-		shooterVisionBotSpeed = 75;
-		if (CommonArea.shooterInit) {
-			shooterInit();
+		
+		if(CommonArea.ejectBack){
+			shooterState = state.EJECT_BALL_BACK;
 		}
+
 		switch (shooterState) {
 
 		case Stopped:
@@ -147,15 +152,15 @@ public class Shooter {
 				comp.shooterTrack.set(TRACKMOTORSPEED);
 				shooterState = state.ejectingBoulder;
 			}
-			if(comp.shooterTrack.getSetpoint() != 0 && !pickRollersIn && !pickRollersOut){
+			if (comp.shooterTrack.getSetpoint() != 0 && !pickRollersIn && !pickRollersOut) {
 				comp.shooterTrack.set(0);
 			}
 			/*
-				 * else if(this.startLowGoal){
-				 * topShooterPID.setSetpoint(this.lowShootSpeed);
-				 * botShooterPID.setSetpoint(this.lowShootSpeed); shooterState =
-				 * state.startManualShoot; }
-				 */
+			 * else if(this.startLowGoal){
+			 * topShooterPID.setSetpoint(this.lowShootSpeed);
+			 * botShooterPID.setSetpoint(this.lowShootSpeed); shooterState =
+			 * state.startManualShoot; }
+			 */
 
 			break;
 
@@ -252,12 +257,18 @@ public class Shooter {
 				botShooterPID.setSetpoint(0);
 				mytimer.stop();
 				shooterState = state.Stopped;
-			} /*
-				 * else if (!FirstController.getInstance().getTriggerRight()) {
-				 * CommonArea.isShot = true; comp.shooterTrack.set(0);
-				 * topShooterPID.setSetpoint(0); botShooterPID.setSetpoint(0);
-				 * shooterState = state.Stopped; }
-				 */
+			}
+			break;
+		case EJECT_BALL_BACK:
+			if(!CommonArea.ejectBack){
+				comp.botShooter.set(0);
+				comp.topShooter.set(0);
+				topShooterPID.enable();
+				botShooterPID.enable();
+				shooterState = state.Stopped;
+			}
+			break;
+		default:
 			break;
 
 		}
