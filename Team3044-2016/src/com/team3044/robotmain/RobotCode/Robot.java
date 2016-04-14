@@ -155,17 +155,17 @@ public class Robot extends IterativeRobot {
 			if (SmartDashboard.getNumber("DIST", 0) < 170) {
 				CommonArea.rightDriveSpeed = 0;
 				CommonArea.leftDriveSpeed = 0;
-				CommonArea.autoAlign = true;
+				CommonArea.autoAlign = false;
 				autoZeroState = 6;
 				SmartDashboard.putString("DB/String 3", "STATE 6");
 			}
 			break;
 		case 6:
 
-			if (SmartDashboard.getNumber("ANGLE", 0) < -12) {
+			if (SmartDashboard.getNumber("ANGLE", 0) < -5) {
 				CommonArea.rightDriveSpeed = 0.25;
 				CommonArea.leftDriveSpeed = 0;
-			} else if (SmartDashboard.getNumber("ANGLE", 0) > 12) {
+			} else if (SmartDashboard.getNumber("ANGLE", 0) > 5) {
 				CommonArea.rightDriveSpeed = 0;
 				CommonArea.leftDriveSpeed = 0.25;
 			} else {
@@ -406,10 +406,10 @@ public class Robot extends IterativeRobot {
 			break;
 		case 5:
 			if (SmartDashboard.getNumber("DIST", 0) > 140) {
-				if (SmartDashboard.getNumber("ANGLE", 0) < -12) {
+				if (SmartDashboard.getNumber("ANGLE", 0) < -5) {
 					CommonArea.rightDriveSpeed = 0.25;
 					CommonArea.leftDriveSpeed = 0;
-				} else if (SmartDashboard.getNumber("ANGLE", 0) > 12) {
+				} else if (SmartDashboard.getNumber("ANGLE", 0) > 5) {
 					CommonArea.rightDriveSpeed = 0;
 					CommonArea.leftDriveSpeed = 0.25;
 				} else {
