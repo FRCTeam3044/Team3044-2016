@@ -93,6 +93,8 @@ public class VisionCalc {
 		// ---------------------------------------------------------------------------------------------
 		case WAITING:
 			if (CommonArea.autoAlign) {
+				this.cameraPID.reset();
+				this.cameraPID.enable();
 				CommonArea.isManualDrive = false;
 				CommonArea.shooterMotorFlag = true;
 				CommonArea.leftDriveSpeed = 0;
