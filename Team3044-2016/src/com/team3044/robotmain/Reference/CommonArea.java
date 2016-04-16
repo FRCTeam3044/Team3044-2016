@@ -80,6 +80,8 @@ public class CommonArea {
 	public static boolean AVALAIBLELT;
 	public static boolean AVALAIBLERT;
 	public static boolean ejectBack;
+	public static boolean UP;
+	public static boolean DOWN;
 	
 	public static void CommonPeriodic(){
 		
@@ -100,6 +102,8 @@ public class CommonArea {
 		autoAlign = firstJoy.getTriggerRight();
 		
 		//SecondaryController
+		UP = secondaryJoy.getRawButton(SecondaryController.BUTTON_Y);
+		DOWN = secondaryJoy.getRawButton(SecondaryController.BUTTON_A);
 		X1 = false;//secondaryJoy.getRawButton(SecondaryController.BUTTON_Y);
 		X2 = false; //secondaryJoy.getRawButton(SecondaryController.BUTTON_X);
 		Y2 = false;//secondaryJoy.getRawButton(SecondaryController.BUTTON_A);

@@ -33,7 +33,9 @@ public class Components {
 	// Defense
 	public CANTalon lowerArm;
 	public CANTalon upperArm;
-
+	public CANTalon leftArm;
+	public CANTalon rightArm;
+		
 	// Pick Up
 	public CANTalon gateTalon;
 	public CANTalon shooterTrack;
