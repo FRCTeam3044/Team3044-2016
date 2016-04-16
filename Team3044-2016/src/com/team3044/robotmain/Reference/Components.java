@@ -31,10 +31,7 @@ public class Components {
 	public CANTalon botShooter;
 
 	// Defense
-	public CANTalon lowerArm;
-	public CANTalon upperArm;
-	public CANTalon leftArm;
-	public CANTalon rightArm;
+	public CANTalon daltonArm;
 		
 	// Pick Up
 	public CANTalon gateTalon;
@@ -87,8 +84,7 @@ public class Components {
 		topShooter = new CANTalon(5);
 		botShooter = new CANTalon(6);
 
-		lowerArm = new CANTalon(7);
-		upperArm = new CANTalon(8);
+		daltonArm = new CANTalon(7);
 
 		gateTalon = new CANTalon(9);
 		shooterTrack = new CANTalon(10);

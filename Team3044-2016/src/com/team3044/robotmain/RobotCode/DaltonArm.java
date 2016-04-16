@@ -12,27 +12,21 @@ public class DaltonArm {
 	public boolean armButtonUp; // BUTTONS
 	public boolean armButtonDown;
 
-	public final double rightArmMovingUpSpeed = -0.15; // MOTOR SPEEDS
-	public final double rightArmMovingDownSpeed = 0.05;
-	public final double rightArmStoppedSpeed = 0;
-	public final double leftArmMovingUpSpeed = -0.15;
-	public final double leftArmMovingDownSpeed = 0.05;
-	public final double leftArmStoppedSpeed = 0;
+	public final double daltonArmMovingUpSpeed = -0.15; // MOTOR SPEEDS
+	public final double daltonArmMovingDownSpeed = 0.05;
+	public final double daltonArmStoppedSpeed = 0;
 
-	public CANTalon leftArmMotor; // MOTORS
-	public CANTalon rightArmMotor;
+	public CANTalon daltonArmMotor; // MOTORS
 
 	state DALTON_ARM = state.STOPPED; // DEFAULT STARTING STATE AND SWITCH
 
-	public boolean armLimitSwitchUp; // LIMIT SWITCHES
-	public boolean armLimitSwitchDown;
+	public boolean daltonArmLimitSwitchUp; // LIMIT SWITCHES
+	public boolean daltonArmLimitSwitchDown;
 
 	public void defenseInit() {
 
-		leftArmMotor = Components.getInstance().leftArm;
-		rightArmMotor = Components.getInstance().rightArm;
-		leftArmMotor.set(leftArmStoppedSpeed);
-		rightArmMotor.set(rightArmStoppedSpeed);
+		daltonArmMotor = Components.getInstance().daltonArm;
+		daltonArmMotor.set(daltonArmStoppedSpeed);
 
 		DALTON_ARM = state.STOPPED;
 
@@ -44,18 +38,10 @@ public class DaltonArm {
 
 	public void defenseTeleopPeriodic() {
 
-		SmartDashboard.putString("DB/String 1", String.valueOf(DALTON_ARM)); // DEFENSE
-																				// TEST
+		SmartDashboard.putString("DB/String 1", String.valueOf(DALTON_ARM)); // DEFENSE TEST
 
-		armLimitSwitchUp = leftArmMotor.isFwdLimitSwitchClosed(); // NEED TO
-																	// FIGURE
-																	// OUT LIMIT
-																	// SWITCHES
-																	// WHICH
-																	// MOTOR
-																	// THEY GO
-																	// THROUGH
-		armLimitSwitchDown = leftArmMotor.isRevLimitSwitchClosed();
+		daltonArmLimitSwitchUp = daltonArmMotor.isFwdLimitSwitchClosed(); // LIMIT SWITCHES
+		daltonArmLimitSwitchDown = daltonArmMotor.isRevLimitSwitchClosed();
 
 		armButtonUp = CommonArea.UP;
 		armButtonDown = CommonArea.DOWN;
@@ -64,22 +50,21 @@ public class DaltonArm {
 
 		default:
 			DALTON_ARM = state.STOPPED;
-			leftArmMotor.set(leftArmStoppedSpeed);
-			rightArmMotor.set(rightArmStoppedSpeed);
+			daltonArmMotor.set(daltonArmStoppedSpeed);
 			break;
 
 		case STOPPED:
-			if (!armLimitSwitchDown && armButtonDown) {
+			if (!daltonArmLimitSwitchDown && armButtonDown) {
 				DALTON_ARM = state.MOVING_DOWN;
-			} else if (!armLimitSwitchUp && armButtonUp) {
+			} else if (!daltonArmLimitSwitchUp && armButtonUp) {
 				DALTON_ARM = state.MOVING_UP;
 			}
 		case MOVING_UP:
-			if (armLimitSwitchUp || !armButtonUp) {
+			if (daltonArmLimitSwitchUp || !armButtonUp) {
 				DALTON_ARM = state.STOPPED;
 			}
 		case MOVING_DOWN:
-			if (armLimitSwitchDown || !armButtonDown) {
+			if (daltonArmLimitSwitchDown || !armButtonDown) {
 				DALTON_ARM = state.STOPPED;
 			}
 		}
