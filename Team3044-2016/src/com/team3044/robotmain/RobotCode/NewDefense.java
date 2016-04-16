@@ -65,8 +65,8 @@ public class NewDefense {
 
 	public void defenseInit() {
 
-		lowerArmMotor = Components.getInstance().lowerArm;
-		upperArmMotor = Components.getInstance().upperArm;
+		//lowerArmMotor = Components.getInstance().lowerArm;
+		//upperArmMotor = Components.getInstance().upperArm;
 		lowerArmMotor.set(lowerArmStopSpeed);
 		upperArmMotor.set(upperArmStopSpeed);
 

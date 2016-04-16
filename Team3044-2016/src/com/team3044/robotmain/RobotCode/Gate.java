@@ -26,8 +26,8 @@ public class Gate {
 	// state gateState = state.Stopped;
 	state gateState = state.Init;
 
-	double motorSpeedUp = -.5;
-	double motorSpeedDown = .7;
+	double motorSpeedUp = -.8;
+	double motorSpeedDown = .8;
 
 	double upperEncoderLimit = -150;
 	double lowerEncoderLimit = -1450;// check values
