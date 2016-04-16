@@ -29,11 +29,56 @@ public class DaltonArm {
 		daltonArmMotor.set(daltonArmStoppedSpeed);
 
 		DALTON_ARM = state.STOPPED;
+	}
+	
+	public void autoInit(){
+		daltonArmMotor.set(daltonArmStoppedSpeed);
 
+		DALTON_ARM = state.STOPPED;
 	}
 
+	public void teleopInit(){
+		daltonArmMotor.set(daltonArmStoppedSpeed);
+
+		DALTON_ARM = state.STOPPED;
+	}
+	
 	public void defenseAutoPeriodic() {
 
+		SmartDashboard.putString("DB/String 1", String.valueOf(DALTON_ARM)); // DEFENSE TEST
+
+		daltonArmLimitSwitchUp = daltonArmMotor.isFwdLimitSwitchClosed(); // LIMIT SWITCHES
+		daltonArmLimitSwitchDown = daltonArmMotor.isRevLimitSwitchClosed();
+
+		armButtonUp = CommonArea.UP;
+		armButtonDown = CommonArea.DOWN;
+
+		switch (DALTON_ARM) {
+
+		default:
+			DALTON_ARM = state.STOPPED;
+			daltonArmMotor.set(daltonArmStoppedSpeed);
+			break;
+
+		case STOPPED:
+			if (!daltonArmLimitSwitchDown && armButtonDown) {
+				daltonArmMotor.set(daltonArmMovingDownSpeed);
+				DALTON_ARM = state.MOVING_DOWN;
+			} else if (!daltonArmLimitSwitchUp && armButtonUp) {
+				daltonArmMotor.set(daltonArmMovingUpSpeed);
+				DALTON_ARM = state.MOVING_UP;
+			}
+		case MOVING_UP:
+			if (daltonArmLimitSwitchUp) {
+				daltonArmMotor.set(daltonArmStoppedSpeed);
+				DALTON_ARM = state.STOPPED;
+			}
+		case MOVING_DOWN:
+			if (daltonArmLimitSwitchDown) {
+				daltonArmMotor.set(daltonArmStoppedSpeed);
+				DALTON_ARM = state.STOPPED;
+			}
+		}
 	}
 
 	public void defenseTeleopPeriodic() {
@@ -55,16 +100,20 @@ public class DaltonArm {
 
 		case STOPPED:
 			if (!daltonArmLimitSwitchDown && armButtonDown) {
+				daltonArmMotor.set(daltonArmMovingDownSpeed);
 				DALTON_ARM = state.MOVING_DOWN;
 			} else if (!daltonArmLimitSwitchUp && armButtonUp) {
+				daltonArmMotor.set(daltonArmMovingUpSpeed);
 				DALTON_ARM = state.MOVING_UP;
 			}
 		case MOVING_UP:
 			if (daltonArmLimitSwitchUp || !armButtonUp) {
+				daltonArmMotor.set(daltonArmStoppedSpeed);
 				DALTON_ARM = state.STOPPED;
 			}
 		case MOVING_DOWN:
 			if (daltonArmLimitSwitchDown || !armButtonDown) {
+				daltonArmMotor.set(daltonArmStoppedSpeed);
 				DALTON_ARM = state.STOPPED;
 			}
 		}
