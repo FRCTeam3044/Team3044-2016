@@ -19,7 +19,7 @@ public class Robot extends IterativeRobot {
 
 	public void robotInit() {
 		// camController = new CameraController();
-		vision.init();
+		
 		Components.getInstance().init();
 		drive.driveInit();
 		vision.Reset();
@@ -114,20 +114,12 @@ public class Robot extends IterativeRobot {
 					String.valueOf(Components.getInstance().leftFrontDrive.getAnalogInPosition() - startLeft));
 			SmartDashboard.putString("DB/String 6",
 					String.valueOf(Components.getInstance().leftFrontDrive.getAnalogInPosition() - startRight));
-			/*
-			 * if (Components.getInstance().leftFrontDrive.getAnalogInPosition()
-			 * - startLeft < -LEFTENC) { CommonArea.leftDriveSpeed = 0;
-			 * CommonArea.rightDriveSpeed = 0; }
-			 */
+
 			if (Components.getInstance().leftFrontDrive.getAnalogInPosition() - startLeft < -RIGHTENC) {
 				CommonArea.leftDriveSpeed = 0;
 				CommonArea.rightDriveSpeed = 0;
 			}
-			if ((Components.getInstance().leftFrontDrive.getAnalogInPosition() - startLeft < -RIGHTENC)
-			/*
-			 * || (Components.getInstance().leftFrontDrive.getAnalogInPosition()
-			 * - startLeft > LEFTENC)
-			 */) {
+			if ((Components.getInstance().leftFrontDrive.getAnalogInPosition() - startLeft < -RIGHTENC)) {
 				autoZeroState = 3;
 				CommonArea.leftDriveSpeed = 0;
 				CommonArea.rightDriveSpeed = .4;
@@ -182,9 +174,11 @@ public class Robot extends IterativeRobot {
 	int moatState = 0;
 	final int MOATENC = 8000;
 	final int MOATENCMOVE = 8000;// 3000;
-
+	double dist;
+	double angle;
 	void moatShoot() {
-		SmartDashboard.putString("DB/String 9", String.valueOf(moatState));
+		dist = SmartDashboard.getNumber("DIST",0);
+		angle = SmartDashboard.getNumber("ANGLE");
 		switch (moatState) {
 		case 0:
 			j = 0;
@@ -197,34 +191,23 @@ public class Robot extends IterativeRobot {
 			startLeft = Components.getInstance().leftFrontDrive.getAnalogInPosition();
 			startRight = Components.getInstance().rightFrontDrive.getAnalogInPosition();
 			moatState = 2;
-			SmartDashboard.putString("DB/String 5",
-					String.valueOf(Components.getInstance().leftFrontDrive.getAnalogInPosition() - startLeft));
-			SmartDashboard.putString("DB/String 6",
-					String.valueOf(Components.getInstance().rightFrontDrive.getAnalogInPosition() - startRight));
 			break;
-		case 1:
 
-			break;
 		case 2:
-			SmartDashboard.putString("DB/String 5",
-					String.valueOf(Components.getInstance().leftFrontDrive.getAnalogInPosition() - startLeft));
-			SmartDashboard.putString("DB/String 6",
-					String.valueOf(Components.getInstance().rightFrontDrive.getAnalogInPosition() - startRight));
 
-			if (Components.getInstance().leftFrontDrive.getAnalogInPosition() - startLeft < -MOATENC) {
+			if (Components.getInstance().leftFrontDrive.getAnalogInPosition() - startLeft < -MOATENC || dist < 150) {
 				CommonArea.leftDriveSpeed = 0;
 				CommonArea.rightDriveSpeed = 0;
 			}
-			if ((Components.getInstance().leftFrontDrive.getAnalogInPosition() - startLeft < -MOATENC)) {
+			if ((Components.getInstance().leftFrontDrive.getAnalogInPosition() - startLeft < -MOATENC) || dist < 150) {
 				moatState = 3;
-
+				CommonArea.leftDriveSpeed = 0;
+				CommonArea.rightDriveSpeed = 0;
 			}
 			break;
 		case 3:
 			j += 1;
 			if (j > 50) {
-				CommonArea.rightDriveSpeed = 0;
-
 				moatState = 4;
 			}
 			break;
@@ -237,14 +220,27 @@ public class Robot extends IterativeRobot {
 				CommonArea.leftDriveSpeed = 0;
 				CommonArea.autoAlign = true;
 				moatState = 6;
-				SmartDashboard.putString("DB/String 3", "STATE 6");
+				j = 0;
 			} else {
 				CommonArea.rightDriveSpeed = -.4;
 				CommonArea.leftDriveSpeed = -.4;
+				
 			}
 			break;
 		case 6:
-
+			if(CommonArea.isAligned && Math.abs(angle) > 7 ){
+				//Think we're aligned but we're not
+				CommonArea.autoAlign = false;
+				j += 1; 
+			}
+			if(!CommonArea.autoAlign && j > 2){
+				CommonArea.autoAlign = true;
+			}
+			if(DriverStation.getInstance().getMatchTime() > 13 && Math.abs(angle) < 10 && !CommonArea.isAligned){
+				CommonArea.autoAlign = false;
+				CommonArea.shooterToSpeed = true;
+				CommonArea.manualFire = true;
+			}
 			break;
 		}
 	}

@@ -152,7 +152,7 @@ public class Shooter {
 				botShooterPID.setSetpoint(shooterVisionBotSpeed);
 				shooterState = state.startingVisionShoot;
 				System.out.println("VISION SHOOT");
-			} else if (startShooterAtManualSpeed) {
+			} else if (startShooterAtManualSpeed || CommonArea.shooterToSpeed) {
 				topShooterPID.setSetpoint(topSpeed);
 				botShooterPID.setSetpoint(botSpeed);
 				shooterState = state.startManualShoot;

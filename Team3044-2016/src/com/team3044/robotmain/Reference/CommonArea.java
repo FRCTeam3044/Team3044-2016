@@ -61,7 +61,7 @@ public class CommonArea {
 	public static boolean calibrate;
 	public static boolean chevalDeFrise;
 	public static boolean AVALIABLEDLEFT;
-	public static boolean shooterToSpeed;
+	public static boolean shooterToSpeed = false;
 	public static boolean shooterInit;
 	
 	//SecondaryController
@@ -98,7 +98,7 @@ public class CommonArea {
 		calibrate = firstJoy.getDPadRight();
 		chevalDeFrise = firstJoy.getDPadDown();
 		pickUpBoulder = firstJoy.getDPadLeft();
-		shooterToSpeed = firstJoy.getTriggerLeft() || secondaryJoy.getTriggerLeft();
+		//shooterToSpeed = firstJoy.getTriggerLeft() || secondaryJoy.getTriggerLeft();
 		autoAlign = firstJoy.getTriggerRight();
 		
 		//SecondaryController
