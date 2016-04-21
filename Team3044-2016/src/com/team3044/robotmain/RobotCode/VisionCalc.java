@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class VisionCalc {
 
 	public enum state {
-		WAITING, SPINSHOOTER, AUTOFIND, ALIGN, WAITFORSHOOTER, SHOOT, RETURN
+		WAITING, SPINSHOOTER, AUTOFIND, ALIGN, WAITFORSHOOTER, SHOOT, RETURN, ALIGN_TWO
 	}
 
 	state visionState = state.WAITING;
@@ -28,7 +28,7 @@ public class VisionCalc {
 		pidController = new AlignPIDController();
 		cameraPID = new PIDController(p,i,d,camAngle,pidController);
 		cameraPID.setSetpoint(0);
-		cameraPID.setOutputRange(-.35, .35);
+		cameraPID.setOutputRange(-.5, .5);
 		cameraPID.setInputRange(-160, 160);
 		cameraPID.setAbsoluteTolerance(6);
 		cameraPID.setToleranceBuffer(4);
@@ -38,8 +38,22 @@ public class VisionCalc {
 	}
 	
 	public double CalculatedTurnSpeed(double Angle) {
-		
-		return pidController.getSpeed();
+		if(Angle < -20){
+			return -.2;
+		}else if(Angle > 20){
+
+			return .2;
+		}else{
+			if(Angle < -6){
+				return -.15;
+			}else if(Angle > 6){
+				return .15;
+			}else{
+				return 0;
+			}
+			//return 0;
+		}
+		//
 		
 	}
 
@@ -85,7 +99,7 @@ public class VisionCalc {
 		SmartDashboard.putString("DB/String 8", String.valueOf(visionState));
 		SmartDashboard.putString("DB/String 1", String.valueOf(CommonArea.isAligned));
 		System.out.println("MOTOR FLAG: " + CommonArea.shooterMotorFlag);
-		CommonArea.isAligned = Math.abs(this.cameraPID.getError()) < 7;//isAligned(CommonArea.angleToTarget, 10);
+		CommonArea.isAligned = Math.abs(this.cameraPID.getError()) < 20;
 		/*
 		 * if(!CommonArea.autoAlign){ Reset(); }
 		 */
@@ -121,23 +135,19 @@ public class VisionCalc {
 					CommonArea.rightDriveSpeed = -DRIVETURNSPEED;
 				}
 				visionState = state.AUTOFIND;
-			} else if (SmartDashboard.getBoolean("TARGET", false) && !CommonArea.isAligned) {
+			} else if(SmartDashboard.getBoolean("TARGET", false) && Math.abs(SmartDashboard.getNumber("ANGLE")) < 6){
+				visionState = state.WAITFORSHOOTER;
+				CommonArea.shooterVisionTopSpeed = 110;
+				CommonArea.shooterVisionBotSpeed = 85;
+			}
+			else{
 				count = 0;
 				visionState = state.ALIGN;
-			} else if (SmartDashboard.getBoolean("TARGET", false) && CommonArea.isAligned) {
-				CommonArea.shooterVisionTopSpeed = CalculatedTopSpeed(75);
-				CommonArea.shooterVisionBotSpeed = CalculatedBotSpeed(60);
-				count = 0;
-				System.out.println("Aligned");
-				visionState = state.WAITFORSHOOTER;
-			}
+			} 
 			break;
 		// ---------------------------------------------------------------------------------------------
 		case AUTOFIND:
-			if(SmartDashboard.getNumber("ANGLE",0) < 30){
-				
-				
-			}
+
 			if (!CommonArea.autoAlign) {
 				Reset();
 				visionState = state.WAITING;
@@ -151,7 +161,10 @@ public class VisionCalc {
 			break;
 		// ---------------------------------------------------------------------------------------------
 		case RETURN:
-			
+			if (!CommonArea.autoAlign) {
+				Reset();
+				visionState = state.WAITING;
+			}
 			k += 1;
 			if(k > 10){
 				CommonArea.rightDriveSpeed = .4;
@@ -166,17 +179,14 @@ public class VisionCalc {
 				Reset();
 				count = 0;
 				visionState = state.WAITING;
-			} else if (CommonArea.isAligned && count >= 20) {
+			} else if (CommonArea.isAligned ) {
 				System.out.println("aligned");
 				CommonArea.leftDriveSpeed = 0;
 				CommonArea.rightDriveSpeed = 0;
-				CommonArea.shooterVisionTopSpeed = 110;
-				CommonArea.shooterVisionBotSpeed = 85;
-				visionState = state.WAITFORSHOOTER;
+
+				visionState = state.ALIGN_TWO;
 				count = 0;
 				SmartDashboard.putBoolean("ALIGNED", true);
-			} else if (CommonArea.isAligned && count <= 20) {
-				count += 1;
 			} else {
 				System.out.println("aligning");
 				SmartDashboard.putBoolean("ALIGNED", false);
@@ -186,6 +196,32 @@ public class VisionCalc {
 				CommonArea.rightDriveSpeed = -CalculatedTurnSpeed(CommonArea.angleToTarget);
 
 
+			}
+			break;
+		case ALIGN_TWO:
+			if (!CommonArea.autoAlign) {
+				Reset();
+				visionState = state.WAITING;
+			}
+			double angle = SmartDashboard.getNumber("ANGLE");
+			if(angle < -2){
+				CommonArea.leftDriveSpeed = -.2;
+			}else if (angle > 2){
+				CommonArea.leftDriveSpeed = .2;
+			}else{
+				CommonArea.leftDriveSpeed = 0;
+			}
+			
+			if(Math.abs(angle) < 5 && count > 7){
+				CommonArea.shooterVisionTopSpeed = 110;
+				CommonArea.shooterVisionBotSpeed = 85;
+				CommonArea.leftDriveSpeed = 0;
+				CommonArea.rightDriveSpeed = 0;
+				visionState = state.WAITFORSHOOTER;
+				
+			}
+			if(Math.abs(angle) < 5){
+				count += 1;
 			}
 			break;
 		// ----------------------------------------------------------------------------------------------
