@@ -19,7 +19,7 @@ public class Robot extends IterativeRobot {
 
 	public void robotInit() {
 		// camController = new CameraController();
-		
+
 		Components.getInstance().init();
 		drive.driveInit();
 		vision.Reset();
@@ -83,7 +83,8 @@ public class Robot extends IterativeRobot {
 	final int RIGHTENCMOVE = 3000;
 
 	void lowBarShoot() {
-		SmartDashboard.putString("DB/String 9", String.valueOf(autoZeroState));
+		// SmartDashboard.putString("DB/String 9",
+		// String.valueOf(autoZeroState));
 		switch (autoZeroState) {
 		case 0:
 			j = 0;
@@ -96,10 +97,12 @@ public class Robot extends IterativeRobot {
 			startLeft = Components.getInstance().leftFrontDrive.getAnalogInPosition();
 			startRight = Components.getInstance().rightFrontDrive.getAnalogInPosition();
 			autoZeroState = 1;
-			SmartDashboard.putString("DB/String 5",
-					String.valueOf(Components.getInstance().leftFrontDrive.getAnalogInPosition() - startLeft));
-			SmartDashboard.putString("DB/String 6",
-					String.valueOf(Components.getInstance().leftFrontDrive.getAnalogInPosition() - startRight));
+			// SmartDashboard.putString("DB/String 5",
+			// String.valueOf(Components.getInstance().leftFrontDrive.getAnalogInPosition()
+			// - startLeft));
+			// SmartDashboard.putString("DB/String 6",
+			// String.valueOf(Components.getInstance().leftFrontDrive.getAnalogInPosition()
+			// - startRight));
 			break;
 		case 1:
 			if (!Components.getInstance().GateDownLimit.get()) {
@@ -110,10 +113,12 @@ public class Robot extends IterativeRobot {
 			}
 			break;
 		case 2:
-			SmartDashboard.putString("DB/String 5",
-					String.valueOf(Components.getInstance().leftFrontDrive.getAnalogInPosition() - startLeft));
-			SmartDashboard.putString("DB/String 6",
-					String.valueOf(Components.getInstance().leftFrontDrive.getAnalogInPosition() - startRight));
+			// SmartDashboard.putString("DB/String 5",
+			/// String.valueOf(Components.getInstance().leftFrontDrive.getAnalogInPosition()
+			// - startLeft));
+			// SmartDashboard.putString("DB/String 6",
+			// String.valueOf(Components.getInstance().leftFrontDrive.getAnalogInPosition()
+			// - startRight));
 
 			if (Components.getInstance().leftFrontDrive.getAnalogInPosition() - startLeft < -RIGHTENC) {
 				CommonArea.leftDriveSpeed = 0;
@@ -149,7 +154,7 @@ public class Robot extends IterativeRobot {
 				CommonArea.leftDriveSpeed = 0;
 				CommonArea.autoAlign = false;
 				autoZeroState = 6;
-				SmartDashboard.putString("DB/String 3", "STATE 6");
+				// SmartDashboard.putString("DB/String 3", "STATE 6");
 			}
 			break;
 		case 6:
@@ -176,8 +181,9 @@ public class Robot extends IterativeRobot {
 	final int MOATENCMOVE = 8000;// 3000;
 	double dist;
 	double angle;
+
 	void moatShoot() {
-		dist = SmartDashboard.getNumber("DIST",0);
+		dist = SmartDashboard.getNumber("DIST", 0);
 		angle = SmartDashboard.getNumber("ANGLE");
 		switch (moatState) {
 		case 0:
@@ -224,19 +230,19 @@ public class Robot extends IterativeRobot {
 			} else {
 				CommonArea.rightDriveSpeed = -.4;
 				CommonArea.leftDriveSpeed = -.4;
-				
+
 			}
 			break;
 		case 6:
-			if(CommonArea.isAligned && Math.abs(angle) > 7 ){
-				//Think we're aligned but we're not
+			if (CommonArea.isAligned && Math.abs(angle) > 7) {
+				// Think we're aligned but we're not
 				CommonArea.autoAlign = false;
-				j += 1; 
+				j += 1;
 			}
-			if(!CommonArea.autoAlign && j > 2){
+			if (!CommonArea.autoAlign && j > 2) {
 				CommonArea.autoAlign = true;
 			}
-			if(DriverStation.getInstance().getMatchTime() > 13 && Math.abs(angle) < 10 && !CommonArea.isAligned){
+			if (DriverStation.getInstance().getMatchTime() > 13 && Math.abs(angle) < 10 && !CommonArea.isAligned) {
 				CommonArea.autoAlign = false;
 				CommonArea.shooterToSpeed = true;
 				CommonArea.manualFire = true;
@@ -246,7 +252,8 @@ public class Robot extends IterativeRobot {
 	}
 
 	void moveToDefense() {
-		SmartDashboard.putString("DB/String 0", String.valueOf(autoOneState));
+		// SmartDashboard.putString("DB/String 0",
+		// String.valueOf(autoOneState));
 		switch (autoOneState) {
 		case 0:
 			j = 0;
@@ -258,17 +265,10 @@ public class Robot extends IterativeRobot {
 			startLeft = Components.getInstance().leftFrontDrive.getAnalogInPosition();
 			startRight = Components.getInstance().rightFrontDrive.getAnalogInPosition();
 			autoOneState = 1;
-			SmartDashboard.putString("DB/String 5",
-					String.valueOf(Components.getInstance().leftFrontDrive.getAnalogInPosition() - startLeft));
-			SmartDashboard.putString("DB/String 6",
-					String.valueOf(Components.getInstance().rightFrontDrive.getAnalogInPosition() - startRight));
+			
 			break;
 		case 1:
-			SmartDashboard.putString("DB/String 3",
-					String.valueOf(Components.getInstance().leftFrontDrive.getAnalogInPosition() - startLeft));
-			SmartDashboard.putString("DB/String 8",
-					String.valueOf(Components.getInstance().rightFrontDrive.getAnalogInPosition() - startRight));
-
+			
 			if (Components.getInstance().rightFrontDrive.getAnalogInPosition() - startRight > MOATENCMOVE) {
 				CommonArea.leftDriveSpeed = 0;
 				CommonArea.rightDriveSpeed = 0;
@@ -331,18 +331,12 @@ public class Robot extends IterativeRobot {
 			}
 		} else if (Dashboard == 2) {
 			this.moveToDefense();
-		} else if (Dashboard == 3) {
-			if (!CommonArea.autoShot) {
-				CommonArea.autoAlign = true;
-			}
 		} else if (Dashboard == 4) {
 			this.moatShoot();
 		} else if (Dashboard == 5) {
 			this.portcullis();
-		} else if (Dashboard == 6) {
-			// Do nothing
-		} else if (Dashboard == 7) {
-			this.altMoatShoot();
+		}else{
+			
 		}
 		drive.driveTeleopPeriodic();
 
@@ -350,91 +344,6 @@ public class Robot extends IterativeRobot {
 		gate.gateTeleopPeriodic();
 		vision.Vision();
 
-	}
-
-	int altMoatState = 0;
-	// final int MOATENC = 8000;
-	// final int MOATENCMOVE = 8000;//3000;
-
-	void altMoatShoot() {
-		SmartDashboard.putString("DB/String 9", String.valueOf(altMoatState));
-		switch (altMoatState) {
-		case 0:
-			j = 0;
-			Components.getInstance().leftFrontDrive.setAnalogPosition(0);
-			Components.getInstance().rightFrontDrive.setAnalogPosition(0);
-
-			startLeft = Components.getInstance().leftFrontDrive.getAnalogInPosition();
-			startRight = Components.getInstance().rightFrontDrive.getAnalogInPosition();
-
-			CommonArea.isManualDrive = false;
-			CommonArea.leftDriveSpeed = .6;
-			CommonArea.rightDriveSpeed = .55;
-			CommonArea.gateDown = false;
-
-			altMoatState = 2;
-
-			break;
-		case 1:
-
-			break;
-		case 2:
-
-			if (Components.getInstance().leftFrontDrive.getAnalogInPosition() - startLeft < -MOATENC) {
-				CommonArea.leftDriveSpeed = 0;
-				CommonArea.rightDriveSpeed = 0;
-			}
-			if ((Components.getInstance().leftFrontDrive.getAnalogInPosition() - startLeft < -MOATENC)) {
-				altMoatState = 3;
-
-			}
-			break;
-		case 3:
-			j += 1;
-			if (j > 50) {
-				CommonArea.rightDriveSpeed = 0;
-
-				altMoatState = 4;
-			}
-			break;
-		case 4:
-			altMoatState = 5;
-			break;
-		case 5:
-			if (SmartDashboard.getNumber("DIST", 0) > 140) {
-				if (SmartDashboard.getNumber("ANGLE", 0) < -5) {
-					CommonArea.rightDriveSpeed = 0.25;
-					CommonArea.leftDriveSpeed = 0;
-				} else if (SmartDashboard.getNumber("ANGLE", 0) > 5) {
-					CommonArea.rightDriveSpeed = 0;
-					CommonArea.leftDriveSpeed = 0.25;
-				} else {
-					CommonArea.rightDriveSpeed = 0;
-					CommonArea.leftDriveSpeed = 0;
-					CommonArea.autoAlign = true;
-					altMoatState = 6;
-				}
-				// CommonArea.autoAlign = true;
-
-				SmartDashboard.putString("DB/String 3", "STATE 6");
-			} else {
-				CommonArea.rightDriveSpeed = -.4;
-				CommonArea.leftDriveSpeed = -.4;
-			}
-			break;
-		case 6:
-			if (!CommonArea.autoAlign)
-				CommonArea.autoAlign = true;
-
-			if (DriverStation.getInstance().getMatchTime() > 13
-					&& Utilities.deadband(SmartDashboard.getNumber("ANGLE", 0), 5) == 0) {
-				CommonArea.autoAlign = false;
-				shooter.startShooterAtManualSpeed = true;
-				CommonArea.manualFire = true;
-			}
-
-			break;
-		}
 	}
 
 	public void teleopInit() {
@@ -449,9 +358,12 @@ public class Robot extends IterativeRobot {
 		shooter.shooterTeleopPeriodic();
 		gate.gateTeleopPeriodic();
 		vision.Vision();
-		SmartDashboard.putNumber("DB/String 5", Components.getInstance().leftFrontDrive.getAnalogInPosition());
-		SmartDashboard.putNumber("DB/String 6", Components.getInstance().rightFrontDrive.getAnalogInPosition());
-		SmartDashboard.putNumber("DRIVECURRENT", Components.getInstance().leftFrontDrive.getOutputCurrent());
+		// SmartDashboard.putNumber("DB/String 5",
+		// Components.getInstance().leftFrontDrive.getAnalogInPosition());
+		// SmartDashboard.putNumber("DB/String 6",
+		// Components.getInstance().rightFrontDrive.getAnalogInPosition());
+		// SmartDashboard.putNumber("DRIVECURRENT",
+		// Components.getInstance().leftFrontDrive.getOutputCurrent());
 		// camController.step();
 
 	}
@@ -463,7 +375,8 @@ public class Robot extends IterativeRobot {
 	public void disabledPeriodic() {
 		// gate.gateTestPeriodic();
 		// camController.step();
-		SmartDashboard.putString("DB/String 0", String.valueOf(Components.getInstance().gateTalon.getEncPosition()));
+		// SmartDashboard.putString("DB/String 0",
+		// String.valueOf(Components.getInstance().gateTalon.getEncPosition()));
 	}
 
 	int TEST_DRIVE_STATE = 0;
@@ -480,9 +393,11 @@ public class Robot extends IterativeRobot {
 
 	public void testPeriodic() {
 		CommonArea.CommonPeriodic();
-		SmartDashboard.putNumber("DB/String 0", Components.getInstance().rightFrontDrive.getAnalogInPosition());
-		SmartDashboard.putNumber("DB/String 1", Components.getInstance().leftFrontDrive.getAnalogInPosition());
-		// SmartDashboard.putNumber("DRIVECURRENT",
+		// SmartDashboard.putNumber("DB/String 0",
+		// Components.getInstance().rightFrontDrive.getAnalogInPosition());
+		// SmartDashboard.putNumber("DB/String 1",
+		// Components.getInstance().leftFrontDrive.getAnalogInPosition());
+		// //SmartDashboard.putNumber("DRIVECURRENT",
 		// Components.getInstance().leftFrontDrive.getOutputCurrent());
 		drive.driveTeleopPeriodic();
 		// drive.DriveRightPID(FirstController.getInstance().getLeftY() * 10);
